@@ -43,6 +43,11 @@ input{-webkit-user-select:text;user-select:text}
 body{margin:0;font-size:14px}
 body{background:var(--space);color:var(--ink);font-family:var(--font-body);overflow:hidden;
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+html{background:var(--space)}
+/* home-screen web app on iPhone: iOS can report a window that stops short of the home-indicator strip,
+   leaving a bare band at the bottom. There we size the app to the full screen ourselves (see fitStandalone). */
+.standalone,.standalone body{height:var(--appH,100%)}
+.standalone #app{bottom:auto;height:var(--appH,100%)}
 #app{position:fixed;inset:0;background:radial-gradient(120% 80% at 50% 45%,var(--space-2) 0%,var(--space) 70%)}
 #stars{position:absolute;inset:0;pointer-events:none}
 #stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--ink)}
@@ -2337,13 +2342,25 @@ function syncBoostUI(){
 }
 
 function resize(){
-  const w=window.innerWidth,h=window.innerHeight; renderer.setSize(w,h,false);
+  const app=$("app"), w=app.clientWidth||window.innerWidth, h=app.clientHeight||window.innerHeight; renderer.setSize(w,h,false);
   camera.aspect=w/h;
   const vHalf=THREE.MathUtils.degToRad(BASE_FOV/2), hHalf=Math.atan(Math.tan(vHalf)*camera.aspect);
   camDist=Math.max(R0+8,(R0*1.02)/Math.sin((vHalf+2*hHalf)/3))-(R0-R);
   camera.updateProjectionMatrix();
 }
 window.addEventListener("resize",resize); resize();
+(function fitStandalone(){
+  const sa=navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
+  if(!sa) return;
+  const fit=()=>{
+    const portrait=innerHeight>=innerWidth, full=portrait?Math.max(screen.width,screen.height):Math.min(screen.width,screen.height);
+    const gap=full-innerHeight, root=document.documentElement;
+    if(gap>0&&gap<=80){root.style.setProperty("--appH",full+"px"); root.classList.add("standalone");}  // only the home-bar sized gap
+    else {root.style.removeProperty("--appH"); root.classList.remove("standalone");}
+    resize();
+  };
+  fit(); addEventListener("resize",fit); addEventListener("orientationchange",()=>setTimeout(fit,300));
+})();
 
 // ---------- Loop ----------
 let last=performance.now(), acc=0, lastCount=0;
