@@ -1048,29 +1048,37 @@ function advance(p,h,dist,extra){
 
 // ---------- Bots ----------
 const sp=new THREE.Vector3(), sh=new THREE.Vector3();
+// A bot's plan: steer k for a moment, then straighten out (how people actually steer), and see how long
+// that stays clear of tubes and of where the other runners' heads are heading.
+const op=new THREE.Vector3(), oh=new THREE.Vector3(), others=[];
 function probe(b,k,jump,hov){
   sp.copy(b.p); sh.copy(b.h);
   let jt=b.jt, t=0, hl=hov?b.hoverMax*b.fl:0; const dt=0.06, H=BOT_LOOK, lim=b.trail.n-1-GRACE;
   if(jump) jt=0;
+  others.length=0; for(const o of players) if(o!==b&&o.alive) others.push(o);
   while(t<H){
-    if(jt<0) sh.applyAxisAngle(sp,k*b.turn*BOT_TURN*dt);
+    if(jt<0&&t<BOT_STEER) sh.applyAxisAngle(sp,k*b.turn*BOT_TURN*dt);
     advance(sp,sh,b.speed*dt); t+=dt;
     let y=0; if(jt>=0){ if(hl>0&&jt>=JT/2) hl-=dt; else jt+=dt; if(jt<JT) y=jumpY(jt); else jt=-1;}
     if(hitsTrail(sp.x,sp.y,sp.z,y,b.i,lim)) return t;
+    if(t<1.2) for(const o of others){ // don't cut right in front of someone (their tube will be there)
+      op.copy(o.p); oh.copy(o.h); advance(op,oh,o.speed*t);
+      if(op.distanceToSquared(sp)*R*R<0.8) return t+0.15;
+    }
   }
   return H+0.001;
 }
 // Bots play like people: they look ~1.5 s ahead, react a few times a second (not every frame),
 // stick with a line until another is clearly better, ease the stick from side to side instead of
 // snapping, and never use the full turn rate except in a real emergency. A little noise keeps them human.
-const BOT_LOOK=1.5, BOT_TURN=0.8;
+const BOT_LOOK=2.2, BOT_STEER=0.7, BOT_TURN=0.8;  // plan further ahead, but steer like a person
 function botThink(b){
   let best=-1,bestK=b.turnTarget||0;
   for(const k of [-1,-0.6,-0.3,0,0.3,0.6,1]){
-    const s=probe(b,k,false)+(k===b.turnTarget?0.25:0)+Math.random()*0.15-Math.abs(k)*0.06;
+    const s=probe(b,k,false)+(k===b.turnTarget?0.2:0)+Math.random()*0.08-Math.abs(k)*0.05;
     if(s>best){best=s;bestK=k;}
   }
-  b.turnTarget=bestK; b.urgent=best<0.55;
+  b.turnTarget=bestK; b.urgent=best<0.6;
   // nothing in the way: wander like a person would — a gentle new curve every second or few
   b.wanderT=(b.wanderT||0)-0.22;
   if(best>BOT_LOOK && b.wanderT<=0){
@@ -1078,7 +1086,7 @@ function botThink(b){
     const k=[-0.6,-0.35,-0.15,0,0,0.15,0.35,0.6][(Math.random()*8)|0];
     if(probe(b,k,false)>BOT_LOOK) b.turnTarget=k;
   }
-  if(b.jt<0 && b.cool<=0 && best<0.8 && Math.random()<0.85){   // jump only when it's getting tight
+  if(b.jt<0 && b.cool<=0 && best<0.9 && Math.random()<0.9){    // jump when it's getting tight
     let done=false;
     for(const k of [-0.3,0,0.3]){
       const s=probe(b,k,true);
@@ -1212,8 +1220,8 @@ function stepPlayer(pl,dt){
       if(pl.human&&joyAng!==null) humTarget.applyAxisAngle(pl.p,a); else if(pl.remote&&pl.netHas) pl.netT.applyAxisAngle(pl.p,a);}
     if(pl.jumpBuf>0){pl.jumpBuf-=dt; if(pl.jt<0&&pl.cool<=0){pl.jt=0;pl.jumpBuf=0;onJump(pl);}}
   } else {
-    pl.think-=dt; if(pl.think<=0){pl.think=0.16+Math.random()*0.12; botThink(pl);}   // reaction time
-    {const rate=(pl.urgent?6:3)*dt, d=(pl.turnTarget||0)-pl.turnCmd; pl.turnCmd+=Math.max(-rate,Math.min(rate,d));}  // ease the stick
+    pl.think-=dt; if(pl.think<=0){pl.think=0.13+Math.random()*0.1; botThink(pl);}   // reaction time
+    {const rate=(pl.urgent?5:3)*dt, d=(pl.turnTarget||0)-pl.turnCmd; pl.turnCmd+=Math.max(-rate,Math.min(rate,d));}  // ease the stick
     if(pl.jt<0) pl.h.applyAxisAngle(pl.p,pl.turnCmd*pl.turn*BOT_TURN*dt);
   }
   // jump (+ hover: rise to the top of the arc, then hang there while held and time is left)
