@@ -489,7 +489,9 @@ input::placeholder{color:var(--muted);opacity:.6}
 "use strict";
 // ---------- Tuning ----------
 const R0 = 10;                      // reference size: speed and camera distance are tuned for this
-const R = 8.0;                      // globe radius (a small, busy planet)
+const R_FULL = 8.0;                 // globe radius with 4 runners
+let R = R_FULL;                      // current globe radius: smaller with fewer runners, so rounds stay short
+const radiusFor=n=>n<=2?6.0:n===3?7.0:R_FULL;  // ~equal room per runner
 const LAP = 8.9;                    // seconds per lap on the reference planet (sets the running speed)
 const SPEED = 2*Math.PI*R0/LAP;
 const TURN = 9.0;                   // rad/s max turn (U-turn ≈ 0.35 s)
@@ -763,24 +765,26 @@ let camDist=50;
 scene.add(new THREE.HemisphereLight(0xdfe6ff,0x2a2350,0.55));
 const sun=new THREE.DirectionalLight(0xfff3e2,0.95); scene.add(sun); scene.add(sun.target);
 
-// globe: faceted mini-planet with soft "continents"
+// globe: faceted mini-planet with soft "continents" (built at full size, scaled to the current R)
+const planetGroup=new THREE.Group();
 (function(){
-  const geo=new THREE.IcosahedronGeometry(R,5);
+  const geo=new THREE.IcosahedronGeometry(R_FULL,5);
   const pos=geo.attributes.position, cols=[];
   const tones=[new THREE.Color(0x3f7a74),new THREE.Color(0x4d8b80),new THREE.Color(0x5e9a86),new THREE.Color(0x77a98a)];
   for(let i=0;i<pos.count;i+=3){
-    const x=(pos.getX(i)+pos.getX(i+1)+pos.getX(i+2))/(3*R), y=(pos.getY(i)+pos.getY(i+1)+pos.getY(i+2))/(3*R), z=(pos.getZ(i)+pos.getZ(i+1)+pos.getZ(i+2))/(3*R);
+    const x=(pos.getX(i)+pos.getX(i+1)+pos.getX(i+2))/(3*R_FULL), y=(pos.getY(i)+pos.getY(i+1)+pos.getY(i+2))/(3*R_FULL), z=(pos.getZ(i)+pos.getZ(i+1)+pos.getZ(i+2))/(3*R_FULL);
     let n=Math.sin(3.1*x+1.3)+Math.sin(2.7*y+0.4)+Math.sin(3.4*z+2.1)+0.35*Math.sin(9*x*y+5*z);
     n=(n+3.35)/6.7; const k=Math.max(0,Math.min(3,Math.floor(n*4.6-0.8)));
     const c=tones[k].clone().offsetHSL(0,0,(Math.random()-.5)*0.025);
     for(let j=0;j<3;j++) cols.push(c.r,c.g,c.b);
   }
   geo.setAttribute("color",new THREE.Float32BufferAttribute(cols,3));
-  scene.add(new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:0.92})));
-  const glow=new THREE.Mesh(new THREE.SphereGeometry(R*1.07,48,32),
+  planetGroup.add(new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:0.92})));
+  const glow=new THREE.Mesh(new THREE.SphereGeometry(R_FULL*1.07,48,32),
     new THREE.MeshBasicMaterial({color:0x8fb6ff,transparent:true,opacity:0.07,side:THREE.BackSide,depthWrite:false}));
-  scene.add(glow);
+  planetGroup.add(glow); scene.add(planetGroup);
 })();
+function setPlanetR(r){ if(!(r>0)||r===R) return; R=r; planetGroup.scale.setScalar(R/R_FULL); grid.clear(); resize(); }
 
 // ---------- Spatial hash for trail points ----------
 const CELL=1.5, grid=new Map();
@@ -892,10 +896,11 @@ function makeFigure(ch,human,parent,colorOverride){
   }
   if(human){ // the ring under your runner doubles as the flutter gauge
     const ring=new THREE.Group(); ring.position.y=0.03;
+    const ringCol=col.clone().lerp(new THREE.Color(0xffffff),0.2);  // your colour, a touch lighter so it reads on the planet
     const track=new THREE.Mesh(new THREE.RingGeometry(0.44,0.62,96),
-      new THREE.MeshBasicMaterial({color:0xdfe6ff,transparent:true,opacity:0.12,side:THREE.DoubleSide,depthWrite:false}));
+      new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:0.22,side:THREE.DoubleSide,depthWrite:false}));
     const fillGeo=new THREE.RingGeometry(0.44,0.62,240,1,-Math.PI/2,Math.PI*2);  // fills from the front of the runner
-    const fill=new THREE.Mesh(fillGeo,new THREE.MeshBasicMaterial({color:0xdfe6ff,transparent:true,opacity:0.5,side:THREE.DoubleSide,depthWrite:false}));
+    const fill=new THREE.Mesh(fillGeo,new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:0.85,side:THREE.DoubleSide,depthWrite:false}));
     track.rotation.x=fill.rotation.x=-Math.PI/2; fill.position.y=0.002;
     ring.add(track,fill); g.add(ring); g.userData.ring=ring; g.userData.ringFill=fill; g.userData.ringSegs=240;}
   { // hover wings (shown only while hovering): two glowing wings that flap fast, seen well from the chase camera
@@ -1370,7 +1375,8 @@ function beginMatch(list){
   if(Net.role==="client"){state="wait"; showMsg("Get ready","");} else startRound();
 }
 function startRound(){
-  round++; roundScored=false; specT=null; grid.clear(); timeScale=1; hud.hidden=false; roundTag.hidden=false; ffBtn.hidden=true; panel.hidden=true; celeb=null; stopRain();
+  round++; roundScored=false; specT=null;
+  setPlanetR(radiusFor(tieSet?tieSet.length:players.filter(p=>!p.left).length)); grid.clear(); timeScale=1; hud.hidden=false; roundTag.hidden=false; ffBtn.hidden=true; panel.hidden=true; celeb=null; stopRain();
   msgBig.classList.remove("cheer"); msgBig.style.color="";
   const q=new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6.28,Math.random()*6.28,Math.random()*6.28));
   const dirs=spawnDirs(players.length);
@@ -1388,7 +1394,7 @@ function startRound(){
   state="count"; stateT=3; Sound.setMode("count"); renderChips();
   roundTag.textContent=tieSet?"Tiebreaker round":`Round ${round} · first to ${POINTS_TO_WIN}`;
   if(Net.role==="host"){Net.tpSent=new Map(); Net.sendAcc=1;
-    broadcast({t:"round",round,tb:tieSet,pl:players.map(p=>[...p.p.toArray(),...p.h.toArray()].map(r3))});}
+    broadcast({t:"round",round,tb:tieSet,R,pl:players.map(p=>[...p.p.toArray(),...p.h.toArray()].map(r3))});}
 }
 let celeb=null;
 function endRound(){
@@ -1518,7 +1524,7 @@ function tickRain(dt){
   c.globalCompositeOperation="source-over"; c.globalAlpha=1;
   if(fade<=0) stopRain();
 }
-function toMenu(){leaveOnline();hideSheets();state="menu";Sound.setMode("menu");panel.hidden=true;hud.hidden=true;roundTag.hidden=true;charSel.hidden=true;
+function toMenu(){setPlanetR(R_FULL);leaveOnline();hideSheets();state="menu";Sound.setMode("menu");panel.hidden=true;hud.hidden=true;roundTag.hidden=true;charSel.hidden=true;
   boostBar.hidden=true;hideMsg();stopRain();celeb=null;menu.hidden=false;
   joy.hidden=true; joyId=null; ptrs.clear();}
 // Score chips: during a round the survivors stay in front; whoever crashes gets their points
@@ -2018,7 +2024,8 @@ function clientData(d){
 }
 function clientRound(d){
   Net.rrDeadline=0; Net.evq=[]; Net.mySent=0; Net.sendAcc=1;
-  round=d.round|0; roundScored=false; specT=null; panel.hidden=true; stopRain(); celeb=null; hideMsg(); grid.clear();
+  round=d.round|0; roundScored=false; specT=null; panel.hidden=true; stopRain(); celeb=null; hideMsg();
+  if(Number.isFinite(d.R)&&d.R>=4&&d.R<=R_FULL) setPlanetR(d.R); grid.clear();
   hud.hidden=false; roundTag.hidden=false;
   players.forEach((pl,i)=>{const a=d.pl&&d.pl[i]; if(!a) return;
     pl.p.set(a[0],a[1],a[2]).normalize(); pl.h.set(a[3],a[4],a[5]).normalize(); pl.sb=[]; pl.pq=[]; pl.log=[];
@@ -2236,7 +2243,7 @@ function syncFigures(){
       // a little pop when it's full again
       if(f>=1&&!pl.flFull){pl.flFull=true; pl.flPop=performance.now();} else if(f<1) pl.flFull=false;
       const pt=pl.flPop?(performance.now()-pl.flPop)/280:1, sc=pt<1?1+0.25*Math.sin(pt*Math.PI):1;
-      rg.scale.set(sc,1,sc); fill.material.opacity=f>=1?0.62:0.5;}
+      rg.scale.set(sc,1,sc); fill.material.opacity=f>=1?0.95:0.8;}
     const hp=pl.fig.userData.hpad, hov=pl.hovering&&state==="play";
     if(hp&&hp.visible!==hov) hp.visible=hov;
     if(hov){const t=performance.now()/1000, f=Math.sin(t*19), w=pl.fig.userData.wings;
