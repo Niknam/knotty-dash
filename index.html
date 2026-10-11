@@ -206,8 +206,8 @@ h1{font-size:44px}
 .carousel{position:relative;margin-inline:-20px;display:flex;flex:1 1 auto;min-height:0}
 .track{flex:1;min-width:0;overflow:hidden;touch-action:none;cursor:grab}
 .strip{display:flex;width:300%;height:100%;will-change:transform}
-.slide{flex:0 0 33.3333%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:0 20px;min-width:0;min-height:0;height:100%}
-.portrait{flex:1 1 0;min-height:60px;width:100%;max-height:340px;background:radial-gradient(circle closest-side at 50% 55%,var(--cbg) 0%,transparent 100%)}
+.slide{flex:0 0 33.3333%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0 20px;min-width:0;min-height:0;height:100%}
+.portrait{flex:1 1 0;min-height:60px;width:100%;max-height:440px;background:radial-gradient(circle closest-side at 50% 55%,var(--cbg) 0%,transparent 100%)}
 .portrait img{width:100%;height:100%;display:block;object-fit:contain}
 .slideName{font-family:var(--font-display);font-size:36px;line-height:1;color:var(--c)}
 .tag{margin:0;color:var(--muted);font-size:14.5px;line-height:1.35;text-align:center;min-height:2.7em;text-wrap:balance;max-width:30ch}
@@ -298,6 +298,10 @@ input::placeholder{color:var(--muted);opacity:.6}
 #charSel .row #charBack{flex:0 0 auto;padding-inline:20px}
 #results li.rdy .nm::after{content:"✓";margin-left:6px;color:var(--up)}
 .oppRow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.setRow{display:flex;flex-direction:column;gap:8px}
+.setRow .seg button{padding-block:12px}
+.setHint{font-size:14px;min-height:1.4em;margin:0}
+#cpuSetup .row #setupBack{flex:0 0 auto;padding-inline:20px}
 .oppRow .seg{flex:0 0 auto;width:min(180px,55%)}
 .oppRow .seg button{padding-block:8px}
 .lobbyList .chg{font:800 12px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:transparent;
@@ -382,15 +386,32 @@ input::placeholder{color:var(--muted);opacity:.6}
         <dt>Flutter</dt><dd><span class="meter"><i id="mHover"></i></span></dd>
       </dl>
       <div class="readyRow" id="readyRow" hidden></div>
-      <div class="oppRow" id="oppRow">
+      <div class="row"><button class="btn ghost" id="charBack" type="button">Back</button><button class="btn" id="charGo" type="button">Play</button></div>
+    </div>
+  </section>
+
+  <section id="cpuSetup" class="sheet" hidden>
+    <div class="card">
+      <div class="label">Play vs computer</div>
+      <h2>Match setup</h2>
+      <div class="setRow">
         <div class="label" id="oppLabel">Opponents</div>
-        <div class="seg" role="group" aria-labelledby="oppLabel">
-          <button type="button" id="opp1" data-n="1" aria-pressed="false">1</button>
-          <button type="button" id="opp2" data-n="2" aria-pressed="false">2</button>
-          <button type="button" id="opp3" data-n="3" aria-pressed="true">3</button>
+        <div class="seg" id="oppSeg" role="group" aria-labelledby="oppLabel">
+          <button type="button" data-n="1" aria-pressed="false">1</button>
+          <button type="button" data-n="2" aria-pressed="false">2</button>
+          <button type="button" data-n="3" aria-pressed="true">3</button>
         </div>
       </div>
-      <div class="row"><button class="btn ghost" id="charBack" type="button">Back</button><button class="btn" id="charGo" type="button">Play</button></div>
+      <div class="setRow">
+        <div class="label" id="diffLabel">Difficulty</div>
+        <div class="seg" id="diffSeg" role="group" aria-labelledby="diffLabel">
+          <button type="button" data-d="easy" aria-pressed="false">Easy</button>
+          <button type="button" data-d="normal" aria-pressed="true">Normal</button>
+          <button type="button" data-d="hard" aria-pressed="false">Hard</button>
+        </div>
+        <p class="lead setHint" id="diffHint"></p>
+      </div>
+      <div class="row"><button class="btn ghost" id="setupBack" type="button">Back</button><button class="btn" id="setupNext" type="button">Next</button></div>
     </div>
   </section>
 
@@ -1004,7 +1025,7 @@ function makePlayers(list){
   for(const p of players){if(p.hoverSnd) Sound.hoverStop(p.hoverSnd); scene.remove(p.fig);scene.remove(p.trail.mesh);p.trail.geo.dispose();}
   players=list.map((e,i)=>{const ch=e.ch, col=e.color!=null?e.color:ch.color, local=e.kind==="local";
     return {i,ch,name:local?"You":(e.name||ch.name),color:col,human:local,remote:e.kind==="remote",peer:e.peer||null,score:0,
-    speed:SPEED*(1+(ch.fart-3)*0.06), turn:TURN*(1+(ch.smid-3)*0.12), charge:BOOST_BASE*(1-(ch.boost-3)*0.15),
+    speed:SPEED*(1+(ch.fart-3)*0.06)*(Net.role?1:(DIFF[diff]||DIFF.normal).tempo), turn:TURN*(1+(ch.smid-3)*0.12), charge:BOOST_BASE*(1-(ch.boost-3)*0.15),
     hoverMax:HOVER_BASE+(ch.hov-3)*HOVER_STEP, fl:1, flWait:0, flFull:true, hovering:false, botHover:false, puffT:0,
     boost:0,bt:-1,streakT:0,netT:new THREE.Vector3(),netHas:false,netJ:0,netB:0,left:false,forceOut:false,np:null,nh:null,ny:0,sb:[],pq:[],log:[],off:null,dieT:null,
     p:new THREE.Vector3(),h:new THREE.Vector3(),y:0,jt:-1,cool:0,acc:0,alive:true,rank:0,
@@ -1053,11 +1074,11 @@ const sp=new THREE.Vector3(), sh=new THREE.Vector3();
 const op=new THREE.Vector3(), oh=new THREE.Vector3(), others=[];
 function probe(b,k,jump,hov){
   sp.copy(b.p); sh.copy(b.h);
-  let jt=b.jt, t=0, hl=hov?b.hoverMax*b.fl:0; const dt=0.06, H=BOT_LOOK, lim=b.trail.n-1-GRACE;
+  const D=botD(); let jt=b.jt, t=0, hl=hov?b.hoverMax*b.fl:0; const dt=0.06, H=D.look, lim=b.trail.n-1-GRACE;
   if(jump) jt=0;
-  others.length=0; for(const o of players) if(o!==b&&o.alive) others.push(o);
+  others.length=0; if(D.avoid) for(const o of players) if(o!==b&&o.alive) others.push(o);
   while(t<H){
-    if(jt<0&&t<BOT_STEER) sh.applyAxisAngle(sp,k*b.turn*BOT_TURN*dt);
+    if(jt<0&&t<BOT_STEER) sh.applyAxisAngle(sp,k*b.turn*D.turn*dt);
     advance(sp,sh,b.speed*dt); t+=dt;
     let y=0; if(jt>=0){ if(hl>0&&jt>=JT/2) hl-=dt; else jt+=dt; if(jt<JT) y=jumpY(jt); else jt=-1;}
     if(hitsTrail(sp.x,sp.y,sp.z,y,b.i,lim)) return t;
@@ -1071,22 +1092,31 @@ function probe(b,k,jump,hov){
 // Bots play like people: they look ~1.5 s ahead, react a few times a second (not every frame),
 // stick with a line until another is clearly better, ease the stick from side to side instead of
 // snapping, and never use the full turn rate except in a real emergency. A little noise keeps them human.
-const BOT_LOOK=2.2, BOT_STEER=0.7, BOT_TURN=0.8;  // plan further ahead, but steer like a person
+// Difficulty (vs computer only). The game's pace (everyone's speed) is the main dial: Easy is slower, Hard faster.
+// Easy bots are a little less sharp than Normal but still sensible; Hard = original sharp reflexes + full turning + smart planning.
+const DIFF={
+  easy:  {think:[0.16,0.10], look:2.0, turn:0.8, noise:0.12, stick:2.8, urgent:5,  jumpAt:0.8, jumpP:0.85, hoverP:0.5, boostP:0.05, avoid:true,  tempo:0.8},
+  normal:{think:[0.13,0.10], look:2.2, turn:0.8, noise:0.08, stick:3,   urgent:5,  jumpAt:0.9, jumpP:0.9,  hoverP:0.7, boostP:0.1,  avoid:true,  tempo:1},
+  hard:  {think:[0.08,0.05], look:2.4, turn:1.0, noise:0.02, stick:40,  urgent:40, jumpAt:1.1, jumpP:0.97, hoverP:0.9, boostP:0.14, avoid:true,  tempo:1.2},
+};
+let diff="normal";
+const BOT_STEER=0.7;
+const botD=()=>DIFF[diff]||DIFF.normal;
 function botThink(b){
-  let best=-1,bestK=b.turnTarget||0;
+  const D=botD(); let best=-1,bestK=b.turnTarget||0;
   for(const k of [-1,-0.6,-0.3,0,0.3,0.6,1]){
-    const s=probe(b,k,false)+(k===b.turnTarget?0.2:0)+Math.random()*0.08-Math.abs(k)*0.05;
+    const s=probe(b,k,false)+(k===b.turnTarget?0.2:0)+Math.random()*D.noise-Math.abs(k)*0.05;
     if(s>best){best=s;bestK=k;}
   }
   b.turnTarget=bestK; b.urgent=best<0.6;
   // nothing in the way: wander like a person would — a gentle new curve every second or few
-  b.wanderT=(b.wanderT||0)-0.22;
-  if(best>BOT_LOOK && b.wanderT<=0){
+  b.wanderT=(b.wanderT||0)-0.2;
+  if(best>D.look && b.wanderT<=0){
     b.wanderT=0.8+Math.random()*2.2;
     const k=[-0.6,-0.35,-0.15,0,0,0.15,0.35,0.6][(Math.random()*8)|0];
-    if(probe(b,k,false)>BOT_LOOK) b.turnTarget=k;
+    if(probe(b,k,false)>D.look) b.turnTarget=k;
   }
-  if(b.jt<0 && b.cool<=0 && best<0.9 && Math.random()<0.9){    // jump when it's getting tight
+  if(b.jt<0 && b.cool<=0 && best<D.jumpAt && Math.random()<D.jumpP){   // jump when it's getting tight
     let done=false;
     for(const k of [-0.3,0,0.3]){
       const s=probe(b,k,true);
@@ -1094,10 +1124,10 @@ function botThink(b){
     }
     if(!done&&b.fl>0.35) for(const k of [-0.3,0,0.3]){
       const s=probe(b,k,true,true);
-      if(s>best+0.35 && Math.random()<0.7){b.jt=0;b.botHover=true;b.turnTarget=k;onJump(b);break;}
+      if(s>best+0.35 && Math.random()<D.hoverP){b.jt=0;b.botHover=true;b.turnTarget=k;onJump(b);break;}
     }
   }
-  if(b.boost>=1 && b.bt<0 && best>BOT_LOOK && Math.random()<0.1) useBoost(b);
+  if(b.boost>=1 && b.bt<0 && best>D.look && Math.random()<D.boostP) useBoost(b);
 }
 
 // ---------- Input ----------
@@ -1220,9 +1250,10 @@ function stepPlayer(pl,dt){
       if(pl.human&&joyAng!==null) humTarget.applyAxisAngle(pl.p,a); else if(pl.remote&&pl.netHas) pl.netT.applyAxisAngle(pl.p,a);}
     if(pl.jumpBuf>0){pl.jumpBuf-=dt; if(pl.jt<0&&pl.cool<=0){pl.jt=0;pl.jumpBuf=0;onJump(pl);}}
   } else {
-    pl.think-=dt; if(pl.think<=0){pl.think=0.13+Math.random()*0.1; botThink(pl);}   // reaction time
-    {const rate=(pl.urgent?5:3)*dt, d=(pl.turnTarget||0)-pl.turnCmd; pl.turnCmd+=Math.max(-rate,Math.min(rate,d));}  // ease the stick
-    if(pl.jt<0) pl.h.applyAxisAngle(pl.p,pl.turnCmd*pl.turn*BOT_TURN*dt);
+    const D=botD();
+    pl.think-=dt; if(pl.think<=0){pl.think=D.think[0]+Math.random()*D.think[1]; botThink(pl);}   // reaction time
+    {const rate=(pl.urgent?D.urgent:D.stick)*dt, d=(pl.turnTarget||0)-pl.turnCmd; pl.turnCmd+=Math.max(-rate,Math.min(rate,d));}  // ease the stick
+    if(pl.jt<0) pl.h.applyAxisAngle(pl.p,pl.turnCmd*pl.turn*D.turn*dt);
   }
   // jump (+ hover: rise to the top of the arc, then hang there while held and time is left)
   if(pl.jt>=0){
@@ -1359,14 +1390,14 @@ function openCharSel(){
   ["mSpeed","mHand","mBoost","mHover"].forEach(id=>$(id).style.width="0");
   charSel.hidden=false; renderStrip();
   const setup=mode==="online"&&!!Net.role;
-  $("oppRow").hidden=mode!=="cpu"; $("nameField").hidden=!setup; $("readyRow").hidden=!setup;
+  $("nameField").hidden=!setup; $("readyRow").hidden=!setup;
   $("charGo").classList.remove("isReady","waiting"); $("charGo").textContent=setup?"Ready":"Play"; $("charBack").textContent=setup?"Leave":"Back";
   if(setup) renderReady();
   requestAnimationFrame(()=>requestAnimationFrame(applyChar));
 }
 const swipeArea=charSel.querySelector(".card");
 swipeArea.addEventListener("pointerdown",e=>{
-  if(drag||e.target.closest("button,input,label,.row,.oppRow,.readyRow")) return;
+  if(drag||e.target.closest("button,input,label,.row,.readyRow")) return;
   const base=settleSlide(); setStripX(base,false);
   drag={id:e.pointerId,x:e.clientX,t:performance.now(),base,dx:0};
   try{swipeArea.setPointerCapture(e.pointerId);}catch(_){}
@@ -1498,7 +1529,7 @@ function showPanel(){
   } else {
     pb.innerHTML=matchOver?'<button class="btn ghost" id="toMenu" type="button">Home</button><button class="btn" id="again" type="button">New match</button>'
       :`<button class="btn" id="nextBtn" type="button">${tie?"Start tiebreaker":"Next round"}</button>`;
-    if(matchOver){$("toMenu").onclick=toMenu;$("again").onclick=()=>{Sound.click();openCharSel();};}
+    if(matchOver){$("toMenu").onclick=toMenu;$("again").onclick=()=>{Sound.click();openCpuSetup();};}
     else $("nextBtn").onclick=()=>{Sound.click();startRound();};
   }
   panel.hidden=false; state="panel"; boostBar.hidden=true; hud.hidden=matchOver; roundTag.hidden=matchOver;
@@ -1608,16 +1639,30 @@ function fitLine(el,max,min){
 }
 
 // menu wiring
-document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{
-  opponents=+b.dataset.n; document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
-}));
-$("startBtn").onclick=()=>{Sound.init();Sound.click();mode="cpu";openCharSel();};
+// match setup (vs computer): opponents + difficulty, remembered between visits
+try{const o=+localStorage.getItem("kd-opp"); if(o>=1&&o<=3) opponents=o; const d=localStorage.getItem("kd-diff"); if(DIFF[d]) diff=d;}catch(_){}
+const DIFF_HINT={easy:"Slower pace, a little more time to think.",normal:"The standard game.",hard:"Faster pace. Sharp, quick rivals."};
+function syncSetup(){
+  document.querySelectorAll("#oppSeg button").forEach(x=>x.setAttribute("aria-pressed",String(+x.dataset.n===opponents)));
+  document.querySelectorAll("#diffSeg button").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.d===diff)));
+  $("diffHint").textContent=DIFF_HINT[diff];
+}
+document.querySelectorAll("#oppSeg button").forEach(b=>b.addEventListener("click",()=>{Sound.click(); opponents=+b.dataset.n; try{localStorage.setItem("kd-opp",opponents);}catch(_){} syncSetup();}));
+document.querySelectorAll("#diffSeg button").forEach(b=>b.addEventListener("click",()=>{Sound.click(); diff=b.dataset.d; try{localStorage.setItem("kd-diff",diff);}catch(_){} syncSetup();}));
+function openCpuSetup(){
+  pushNav(); mode="cpu"; Sound.setMode("menu"); state="cpuset"; celeb=null;
+  hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain();
+  syncSetup(); $("cpuSetup").hidden=false;
+}
+$("setupBack").onclick=()=>{Sound.click(); toMenu();};
+$("setupNext").onclick=()=>{Sound.click(); openCharSel();};
+$("startBtn").onclick=()=>{Sound.init();Sound.click();openCpuSetup();};
 $("onlineBtn").onclick=()=>{Sound.init();Sound.click();mode="online";openOnline();};
 $("charGo").onclick=()=>{Sound.click();
   if(mode!=="online"){startMatch(); return;}
   if(!Net.role){openOnline(); return;}
   $("nick").blur(); myReady=!myReady; clearTimeout(pickTimer); sendPick(); renderReady();};
-$("charBack").onclick=()=>{Sound.click(); if(mode==="online"&&Net.role){leaveOnline(); toMenu();} else if(mode==="online") openOnline(); else toMenu();};
+$("charBack").onclick=()=>{Sound.click(); if(mode==="online"&&Net.role){leaveOnline(); toMenu();} else if(mode==="online") openOnline(); else openCpuSetup();};
 // ---------- Navigation: home outside a match, pause menu inside one ----------
 let paused=false;
 const inMatchState=()=>["count","play","ending","panel","wait"].includes(state)&&players.length>0;
@@ -1760,7 +1805,7 @@ function netFail(text){const wasJoin=Net.role==="client"; leaveOnline(); if(wasJ
 
 // ----- screens -----
 const onlineSheet=$("online"), lobbySheet=$("lobby");
-function hideSheets(){[menu,charSel,panel,onlineSheet,lobbySheet,$("joinSheet"),$("notice"),$("pause")].forEach(s=>s.hidden=true); paused=false;}
+function hideSheets(){[menu,charSel,$("cpuSetup"),panel,onlineSheet,lobbySheet,$("joinSheet"),$("notice"),$("pause")].forEach(s=>s.hidden=true); paused=false;}
 function openOnline(){
   pushNav();
   hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain();
@@ -2217,7 +2262,7 @@ function syncSpec(){
 function updateCamera(dt){
   let target=null;
   if(celeb) target=celeb.pl;
-  else if(players.length && !["menu","select","online","lobby"].includes(state)){
+  else if(players.length && !["menu","select","online","lobby","cpuset"].includes(state)){
     const me=meP();
     if(me&&(me.alive||(state==="count"&&!me.sit))) target=me;
     else target=specTarget()||players.find(p=>p.alive)||null;
@@ -2225,7 +2270,7 @@ function updateCamera(dt){
   if(target){
     oldC.copy(camC); camC.lerp(target.p,1-Math.exp(-6*dt)).normalize();
     qq.setFromUnitVectors(oldC,camC); camU.applyQuaternion(qq);
-  } else if(["menu","select","online","lobby"].includes(state)){
+  } else if(["menu","select","online","lobby","cpuset"].includes(state)){
     camC.applyAxisAngle(camU,-dt*0.15).normalize(); // slow idle spin
   }
   camZoom+=((celeb?0.58:1)-camZoom)*(1-Math.exp(-3*dt));
