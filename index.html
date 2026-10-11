@@ -1713,7 +1713,8 @@ $("homeBtn").onclick=()=>{Sound.click(); if(!$("pause").hidden) closePause(); el
 window.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(!$("pause").hidden) closePause(); else if(state!=="menu") $("homeBtn").click(); }});
 // hardware/gesture back (Android, desktop): back = home, or the pause menu during a match
 try{history.replaceState({tp:"menu"},"");}catch(_){}
-function pushNav(){try{if(!history.state||history.state.tp!=="in") history.pushState({tp:"in"},"");}catch(_){}}
+const IOS_HOME_APP=navigator.standalone===true;
+function pushNav(){if(IOS_HOME_APP) return; try{if(!history.state||history.state.tp!=="in") history.pushState({tp:"in"},"");}catch(_){}}
 window.addEventListener("popstate",()=>{
   if(state==="menu") return;
   if(inMatchState()){openPause(true); pushNav();} else goHome();
@@ -1746,6 +1747,9 @@ syncSoundUI();
   document.addEventListener("touchend",e=>{const now=e.timeStamp||performance.now();
     if(now-lastEnd<350&&!(e.target.closest&&e.target.closest("input,button,a"))) stop(e); lastEnd=now;},{passive:false});
   document.addEventListener("selectstart",e=>{if(!(e.target.closest&&e.target.closest("input"))) stop(e);});
+  // swipes that start at the very edge of the screen are the system's "back" gesture: swallow them
+  document.addEventListener("touchstart",e=>{const t=e.touches&&e.touches[0]; if(!t) return;
+    if((t.clientX<22||t.clientX>innerWidth-22)&&!(e.target.closest&&e.target.closest("input,button"))) stop(e);},{passive:false});
   // iOS shows its magnifier on a quick double tap + hold. On the play area there is nothing native to keep,
   // so cancel the touch's default action outright (pointer events, which the game uses, are unaffected).
   stage.addEventListener("touchstart",stop,{passive:false});
@@ -2342,7 +2346,9 @@ function syncBoostUI(){
 }
 
 function resize(){
-  const app=$("app"), w=app.clientWidth||window.innerWidth, h=app.clientHeight||window.innerHeight; renderer.setSize(w,h,false);
+  const app=$("app"), w=app.clientWidth||window.innerWidth, h=app.clientHeight||window.innerHeight;
+  if(w===resize.w&&h===resize.h&&resize.R===R) return;   // nothing changed: don't touch the canvas (it would flash)
+  resize.w=w; resize.h=h; resize.R=R; renderer.setSize(w,h,false);
   camera.aspect=w/h;
   const vHalf=THREE.MathUtils.degToRad(BASE_FOV/2), hHalf=Math.atan(Math.tan(vHalf)*camera.aspect);
   camDist=Math.max(R0+8,(R0*1.02)/Math.sin((vHalf+2*hHalf)/3))-(R0-R);
@@ -2352,14 +2358,23 @@ window.addEventListener("resize",resize); resize();
 (function fitStandalone(){
   const sa=navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
   if(!sa) return;
+  const root=document.documentElement;
+  // iOS sometimes reports a window, or a page height, one home-indicator strip short of the screen,
+  // and it can change after launch or when the app comes back. Measure the shortest of the two,
+  // stretch to the full screen when the gap is that strip, and keep re-checking.
   const fit=()=>{
+    root.style.removeProperty("--appH"); root.classList.remove("standalone");
     const portrait=innerHeight>=innerWidth, full=portrait?Math.max(screen.width,screen.height):Math.min(screen.width,screen.height);
-    const gap=full-innerHeight, root=document.documentElement;
-    if(gap>0&&gap<=80){root.style.setProperty("--appH",full+"px"); root.classList.add("standalone");}  // only the home-bar sized gap
-    else {root.style.removeProperty("--appH"); root.classList.remove("standalone");}
+    const have=Math.min(innerHeight,root.clientHeight||innerHeight), gap=full-have;
+    if(gap>0&&gap<=90){root.style.setProperty("--appH",full+"px"); root.classList.add("standalone");}
     resize();
   };
-  fit(); addEventListener("resize",fit); addEventListener("orientationchange",()=>setTimeout(fit,300));
+  fit();
+  ["resize","orientationchange","pageshow","focus"].forEach(ev=>addEventListener(ev,()=>setTimeout(fit,ev==="orientationchange"?350:60)));
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden) setTimeout(fit,120);});
+  let n=0; const early=setInterval(()=>{fit(); if(++n>=8) clearInterval(early);},500);   // the first seconds after launch
+  setInterval(()=>{const want=root.classList.contains("standalone"); const app=$("app");
+    if(want&&Math.abs(app.clientHeight-parseFloat(root.style.getPropertyValue("--appH")))>2) fit(); else if(!want) fit();},2000);
 })();
 
 // ---------- Loop ----------
