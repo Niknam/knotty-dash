@@ -1133,7 +1133,11 @@ function botThink(b){
 // ---------- Input ----------
 const ptrs=new Map(); let joyId=null, joyX=0, joyY=0, joyDX=0, joyDY=0;
 const keys=new Set();
-function tryJump(){const me=meP(); if(!me||!me.alive) return; me.jumpBuf=0.14;}
+// No jumping during the countdown or the first moment after "Go!": a tap in the countdown used to be
+// held as "jump as soon as you can" and fired the instant the round started.
+let goAt=0; const JUMP_LOCK_MS=350;
+function tryJump(){const me=meP(); if(!me||!me.alive) return; if(state!=="play"||performance.now()-goAt<JUMP_LOCK_MS) return; me.jumpBuf=0.14;}
+function onGo(){goAt=performance.now(); const me=meP(); if(me){me.jumpBuf=0;} hoverHeld=false; hoverPtr=null;}
 // Hover: tap to jump, then press again and hold while in the air. The first finger (steering) never counts.
 let hoverHeld=false, hoverPtr=null, hoverUsed=false;
 const airborne=me=>!!me&&me.alive&&state==="play"&&(me.jt>=0||me.jumpBuf>0);
@@ -1311,7 +1315,7 @@ function hoverSounds(){
 function onLand(pl){ hostFx("l",pl); if(pl.human) Sound.land(0,1); }
 function onCrash(pl){ if(pl.human) Sound.crash(0,1,true); else {const s=spatial(pl); Sound.crash(s.pan,s.vol,false);} }
 function simStep(dt){
-  if(state==="count"){stateT-=dt; if(stateT<=0){state="play";if(Net.role==="host")broadcast({t:"go"});Sound.count(0);Sound.setMode("play");showMsg("Go!","");setTimeout(afterGo,550);} return;}
+  if(state==="count"){stateT-=dt; if(stateT<=0){state="play";onGo();if(Net.role==="host")broadcast({t:"go"});Sound.count(0);Sound.setMode("play");showMsg("Go!","");setTimeout(afterGo,550);} return;}
   if(state!=="play") return;
   const alive=players.filter(p=>p.alive);
   for(const pl of alive) if(!pl.remote) stepPlayer(pl,dt);
@@ -2078,7 +2082,7 @@ function clientData(d){
     case "match": Net.phase="match"; if(Array.isArray(d.players)) beginMatch(d.players.slice(0,4).map(x=>({ch:charById(x.char),name:cleanName(x.name),
         color:Number.isFinite(x.color)?x.color:charById(x.char).color,peer:String(x.id),kind:x.id===Net.myId?"local":"remote"}))); break;
     case "round": clientRound(d); break;
-    case "go": if(state==="count"){state="play"; Sound.count(0); Sound.setMode("play"); showMsg("Go!",""); setTimeout(afterGo,550);} break;
+    case "go": if(state==="count"){state="play"; onGo(); Sound.count(0); Sound.setMode("play"); showMsg("Go!",""); setTimeout(afterGo,550);} break;
     case "s": clientState(d); break;
     case "tp": if(d.r===round&&Array.isArray(d.d)) for(const a of d.d){ if(!Array.isArray(a)) continue; const pl=players[a[0]]; if(!pl||pl.human) continue;
         for(let q=2,idx=a[1]|0;q+3<a.length;q+=4,idx++) pl.pq.push([idx,+a[q],+a[q+1],+a[q+2],+a[q+3]]);} break;
