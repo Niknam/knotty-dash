@@ -92,8 +92,12 @@ html{background:var(--space)}
 #msgSmall{font-weight:800;font-size:17px;color:var(--ink);text-shadow:0 2px 6px rgba(0,0,0,.6)}
 #ffBtn{pointer-events:auto}
 
-#joy{position:absolute;width:112px;height:112px;margin:-56px 0 0 -56px;border-radius:50%;
+#joy{position:absolute;width:136px;height:60px;margin:-30px 0 0 -68px;border-radius:30px;
   border:2px solid rgba(243,240,255,.35);background:rgba(243,240,255,.06);pointer-events:none}
+#joy::before,#joy::after{content:"";position:absolute;top:50%;width:9px;height:9px;margin-top:-5px;
+  border:solid rgba(243,240,255,.45);border-width:0 0 2.5px 2.5px}
+#joy::before{left:12px;transform:rotate(45deg)}
+#joy::after{right:12px;transform:rotate(-135deg)}
 #knob{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
   background:rgba(243,240,255,.55)}
 
@@ -215,7 +219,7 @@ h1{font-size:44px}
 #globalSound{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:16px;z-index:8}
 #charSel .card{align-self:stretch;height:auto;max-height:760px;overflow:hidden;gap:12px;box-sizing:border-box}
 .carousel{position:relative;margin-inline:-20px;display:flex;flex:1 1 auto;min-height:0}
-.track{flex:1;min-width:0;overflow:hidden;touch-action:none;cursor:grab}
+.track{flex:1;min-width:0;overflow:hidden;touch-action:none}
 .strip{display:flex;width:300%;height:100%;will-change:transform}
 .slide{flex:0 0 33.3333%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0 20px;min-width:0;min-height:0;height:100%}
 .portrait{flex:1 1 0;min-height:60px;width:100%;max-height:440px;background:radial-gradient(circle closest-side at 50% 55%,var(--cbg) 0%,transparent 100%)}
@@ -315,6 +319,29 @@ input::placeholder{color:var(--muted);opacity:.6}
 #cpuSetup .row #setupBack{flex:0 0 auto;padding-inline:20px}
 .oppRow .seg{flex:0 0 auto;width:min(180px,55%)}
 .oppRow .seg button{padding-block:8px}
+/* desktop: a hand over anything clickable, and a small Enter badge on the button that Enter presses */
+button,.lnEdit,label.field,.seg button{cursor:pointer}
+button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
+.track{cursor:grab}
+@media (hover:hover) and (pointer:fine){
+  .enterKey::after{content:"↵";display:inline-grid;place-items:center;margin-left:9px;min-width:22px;height:20px;padding:0 4px;
+    border-radius:6px;border:1.5px solid currentColor;font:700 12px/1 var(--font-body);opacity:.55;vertical-align:2px}
+  .enterKey.waiting::after,.enterKey:disabled::after{display:none}
+}
+/* busy status line (joining / connecting): a small spinner in front of the text */
+.status.busy{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--ink)}
+.status.busy::before{content:"";width:16px;height:16px;flex:none;border-radius:50%;border:2.5px solid rgba(243,240,255,.22);
+  border-top-color:var(--you);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* your own row in the lobby: tap the name to change it */
+.lnEdit{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:8px;min-width:0;font-weight:800;font-size:16px;
+  padding:6px 10px;margin:-6px -10px;border-radius:10px}
+.lnEdit .lnTxt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lnEdit svg{flex:none;width:15px;height:15px;opacity:.6}
+@media (hover:hover){.lnEdit:hover{background:rgba(243,240,255,.07)} .lnEdit:hover svg{opacity:1}}
+.lnEdit:focus-visible{outline:3px solid var(--ink);outline-offset:0}
+.lnInp{font:800 16px var(--font-body);color:var(--ink);background:rgba(69,209,255,.08);border:1.5px solid var(--you);border-radius:10px;
+  padding:7px 10px;margin:-8px -11px;min-width:0;width:calc(100% + 22px);outline:none}
 .lobbyList .chg{font:800 12px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:transparent;
   border:1px solid var(--line);border-radius:999px;padding:6px 10px}
 @media (prefers-reduced-motion:reduce){#results li.win,#results li.win::after,#results li.win .crown{animation:none}.btn.waiting{animation:none}.chip{transition:none}#boostBar.ready,.pulse,.dotPulse::before,#msgBig.cheer,h2.champTitle,.champ .rays,.champFig,.champCrown,.lgWordmark>g,.lgPlanet,.logo .rings path,.lgStars path{animation:none}}
@@ -376,7 +403,7 @@ input::placeholder{color:var(--muted);opacity:.6}
         </svg>
       </h1>
       <p class="note" id="menuNote" hidden></p>
-      <button class="btn" id="onlineBtn" type="button">Play with friends</button>
+      <button class="enterKey btn" id="onlineBtn" type="button">Play with friends</button>
       <button class="btn ghost" id="startBtn" type="button">Play vs computer</button>
     </div>
   </section>
@@ -397,7 +424,7 @@ input::placeholder{color:var(--muted);opacity:.6}
         <dt>Flutter</dt><dd><span class="meter"><i id="mHover"></i></span></dd>
       </dl>
       <div class="readyRow" id="readyRow" hidden></div>
-      <div class="row"><button class="btn ghost" id="charBack" type="button">Back</button><button class="btn" id="charGo" type="button">Play</button></div>
+      <div class="row"><button class="btn ghost" id="charBack" type="button">Back</button><button class="enterKey btn" id="charGo" type="button">Play</button></div>
     </div>
   </section>
 
@@ -422,14 +449,14 @@ input::placeholder{color:var(--muted);opacity:.6}
         </div>
         <p class="lead setHint" id="diffHint"></p>
       </div>
-      <div class="row"><button class="btn ghost" id="setupBack" type="button">Back</button><button class="btn" id="setupNext" type="button">Next</button></div>
+      <div class="row"><button class="btn ghost" id="setupBack" type="button">Back</button><button class="enterKey btn" id="setupNext" type="button">Next</button></div>
     </div>
   </section>
 
   <section id="online" class="sheet" hidden>
     <div class="card">
       <div class="label">Play online</div>
-      <button class="btn" id="createBtn" type="button">Create game</button>
+      <button class="enterKey btn" id="createBtn" type="button">Create game</button>
       <button class="btn secondary" id="toJoinBtn" type="button">Join a game</button>
       <p class="status" id="onlineStatus" role="status"></p>
       <button class="btn ghost" id="onlineBack" type="button">Back</button>
@@ -459,7 +486,7 @@ input::placeholder{color:var(--muted);opacity:.6}
       </div>
       <ol class="lobbyList" id="lobbyList"></ol>
       <p class="status" id="lobbyStatus" role="status"></p>
-      <div class="row"><button class="btn ghost" id="lobbyLeave" type="button">Leave</button><button class="btn" id="lobbyStart" type="button">Start</button></div>
+      <div class="row"><button class="btn ghost" id="lobbyLeave" type="button">Leave</button><button class="enterKey btn" id="lobbyStart" type="button">Start</button></div>
     </div>
   </section>
 
@@ -468,7 +495,7 @@ input::placeholder{color:var(--muted);opacity:.6}
       <div class="label" id="noticeLabel">Match ended</div>
       <h2 id="noticeTitle">The host left the game</h2>
       <p class="lead" id="noticeText">The match can't continue without the host.</p>
-      <button class="btn" id="noticeBtn" type="button">Back to home</button>
+      <button class="enterKey btn" id="noticeBtn" type="button">Back to home</button>
       <button class="btn ghost" id="noticeAlt" type="button" hidden>Home</button>
     </div>
   </section>
@@ -478,7 +505,7 @@ input::placeholder{color:var(--muted);opacity:.6}
       <div class="label" id="pauseLabel">Paused</div>
       <h2 id="pauseTitle">Take a breather</h2>
       <p class="lead" id="pauseNote" hidden></p>
-      <button class="btn" id="resumeBtn" type="button">Resume</button>
+      <button class="enterKey btn" id="resumeBtn" type="button">Resume</button>
       <button class="btn ghost" id="quitBtn" type="button">Quit to home</button>
     </div>
   </section>
@@ -489,7 +516,7 @@ input::placeholder{color:var(--muted);opacity:.6}
       <h2 id="panelTitle"></h2>
       <ol id="results"></ol>
       <div class="row" id="panelBtns">
-        <button class="btn" id="nextBtn" type="button">Next round</button>
+        <button class="btn enterKey" id="nextBtn" type="button">Next round</button>
       </div>
     </div>
   </section>
@@ -1178,8 +1205,7 @@ stage.addEventListener("pointermove",e=>{
   if(e.pointerId===joyId){
     joyDX=e.clientX-joyX; joyDY=e.clientY-joyY;
     if(r.moved&&joyActive()){joy.hidden=false; joy.style.left=joyX+"px"; joy.style.top=joyY+"px";
-      const l=Math.hypot(joyDX,joyDY), c=Math.min(1,40/(l||1));
-      knob.style.transform=`translate(${joyDX*c}px,${joyDY*c}px)`;}
+      knob.style.transform=`translateX(${Math.max(-JOY_FULL,Math.min(JOY_FULL,joyDX))}px)`;}  // left/right only
   }
 });
 function endPtr(e){
@@ -1195,7 +1221,9 @@ stage.addEventListener("pointerup",endPtr); stage.addEventListener("pointercance
 stage.addEventListener("contextmenu",e=>e.preventDefault());
 const boostBar=$("boostBar"), boostLbl=$("boostLbl");
 window.addEventListener("keydown",e=>{
+  if(e.target&&e.target.closest&&e.target.closest("input,textarea")) return;   // typing a name
   if(state==="select"&&(e.code==="ArrowLeft"||e.code==="ArrowRight")){shiftChar(e.code==="ArrowLeft"?-1:1);return;}
+  if(e.code==="Space"&&!(state==="play"||state==="count"||isSpectator())) return;  // menus: Space presses the focused button as usual
   if(e.code==="Space"){e.preventDefault(); if(e.repeat) return; if(isSpectator()){cycleSpec(); return;} if(airborne(meP())){hoverHeld=true; hoverUsed=false;} else tryJump(); return;}
   if((e.code==="KeyB"||e.code==="ShiftLeft"||e.code==="ShiftRight")&&!e.repeat&&state==="play"){pressBoost();return;}
   keys.add(e.code);
@@ -1203,30 +1231,21 @@ window.addEventListener("keydown",e=>{
 window.addEventListener("keyup",e=>{keys.delete(e.code); if(e.code==="Space"&&hoverPtr===null) hoverHeld=false;});
 
 const camRight=new THREE.Vector3(), camUpW=new THREE.Vector3(), want=new THREE.Vector3();
-// The stick picks a direction once; that direction is then locked in world space and
-// carried along with the runner, so a steady thumb gives a dead-straight line.
-const humTarget=new THREE.Vector3(); let joyAng=null, jsx=0, jsy=0, jsOn=false;
-function humanDesired(me){
-  let dx=0,dy=0;
+// Steering is relative to the runner: the camera always looks the way you run, so the stick (or the
+// arrow keys) only says "turn left / turn right" and how hard. Stick centred or released = straight.
+const humTarget=new THREE.Vector3(); let joyAng=null, jsx=0, jsy=0, jsOn=false, keyTurn=0;
+const JOY_DEAD=6, JOY_FULL=38;   // px: dead zone, and the throw that gives a full-rate turn
+function humanSteer(dt){
   if(joyActive()){ if(!jsOn){jsx=joyDX;jsy=joyDY;jsOn=true;} else {jsx+=(joyDX-jsx)*0.3; jsy+=(joyDY-jsy)*0.3;} } else jsOn=false;
-  if(jsOn && Math.hypot(jsx,jsy)>14){dx=jsx;dy=-jsy;}
-  else{
-    if(keys.has("ArrowLeft")||keys.has("KeyA")) dx-=1;
-    if(keys.has("ArrowRight")||keys.has("KeyD")) dx+=1;
-    if(keys.has("ArrowUp")||keys.has("KeyW")) dy+=1;
-    if(keys.has("ArrowDown")||keys.has("KeyS")) dy-=1;
-  }
-  if(!dx&&!dy){joyAng=null; return null;}
-  const ang=Math.atan2(dy,dx);
-  let dif=Math.PI; if(joyAng!==null){dif=Math.abs(ang-joyAng); if(dif>Math.PI) dif=2*Math.PI-dif;}
-  if(dif>0.07){ // only re-aim when the thumb really moves (~4°)
-    camRight.setFromMatrixColumn(camera.matrixWorld,0); camUpW.setFromMatrixColumn(camera.matrixWorld,1);
-    want.copy(camRight).multiplyScalar(Math.cos(ang)).addScaledVector(camUpW,Math.sin(ang));
-    want.addScaledVector(me.p,-want.dot(me.p));
-    if(want.lengthSq()<1e-6) return null;
-    humTarget.copy(want).normalize(); joyAng=ang;
-  }
-  return humTarget;
+  if(jsOn){const a=Math.abs(jsx); keyTurn=0;
+    if(a<JOY_DEAD) return 0;
+    const u=Math.min(1,(a-JOY_DEAD)/(JOY_FULL-JOY_DEAD)); return Math.sign(jsx)*(0.25+0.75*u);}
+  let k=0;
+  if(keys.has("ArrowLeft")||keys.has("KeyA")) k-=1;
+  if(keys.has("ArrowRight")||keys.has("KeyD")) k+=1;
+  // keys ease in over ~0.12 s so a quick tap is a nudge rather than a yank
+  if(!k) keyTurn=0; else {if(Math.sign(keyTurn)!==k) keyTurn=0; keyTurn=Math.max(-1,Math.min(1,keyTurn+k*dt/0.12));}
+  return k?Math.sign(keyTurn)*(0.3+0.7*Math.abs(keyTurn)):0;
 }
 
 // ---------- Simulation ----------
@@ -1256,10 +1275,11 @@ function assist(pl,dt){
 function stepPlayer(pl,dt){
   // steering (locked while airborne)
   if(pl.human||pl.remote){
-    const d=pl.jt<0?(pl.human?humanDesired(pl):(pl.netHas?pl.netT:null)):null;
-    if(d&&d.lengthSq()>0.5){tmpB.crossVectors(pl.h,d);
-      const ang=Math.atan2(tmpB.dot(pl.p),pl.h.dot(d)), lim=pl.turn*dt;
-      if(Math.abs(ang)<0.004) pl.h.copy(d); else pl.h.applyAxisAngle(pl.p,Math.max(-lim,Math.min(lim,ang)));}
+    if(pl.human){const k=pl.jt<0?humanSteer(dt):0; if(k) pl.h.applyAxisAngle(pl.p,-k*pl.turn*dt);}
+    else{const d=pl.jt<0&&pl.netHas?pl.netT:null;
+      if(d&&d.lengthSq()>0.5){tmpB.crossVectors(pl.h,d);
+        const ang=Math.atan2(tmpB.dot(pl.p),pl.h.dot(d)), lim=pl.turn*dt;
+        if(Math.abs(ang)<0.004) pl.h.copy(d); else pl.h.applyAxisAngle(pl.p,Math.max(-lim,Math.min(lim,ang)));}}
     assist(pl,dt);
     if(pl.asCmd){const a=pl.asCmd*pl.turn*dt; pl.h.applyAxisAngle(pl.p,a);
       if(pl.human&&joyAng!==null) humTarget.applyAxisAngle(pl.p,a); else if(pl.remote&&pl.netHas) pl.netT.applyAxisAngle(pl.p,a);}
@@ -1406,7 +1426,7 @@ function openCharSel(){
   charSel.hidden=false; renderStrip();
   const setup=mode==="online"&&!!Net.role;
   $("nameField").hidden=!setup; $("readyRow").hidden=!setup;
-  $("charGo").classList.remove("isReady","waiting"); $("charGo").textContent=setup?"Ready":"Play"; $("charBack").textContent=setup?"Leave":"Back";
+  $("charGo").classList.remove("isReady","waiting"); $("charGo").textContent=setup?"Ready":"Play"; $("charBack").textContent=setup?(Net.role==="host"?"Lobby":"Leave"):"Back";
   if(setup) renderReady();
   requestAnimationFrame(()=>requestAnimationFrame(applyChar));
 }
@@ -1441,6 +1461,7 @@ function beginMatch(list){
   if(Net.role==="client"){state="wait"; showMsg("Get ready","");} else startRound();
 }
 function startRound(){
+  try{const a=document.activeElement; if(a&&a!==document.body&&a.blur) a.blur();}catch(_){}
   round++; roundScored=false; specT=null;
   setPlanetR(radiusFor(tieSet?tieSet.length:players.filter(p=>!p.left).length)); grid.clear(); timeScale=1; hud.hidden=false; roundTag.hidden=false; ffBtn.hidden=true; panel.hidden=true; celeb=null; stopRain();
   msgBig.classList.remove("cheer"); msgBig.style.color="";
@@ -1531,19 +1552,19 @@ function showPanel(){
   Net.rrDeadline=0; $("rrStatus")&&$("rrStatus").remove();
   if(Net.role&&!matchOver){
     Net.rr=new Set(); Net.rrOrder=standingOrder(players); Net.rrDeadline=performance.now()+RR_SECS*1000;
-    pb.innerHTML='<button class="btn" id="readyBtn" type="button">Ready</button>';
+    pb.innerHTML='<button class="btn enterKey" id="readyBtn" type="button">Ready</button>';
     pb.insertAdjacentHTML("beforebegin",'<p class="waitPill" id="rrStatus" role="status"></p>');
     $("readyBtn").onclick=e=>{if(e.currentTarget.classList.contains("waiting")) return; Sound.click(); pressRoundReady();};
     panelReady();
   } else if(Net.role==="client"){
-    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><div class="waitPill pulse">Waiting for the host</div>';
-    $("toMenu").onclick=()=>{leaveOnline();toMenu();};
+    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><button class="btn enterKey" id="again" type="button">Lobby</button>';
+    $("toMenu").onclick=()=>{leaveOnline();toMenu();}; $("again").onclick=()=>{Sound.click(); clientToLobby();};
   } else if(Net.role==="host"){
-    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><button class="btn" id="again" type="button">Lobby</button>';
+    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><button class="btn enterKey" id="again" type="button">Lobby</button>';
     $("toMenu").onclick=()=>{leaveOnline();toMenu();}; $("again").onclick=()=>{Sound.click(); openLobby(); hostSendLobby();};
   } else {
-    pb.innerHTML=matchOver?'<button class="btn ghost" id="toMenu" type="button">Home</button><button class="btn" id="again" type="button">New match</button>'
-      :`<button class="btn" id="nextBtn" type="button">${tie?"Start tiebreaker":"Next round"}</button>`;
+    pb.innerHTML=matchOver?'<button class="btn ghost" id="toMenu" type="button">Home</button><button class="btn enterKey" id="again" type="button">New match</button>'
+      :`<button class="btn enterKey" id="nextBtn" type="button">${tie?"Start tiebreaker":"Next round"}</button>`;
     if(matchOver){$("toMenu").onclick=toMenu;$("again").onclick=()=>{Sound.click();openCpuSetup();};}
     else $("nextBtn").onclick=()=>{Sound.click();startRound();};
   }
@@ -1677,7 +1698,9 @@ $("charGo").onclick=()=>{Sound.click();
   if(mode!=="online"){startMatch(); return;}
   if(!Net.role){openOnline(); return;}
   $("nick").blur(); myReady=!myReady; clearTimeout(pickTimer); sendPick(); renderReady();};
-$("charBack").onclick=()=>{Sound.click(); if(mode==="online"&&Net.role){leaveOnline(); toMenu();} else if(mode==="online") openOnline(); else openCpuSetup();};
+$("charBack").onclick=()=>{Sound.click();
+  if(mode==="online"&&Net.role==="host"){Net.phase="lobby"; hostSendLobby(); openLobby(); return;}   // everyone back; new players can join again
+  if(mode==="online"&&Net.role){leaveOnline(); toMenu();} else if(mode==="online") openOnline(); else openCpuSetup();};
 // ---------- Navigation: home outside a match, pause menu inside one ----------
 let paused=false;
 const inMatchState=()=>["count","play","ending","panel","wait"].includes(state)&&players.length>0;
@@ -1716,7 +1739,32 @@ $("menuBtn").onclick=()=>{Sound.click(); if(!$("pause").hidden) closePause(); el
 $("resumeBtn").onclick=()=>{Sound.click(); closePause();};
 $("quitBtn").onclick=()=>{Sound.click(); if(pauseStep==="menu"){pauseStep="confirm"; renderPause();} else goHome();};
 $("homeBtn").onclick=()=>{Sound.click(); if(!$("pause").hidden) closePause(); else if(inMatchState()) openPause(true); else goHome();};
-window.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(!$("pause").hidden) closePause(); else if(state!=="menu") $("homeBtn").click(); }});
+// Enter moves you on: whatever the main button of the current screen is. A button you've tabbed to
+// keeps the usual meaning (Enter presses that one); one that only has focus from a mouse click doesn't.
+function enterTarget(){
+  const vis=b=>b&&!b.disabled&&!b.classList.contains("waiting")&&b.offsetParent!==null&&b.getAttribute("aria-disabled")!=="true";
+  if(!$("notice").hidden) return $("noticeBtn");
+  if(!$("pause").hidden) return $("resumeBtn");   // Resume / Keep playing: never the one that quits
+  const pick={menu:"onlineBtn",online:"createBtn",cpuset:"setupNext",select:"charGo",lobby:"lobbyStart"}[state];   // always the filled button
+  if(pick) return vis($(pick))?$(pick):null;
+  if(state==="panel"){for(const id of ["readyBtn","nextBtn","again"]){const b=$(id); if(vis(b)) return b;}}
+  return null;
+}
+// (":focus-visible" can't tell these apart: Chrome turns it on for a clicked button as soon as any key is pressed)
+let tabbing=false, kbFocus=null;
+window.addEventListener("keydown",e=>{if(e.key==="Tab") tabbing=true;},true);
+document.addEventListener("pointerdown",()=>{tabbing=false; kbFocus=null;},true);
+document.addEventListener("focusin",e=>{kbFocus=tabbing?e.target:null; tabbing=false;});
+window.addEventListener("keydown",e=>{
+  if(e.key!=="Enter"||e.repeat||e.isComposing) return;
+  const a=document.activeElement;
+  if(e.target&&e.target.matches&&e.target.matches("input,textarea")) return;   // the field handles its own Enter
+  if(a&&a.matches&&a.matches("input,textarea")) return;                    // the field handles its own Enter
+  if(a&&a===kbFocus&&a!==document.body&&a.offsetParent!==null) return;      // tabbed-to button: Enter presses that one
+  const b=enterTarget(); if(!b) return;
+  e.preventDefault(); b.click();
+});
+window.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(e.target&&e.target.classList&&e.target.classList.contains("lnInp")) return; if(!$("pause").hidden) closePause(); else if(state!=="menu") $("homeBtn").click(); }});
 // hardware/gesture back (Android, desktop): back = home, or the pause menu during a match
 try{history.replaceState({tp:"menu"},"");}catch(_){}
 const IOS_HOME_APP=navigator.standalone===true;
@@ -1819,7 +1867,8 @@ function leaveOnline(quiet){
   const peer=Net.peer; if(peer) setTimeout(()=>{try{peer.destroy();}catch(_){}},300); // let the goodbye get out first
   Object.assign(Net,{uconns:new Map(),uConn:null,snaps:[],evq:[],off:null,role:null,peer:null,conns:new Map(),hostConn:null,code:"",myId:null,roster:[],inMatch:false});
 }
-function setOnlineStatus(t,isErr){["onlineStatus","joinStatus"].forEach(id=>{const el=$(id); el.textContent=t||""; el.classList.toggle("err",!!isErr);});}
+function setOnlineStatus(t,isErr){const busy=!isErr&&/…$/.test(t||"");   // "Joining 1234…", "Connecting…" get a spinner
+  ["onlineStatus","joinStatus"].forEach(id=>{const el=$(id); el.textContent=t||""; el.classList.toggle("err",!!isErr); el.classList.toggle("busy",busy);});}
 function netFail(text){const wasJoin=Net.role==="client"; leaveOnline(); if(wasJoin) openJoin(true); else openOnline(); setOnlineStatus(text,true);}
 
 // ----- screens -----
@@ -1868,24 +1917,66 @@ function openLobby(){
   hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain(); celeb=null;
   state="lobby"; Net.inMatch=false; Sound.setMode("menu"); lobbySheet.hidden=false; renderLobby();
 }
+// Your own row in the lobby: tap your name to change it. While you type, the rest of the list can still
+// update around you (people joining) without the field being rebuilt.
+const PENCIL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>';
+let lobbyEditing=false, lobbyPendingName=null;
+function lobbyIni(r){return esc((/^Player (\d)$/.exec(r.name)||[])[1]||(r.name||"?").trim().charAt(0).toUpperCase());}
+function lobbyRow(r,i){
+  const mine=r.id===Net.myId;
+  const nm=mine?`<button class="lnEdit" type="button" aria-label="Your name: ${esc(r.name)}. Change name"><span class="lnTxt">${esc(r.name)} <em>(you)</em></span>${PENCIL}</button>`
+               :`<span class="ln">${esc(r.name)}</span>`;
+  return `<li${mine?' class="me"':""}><span class="lp ini">${lobbyIni(r)}</span>${nm}<span class="lt">${i===0?"Host":""}</span></li>`;
+}
 function renderLobby(){
   $("lobbyCode").textContent=Net.code;
-  $("lobbyList").innerHTML=Net.roster.map((r,i)=>`<li><span class="lp ini">${esc((/^Player (\d)$/.exec(r.name)||[])[1]||(r.name||"?").trim().charAt(0).toUpperCase())}</span>
-      <span class="ln">${esc(r.name)}${r.id===Net.myId?' <em>(you)</em>':""}</span><span class="lt">${i===0?"Host":""}</span></li>`).join("")
-    +Array.from({length:Math.max(0,4-Net.roster.length)},()=>`<li class="empty"><span class="lp"></span><span class="ln">Open seat</span><span class="lt"></span></li>`).join("");
+  const list=$("lobbyList"), seats=Array.from({length:Math.max(0,4-Net.roster.length)},()=>`<li class="empty"><span class="lp"></span><span class="ln">Open seat</span><span class="lt"></span></li>`).join("");
+  const mineLi=lobbyEditing?list.querySelector("li.me"):null, k=Net.roster.findIndex(r=>r.id===Net.myId);
+  if(mineLi&&k>=0){   // keep the row being edited exactly where it is in the DOM, swap everything around it
+    [...list.children].forEach(li=>{if(li!==mineLi) li.remove();});
+    mineLi.insertAdjacentHTML("beforebegin",Net.roster.slice(0,k).map(lobbyRow).join(""));
+    mineLi.insertAdjacentHTML("afterend",Net.roster.slice(k+1).map((r,j)=>lobbyRow(r,k+1+j)).join("")+seats);
+    mineLi.querySelector(".lt").textContent=k===0?"Host":"";
+  } else { lobbyEditing=false; list.innerHTML=Net.roster.map(lobbyRow).join("")+seats; }
   const host=Net.role==="host", st=$("lobbyStatus");
   $("lobbyStart").hidden=!host; $("lobbyStart").disabled=Net.roster.length<2;
   st.textContent=host?"Keep this screen open":"Waiting for the host to start";
   st.className=host?"waitPill dotPulse":"waitPill pulse";
 }
+function startLobbyEdit(btn){
+  const me=Net.roster.find(r=>r.id===Net.myId); if(!me||lobbyEditing) return;
+  lobbyEditing=true; Sound.click();
+  const inp=document.createElement("input");
+  inp.className="lnInp"; inp.maxLength=10; inp.autocomplete="nickname"; inp.enterKeyHint="done"; inp.setAttribute("aria-label","Your name");
+  inp.value=/^Player \d$/.test(me.name)?"":me.name; inp.placeholder=me.name;
+  btn.replaceWith(inp); inp.focus(); try{inp.select();}catch(_){}
+  let done=false;
+  const finish=keep=>{ if(done) return; done=true; lobbyEditing=false; if(keep) commitLobbyName(inp.value); if(state==="lobby") renderLobby(); };
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault(); e.stopPropagation(); inp.blur();} else if(e.key==="Escape"){e.preventDefault(); e.stopPropagation(); finish(false);} });
+  inp.addEventListener("blur",()=>finish(true));
+  inp._finish=finish;
+}
+// Saves a new name from the lobby. Also called if the host starts while you're still typing: the name you
+// had typed so far is kept and carried into the next screen (where it can still be changed).
+function commitLobbyName(raw){
+  const v=String(raw||"").trim(); if(!v) return;
+  const name=cleanName(v), me=Net.roster.find(r=>r.id===Net.myId); if(!me||me.name===name) return;
+  try{localStorage.setItem("tp-name",name);}catch(_){}
+  me.name=name; $("nick").value=name; lobbyPendingName=name;
+  if(Net.role==="client") toHost({t:"name",name});
+  else if(Net.role==="host") hostSendLobby();
+}
+function flushLobbyEdit(){const inp=document.querySelector("#lobbyList .lnInp"); if(inp&&inp._finish) inp._finish(true);}
+$("lobbyList").addEventListener("click",e=>{const b=e.target.closest(".lnEdit"); if(b) startLobbyEdit(b);});
 // pick runner + name together, once everyone has joined
 let myReady=false, pickTimer=0;
 function openSetup(){
   mode="online"; myReady=false;
   const me=Net.roster.find(r=>r.id===Net.myId);
-  $("nick").value=(me&&!/^Player \d$/.test(me.name))?me.name:(savedName()||"");
+  $("nick").value=lobbyPendingName||((me&&!/^Player \d$/.test(me.name))?me.name:(savedName()||""));
   if(me) selChar=me.char;
   openCharSel();
+  if(lobbyPendingName){lobbyPendingName=null; queuePick(60);}
 }
 function renderReady(){
   if(!(mode==="online"&&Net.role)) return;
@@ -1907,6 +1998,7 @@ function hostAfterPick(){
 }
 function hostStartSetup(){
   if(Net.role!=="host"||Net.roster.length<2) return;
+  if(lobbyEditing) flushLobbyEdit();
   Net.phase="setup"; Net.roster.forEach(r=>r.ready=false);
   broadcast({t:"setup",roster:Net.roster}); openSetup();
 }
@@ -1971,7 +2063,15 @@ function hostData(conn,d){
   if(d.t==="pick"){
     const r=Net.roster.find(x=>x.id===conn.peer); if(!r) return;
     if(String(d.name||"").trim()) r.name=cleanName(d.name);
-    r.char=charById(d.char).id; r.ready=!!d.ready; hostAfterPick(); return;
+    r.char=charById(d.char).id; r.ready=!!d.ready;
+    if(Net.phase==="lobby"){r.ready=false; hostSendLobby();} else hostAfterPick();
+    return;
+  }
+  if(d.t==="name"){
+    const r=Net.roster.find(x=>x.id===conn.peer); if(!r||!String(d.name||"").trim()) return;
+    r.name=cleanName(d.name);
+    if(Net.phase==="lobby") hostSendLobby(); else hostAfterPick();
+    return;
   }
   if(d.t==="bye"){hostDrop(conn.peer); try{conn.close();}catch(_){} return;}
   if(d.t==="rready"){ if(state==="panel"&&Net.rrDeadline){Net.rr.add(conn.peer); broadcast({t:"rr",ids:[...Net.rr]}); panelReady();} return; }
@@ -2075,11 +2175,18 @@ function clientJoin(code){
     netFail(e.type==="peer-unavailable"?"No game found with that code.":"Couldn't connect. Check your connection and try again.");
   });
 }
+// After a match a guest can head back to the lobby on their own; the host's next "lobby"/"setup" picks them up there.
+function clientToLobby(){
+  if(Net.role!=="client") return;
+  Net.phase="lobby";
+  const gone=new Set(players.filter(p=>p.left).map(p=>p.peer)); Net.roster=Net.roster.filter(r=>!gone.has(r.id)); Net.roster.forEach(r=>r.ready=false);
+  openLobby();
+}
 function readRoster(a){return Array.isArray(a)?a.slice(0,4).map(r=>({id:String(r.id),name:cleanName(r.name),char:charById(r.char).id,ready:!!r.ready})):[];}
 function hostGone(){
   if(Net.role!=="client") return;
   const early=Net.phase!=="match"; leaveOnline(true);
-  if(early) openNotice("Game closed","The host left","The host closed this game before it started.");
+  if(early) openNotice("Game closed","The host left","The host closed this game.");
   else openNotice("Match ended","The host left the game","The match can't continue without the host.");
 }
 function clientData(d){
@@ -2087,7 +2194,8 @@ function clientData(d){
   switch(d.t){
     case "lobby": Net.code=d.code; Net.phase="lobby"; Net.roster=readRoster(d.roster);
       if(state==="lobby") renderLobby(); else openLobby(); break;
-    case "setup": Net.phase="setup"; Net.roster=readRoster(d.roster);
+    case "setup": if(lobbyEditing) flushLobbyEdit(); Net.phase="setup"; Net.roster=readRoster(d.roster);
+      if(lobbyPendingName){const me=Net.roster.find(r=>r.id===Net.myId); if(me) me.name=lobbyPendingName;}
       if(state==="select") renderReady(); else openSetup(); break;
     case "rr": if(Array.isArray(d.ids)){Net.rr=new Set(d.ids.map(String)); panelReady();} break;
     case "bye": hostGone(); break;
@@ -2238,6 +2346,7 @@ $("onlineBack").onclick=()=>{Sound.click(); leaveOnline(); toMenu();};
 $("lobbyLeave").onclick=()=>{Sound.click(); leaveOnline(); toMenu();};
 $("lobbyStart").onclick=()=>{Sound.click(); hostStartSetup();};
 $("nick").addEventListener("input",()=>{if(mode==="online"&&Net.role) queuePick(400);});
+$("nick").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault(); e.stopPropagation(); $("nick").blur();}});
 $("shareBtn").onclick=async()=>{
   const url=location.origin+location.pathname+"#"+Net.code, text=`Join my Knotty Dash game! Code: ${Net.code}`;
   try{ if(navigator.share){await navigator.share({title:"Knotty Dash",text,url}); return;} }catch(_){ return; }
@@ -2250,7 +2359,10 @@ if(pendingCode){mode="online"; setTimeout(()=>{Sound.init(); openOnline();},0);}
 
 // ---------- Camera ----------
 const camC=new THREE.Vector3(0,0,1), camU=new THREE.Vector3(0,1,0), oldC=new THREE.Vector3(), qq=new THREE.Quaternion();
-const look=new THREE.Vector3(), camDir=new THREE.Vector3();
+const look=new THREE.Vector3(), camDir=new THREE.Vector3(), camHd=new THREE.Vector3();
+const CAM_FOLLOW=4.5;   // how fast the view swings round behind the runner (1/s)
+let CAM_LEAD=0.5;       // how far ahead of the runner (rad on the globe) the view is centred
+const camAim=new THREE.Vector3();
 const BASE_FOV=42; let camZoom=1;
 // ---------- Spectating (knocked out, or sitting out a tiebreaker) ----------
 // Starts on whoever is closest to where the camera already is; tap anywhere (or Space) to switch;
@@ -2287,8 +2399,15 @@ function updateCamera(dt){
     else target=specTarget()||players.find(p=>p.alive)||null;
   }
   if(target){
-    oldC.copy(camC); camC.lerp(target.p,1-Math.exp(-6*dt)).normalize();
+    const chase=state==="play"||state==="count"||state==="ending"||!!celeb;
+    // aim a little ahead of the runner so the screen shows where you're going, not where you've been
+    camAim.copy(target.p); if(chase&&!celeb) camAim.multiplyScalar(Math.cos(CAM_LEAD)).addScaledVector(target.h,Math.sin(CAM_LEAD));
+    oldC.copy(camC); camC.lerp(camAim,1-Math.exp(-6*dt)).normalize();
     qq.setFromUnitVectors(oldC,camC); camU.applyQuaternion(qq);
+    // chase view: screen-up swings round to the runner's heading, so "forward" is always up the screen
+    if(chase){
+      camHd.copy(target.h).addScaledVector(camC,-target.h.dot(camC));
+      if(camHd.lengthSq()>1e-6){camHd.normalize(); camU.lerp(camHd,1-Math.exp(-CAM_FOLLOW*dt));}}
   } else if(["menu","select","online","lobby","cpuset"].includes(state)){
     camC.applyAxisAngle(camU,-dt*0.15).normalize(); // slow idle spin
   }
