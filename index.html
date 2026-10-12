@@ -92,12 +92,8 @@ html{background:var(--space)}
 #msgSmall{font-weight:800;font-size:17px;color:var(--ink);text-shadow:0 2px 6px rgba(0,0,0,.6)}
 #ffBtn{pointer-events:auto}
 
-#joy{position:absolute;width:136px;height:60px;margin:-30px 0 0 -68px;border-radius:30px;
+#joy{position:absolute;width:112px;height:112px;margin:-56px 0 0 -56px;border-radius:50%;
   border:2px solid rgba(243,240,255,.35);background:rgba(243,240,255,.06);pointer-events:none}
-#joy::before,#joy::after{content:"";position:absolute;top:50%;width:9px;height:9px;margin-top:-5px;
-  border:solid rgba(243,240,255,.45);border-width:0 0 2.5px 2.5px}
-#joy::before{left:12px;transform:rotate(45deg)}
-#joy::after{right:12px;transform:rotate(-135deg)}
 #knob{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
   background:rgba(243,240,255,.55)}
 
@@ -319,16 +315,13 @@ input::placeholder{color:var(--muted);opacity:.6}
 #cpuSetup .row #setupBack{flex:0 0 auto;padding-inline:20px}
 .oppRow .seg{flex:0 0 auto;width:min(180px,55%)}
 .oppRow .seg button{padding-block:8px}
-/* desktop: a hand over anything clickable, and a small Enter badge on the button that Enter presses */
+/* desktop: a hand over anything clickable */
 button,.lnEdit,label.field,.seg button{cursor:pointer}
 button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
 .track{cursor:grab}
-@media (hover:hover) and (pointer:fine){
-  .enterKey::after{content:"↵";display:inline-grid;place-items:center;margin-left:9px;min-width:22px;height:20px;padding:0 4px;
-    border-radius:6px;border:1.5px solid currentColor;font:700 12px/1 var(--font-body);opacity:.55;vertical-align:2px}
-  .enterKey.waiting::after,.enterKey:disabled::after{display:none}
-}
 /* busy status line (joining / connecting): a small spinner in front of the text */
+#boostLbl kbd{display:inline-block;font:800 10px/1 var(--font-body);letter-spacing:.06em;padding:3px 5px 2px;margin-right:2px;
+  border:1.5px solid currentColor;border-radius:5px;box-shadow:0 1.5px 0 currentColor;vertical-align:1px}
 .status.busy{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--ink)}
 .status.busy::before{content:"";width:16px;height:16px;flex:none;border-radius:50%;border:2.5px solid rgba(243,240,255,.22);
   border-top-color:var(--you);animation:spin .8s linear infinite}
@@ -336,6 +329,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
 /* your own row in the lobby: tap the name to change it */
 .lnEdit{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:8px;min-width:0;font-weight:800;font-size:16px;
   padding:6px 10px;margin:-6px -10px;border-radius:10px}
+.lnEdit em{font-style:normal;color:var(--muted);font-weight:600}
 .lnEdit .lnTxt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lnEdit svg{flex:none;width:15px;height:15px;opacity:.6}
 @media (hover:hover){.lnEdit:hover{background:rgba(243,240,255,.07)} .lnEdit:hover svg{opacity:1}}
@@ -403,7 +397,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
         </svg>
       </h1>
       <p class="note" id="menuNote" hidden></p>
-      <button class="enterKey btn" id="onlineBtn" type="button">Play with friends</button>
+      <button class="btn" id="onlineBtn" type="button">Play with friends</button>
       <button class="btn ghost" id="startBtn" type="button">Play vs computer</button>
     </div>
   </section>
@@ -424,7 +418,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
         <dt>Flutter</dt><dd><span class="meter"><i id="mHover"></i></span></dd>
       </dl>
       <div class="readyRow" id="readyRow" hidden></div>
-      <div class="row"><button class="btn ghost" id="charBack" type="button">Back</button><button class="enterKey btn" id="charGo" type="button">Play</button></div>
+      <div class="row"><button class="btn ghost" id="charBack" type="button">Back</button><button class="btn" id="charGo" type="button">Play</button></div>
     </div>
   </section>
 
@@ -449,14 +443,14 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
         </div>
         <p class="lead setHint" id="diffHint"></p>
       </div>
-      <div class="row"><button class="btn ghost" id="setupBack" type="button">Back</button><button class="enterKey btn" id="setupNext" type="button">Next</button></div>
+      <div class="row"><button class="btn ghost" id="setupBack" type="button">Back</button><button class="btn" id="setupNext" type="button">Next</button></div>
     </div>
   </section>
 
   <section id="online" class="sheet" hidden>
     <div class="card">
       <div class="label">Play online</div>
-      <button class="enterKey btn" id="createBtn" type="button">Create game</button>
+      <button class="btn" id="createBtn" type="button">Create game</button>
       <button class="btn secondary" id="toJoinBtn" type="button">Join a game</button>
       <p class="status" id="onlineStatus" role="status"></p>
       <button class="btn ghost" id="onlineBack" type="button">Back</button>
@@ -486,7 +480,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
       </div>
       <ol class="lobbyList" id="lobbyList"></ol>
       <p class="status" id="lobbyStatus" role="status"></p>
-      <div class="row"><button class="btn ghost" id="lobbyLeave" type="button">Leave</button><button class="enterKey btn" id="lobbyStart" type="button">Start</button></div>
+      <div class="row"><button class="btn ghost" id="lobbyLeave" type="button">Leave</button><button class="btn" id="lobbyStart" type="button">Start</button></div>
     </div>
   </section>
 
@@ -495,7 +489,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
       <div class="label" id="noticeLabel">Match ended</div>
       <h2 id="noticeTitle">The host left the game</h2>
       <p class="lead" id="noticeText">The match can't continue without the host.</p>
-      <button class="enterKey btn" id="noticeBtn" type="button">Back to home</button>
+      <button class="btn" id="noticeBtn" type="button">Back to home</button>
       <button class="btn ghost" id="noticeAlt" type="button" hidden>Home</button>
     </div>
   </section>
@@ -505,7 +499,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
       <div class="label" id="pauseLabel">Paused</div>
       <h2 id="pauseTitle">Take a breather</h2>
       <p class="lead" id="pauseNote" hidden></p>
-      <button class="enterKey btn" id="resumeBtn" type="button">Resume</button>
+      <button class="btn" id="resumeBtn" type="button">Resume</button>
       <button class="btn ghost" id="quitBtn" type="button">Quit to home</button>
     </div>
   </section>
@@ -516,7 +510,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
       <h2 id="panelTitle"></h2>
       <ol id="results"></ol>
       <div class="row" id="panelBtns">
-        <button class="btn enterKey" id="nextBtn" type="button">Next round</button>
+        <button class="btn" id="nextBtn" type="button">Next round</button>
       </div>
     </div>
   </section>
@@ -851,6 +845,27 @@ const cellKey=(ix,iy,iz)=>((ix+24)*64+(iy+24))*64+(iz+24);
 function gridAdd(code,x,y,z){const k=cellKey(Math.floor(x/CELL),Math.floor(y/CELL),Math.floor(z/CELL));
   let a=grid.get(k); if(!a){a=[];grid.set(k,a);} a.push(code);}
 
+// ---------- Flutter wings ----------
+// One soft white wing drawn on a canvas (tinted per runner by the material colour): a long forewing and a
+// rounder hindwing, glowing toward the root, with a bright rim and a few veins.
+let _wingTex=null;
+function wingTex(){
+  if(_wingTex) return _wingTex;
+  const c=document.createElement("canvas"); c.width=256; c.height=192; const x=c.getContext("2d");
+  // canvas x = out from the body (0 = root), canvas y = front (0) to back (192)
+  const fore=new Path2D(); fore.moveTo(6,92); fore.bezierCurveTo(40,30,170,6,246,40); fore.bezierCurveTo(258,62,200,96,120,104); fore.bezierCurveTo(70,108,30,104,6,98); fore.closePath();
+  const hind=new Path2D(); hind.moveTo(6,100); hind.bezierCurveTo(50,104,150,108,176,140); hind.bezierCurveTo(190,170,130,188,80,170); hind.bezierCurveTo(40,156,14,124,6,104); hind.closePath();
+  for(const sh of [hind,fore]){
+    const g=x.createRadialGradient(0,96,6,0,96,250); g.addColorStop(0,"rgba(255,255,255,.95)"); g.addColorStop(1,"rgba(255,255,255,.42)");
+    x.fillStyle=g; x.fill(sh); x.lineWidth=5; x.strokeStyle="rgba(255,255,255,.95)"; x.stroke(sh);}
+  x.strokeStyle="rgba(255,255,255,.75)"; x.lineWidth=2.5; x.lineCap="round";
+  for(const [ex,ey] of [[230,44],[190,70],[130,96]]){x.beginPath(); x.moveTo(8,95); x.quadraticCurveTo(ex*0.5,(95+ey)/2-8,ex,ey); x.stroke();}
+  for(const [ex,ey] of [[160,142],[100,166]]){x.beginPath(); x.moveTo(8,102); x.quadraticCurveTo(ex*0.5,(102+ey)/2,ex,ey); x.stroke();}
+  _wingTex=new THREE.CanvasTexture(c); return _wingTex;
+}
+// flat on the runner's side/forward plane, root at the pivot, reaching out along +x and swept slightly back
+const WING_GEO=(()=>{const g=new THREE.PlaneGeometry(0.95,0.71); g.translate(0.475,0,0); g.rotateX(Math.PI/2); return g;})();
+
 // ---------- Trail (growing tube) ----------
 const capGeo=new THREE.SphereGeometry(TR,12,8);
 class Trail{
@@ -962,11 +977,17 @@ function makeFigure(ch,human,parent,colorOverride){
     const fill=new THREE.Mesh(fillGeo,new THREE.MeshBasicMaterial({color:ringCol,transparent:true,opacity:0.85,side:THREE.DoubleSide,depthWrite:false}));
     track.rotation.x=fill.rotation.x=-Math.PI/2; fill.position.y=0.002;
     ring.add(track,fill); g.add(ring); g.userData.ring=ring; g.userData.ringFill=fill; g.userData.ringSegs=240;}
-  { // hover wings (shown only while hovering): two glowing wings that flap fast, seen well from the chase camera
-    const hp=new THREE.Group(), wm=new THREE.MeshBasicMaterial({color:col.clone().lerp(new THREE.Color(0xffffff),0.55),transparent:true,opacity:0.9,side:THREE.DoubleSide,depthWrite:false});
-    const wg=new THREE.CircleGeometry(0.3,20), wings=[];
-    for(const sd of [-1,1]){const piv=new THREE.Group(); piv.position.set(0.12*sd,0.74,-0.06);
-      const w=new THREE.Mesh(wg,wm); w.scale.set(1.5,0.7,1); w.position.x=0.42*sd; piv.add(w); hp.add(piv); wings.push(piv);}
+  { // hover wings (shown only while hovering): a pair of insect wings (fore + hind lobe) lying flat out to the
+    // sides, so the camera above sees their whole shape; they beat up and down, with a faint trailing blur copy
+    const hp=new THREE.Group(), tint=col.clone().lerp(new THREE.Color(0xffffff),0.45);
+    const wm=new THREE.MeshBasicMaterial({map:wingTex(),color:tint,transparent:true,opacity:0.95,side:THREE.DoubleSide,depthWrite:false});
+    const gm=wm.clone(); gm.opacity=0.32;
+    const wings=[];
+    for(const sd of [-1,1]){const piv=new THREE.Group(); piv.position.set(0.1*sd,0.78,-0.08);
+      const mk=m=>{const w=new THREE.Mesh(WING_GEO,m); w.scale.set(sd,1,1); return w;};
+      const w=mk(wm), ghost=new THREE.Group(); ghost.add(mk(gm));
+      piv.add(w); hp.add(piv); hp.add(ghost); ghost.position.copy(piv.position);
+      piv.userData={sd,ghost}; wings.push(piv);}
     hp.visible=false; g.add(hp); g.userData.hpad=hp; g.userData.wings=wings;}
   g.userData.legs=legs; parent.add(g); return g;
 }
@@ -1205,7 +1226,8 @@ stage.addEventListener("pointermove",e=>{
   if(e.pointerId===joyId){
     joyDX=e.clientX-joyX; joyDY=e.clientY-joyY;
     if(r.moved&&joyActive()){joy.hidden=false; joy.style.left=joyX+"px"; joy.style.top=joyY+"px";
-      knob.style.transform=`translateX(${Math.max(-JOY_FULL,Math.min(JOY_FULL,joyDX))}px)`;}  // left/right only
+      const l=Math.hypot(joyDX,joyDY), c=Math.min(1,42/(l||1));
+      knob.style.transform=`translate(${joyDX*c}px,${joyDY*c}px)`;}
   }
 });
 function endPtr(e){
@@ -1220,6 +1242,8 @@ function endPtr(e){
 stage.addEventListener("pointerup",endPtr); stage.addEventListener("pointercancel",endPtr);
 stage.addEventListener("contextmenu",e=>e.preventDefault());
 const boostBar=$("boostBar"), boostLbl=$("boostLbl");
+// a mouse/trackpad computer gets keyboard hints ("Shift to boost"); phones and tablets get touch hints
+const KEYBOARD_UI=(()=>{try{return matchMedia("(hover:hover) and (pointer:fine)").matches;}catch(_){return false;}})();
 window.addEventListener("keydown",e=>{
   if(e.target&&e.target.closest&&e.target.closest("input,textarea")) return;   // typing a name
   if(state==="select"&&(e.code==="ArrowLeft"||e.code==="ArrowRight")){shiftChar(e.code==="ArrowLeft"?-1:1);return;}
@@ -1231,21 +1255,31 @@ window.addEventListener("keydown",e=>{
 window.addEventListener("keyup",e=>{keys.delete(e.code); if(e.code==="Space"&&hoverPtr===null) hoverHeld=false;});
 
 const camRight=new THREE.Vector3(), camUpW=new THREE.Vector3(), want=new THREE.Vector3();
-// Steering is relative to the runner: the camera always looks the way you run, so the stick (or the
-// arrow keys) only says "turn left / turn right" and how hard. Stick centred or released = straight.
-const humTarget=new THREE.Vector3(); let joyAng=null, jsx=0, jsy=0, jsOn=false, keyTurn=0;
-const JOY_DEAD=6, JOY_FULL=38;   // px: dead zone, and the throw that gives a full-rate turn
-function humanSteer(dt){
-  if(joyActive()){ if(!jsOn){jsx=joyDX;jsy=joyDY;jsOn=true;} else {jsx+=(joyDX-jsx)*0.3; jsy+=(joyDY-jsy)*0.3;} } else jsOn=false;
-  if(jsOn){const a=Math.abs(jsx); keyTurn=0;
-    if(a<JOY_DEAD) return 0;
-    const u=Math.min(1,(a-JOY_DEAD)/(JOY_FULL-JOY_DEAD)); return Math.sign(jsx)*(0.25+0.75*u);}
+// Touch steers like a wheel: how far the thumb is to the side of where it went down = how hard you turn.
+// Held out to the side, you keep turning; back over the middle (or let go), you run straight.
+// A short push gives a gentle curve; full lock needs a good, deliberate push (JOY_FULL px).
+let joyAng=null, jsx=0, jsy=0, jsOn=false, keyTurn=0;
+const JOY_DEAD=6, JOY_FULL=58;
+function joySteer(){
+  if(joyActive()){ if(!jsOn){jsx=joyDX;jsy=joyDY;jsOn=true;} else {jsx+=(joyDX-jsx)*0.35; jsy+=(joyDY-jsy)*0.35;} } else jsOn=false;
+  if(!jsOn) return null;
+  const a=Math.abs(jsx); if(a<JOY_DEAD) return 0;
+  const u=Math.min(1,(a-JOY_DEAD)/(JOY_FULL-JOY_DEAD));
+  return Math.sign(jsx)*Math.pow(u,1.25);     // a touch softer near the middle, for fine corrections
+}
+function keySteer(dt){
   let k=0;
   if(keys.has("ArrowLeft")||keys.has("KeyA")) k-=1;
   if(keys.has("ArrowRight")||keys.has("KeyD")) k+=1;
   // keys ease in over ~0.12 s so a quick tap is a nudge rather than a yank
   if(!k) keyTurn=0; else {if(Math.sign(keyTurn)!==k) keyTurn=0; keyTurn=Math.max(-1,Math.min(1,keyTurn+k*dt/0.12));}
   return k?Math.sign(keyTurn)*(0.3+0.7*Math.abs(keyTurn)):0;
+}
+function turnToward(pl,d,dt){
+  if(!(d&&d.lengthSq()>0.5)) return;
+  tmpB.crossVectors(pl.h,d);
+  const ang=Math.atan2(tmpB.dot(pl.p),pl.h.dot(d)), lim=pl.turn*dt;
+  if(Math.abs(ang)<0.004) pl.h.copy(d); else pl.h.applyAxisAngle(pl.p,Math.max(-lim,Math.min(lim,ang)));
 }
 
 // ---------- Simulation ----------
@@ -1275,14 +1309,11 @@ function assist(pl,dt){
 function stepPlayer(pl,dt){
   // steering (locked while airborne)
   if(pl.human||pl.remote){
-    if(pl.human){const k=pl.jt<0?humanSteer(dt):0; if(k) pl.h.applyAxisAngle(pl.p,-k*pl.turn*dt);}
-    else{const d=pl.jt<0&&pl.netHas?pl.netT:null;
-      if(d&&d.lengthSq()>0.5){tmpB.crossVectors(pl.h,d);
-        const ang=Math.atan2(tmpB.dot(pl.p),pl.h.dot(d)), lim=pl.turn*dt;
-        if(Math.abs(ang)<0.004) pl.h.copy(d); else pl.h.applyAxisAngle(pl.p,Math.max(-lim,Math.min(lim,ang)));}}
+    if(pl.human){ if(pl.jt<0){const j=joySteer(), k=j!==null?j:keySteer(dt); if(k) pl.h.applyAxisAngle(pl.p,-k*pl.turn*dt);} }
+    else if(pl.jt<0&&pl.netHas) turnToward(pl,pl.netT,dt);
     assist(pl,dt);
     if(pl.asCmd){const a=pl.asCmd*pl.turn*dt; pl.h.applyAxisAngle(pl.p,a);
-      if(pl.human&&joyAng!==null) humTarget.applyAxisAngle(pl.p,a); else if(pl.remote&&pl.netHas) pl.netT.applyAxisAngle(pl.p,a);}
+      if(pl.remote&&pl.netHas) pl.netT.applyAxisAngle(pl.p,a);}
     if(pl.jumpBuf>0){pl.jumpBuf-=dt; if(pl.jt<0&&pl.cool<=0){pl.jt=0;pl.jumpBuf=0;onJump(pl);}}
   } else {
     const D=botD();
@@ -1317,7 +1348,7 @@ function stepPlayer(pl,dt){
     if(pl.boost>=1&&pl.human) Sound.boostReady();
   }
   // move + trail
-  const d=pl.speed*mul*dt; advance(pl.p,pl.h,d,pl.human?(joyAng!==null?humTarget:null):(pl.remote&&pl.netHas?pl.netT:null)); pl.acc+=d;
+  const d=pl.speed*mul*dt; advance(pl.p,pl.h,d,pl.human?null:(pl.remote&&pl.netHas?pl.netT:null)); pl.acc+=d;
   pl.stride+=d; const sn=Math.floor(pl.stride/STEP_LEN);
   if(sn!==pl.stepN){pl.stepN=sn; if(pl.human&&pl.jt<0) Sound.step();}
   while(pl.acc>=SP){pl.acc-=SP; dropPoint(pl);}
@@ -1552,19 +1583,19 @@ function showPanel(){
   Net.rrDeadline=0; $("rrStatus")&&$("rrStatus").remove();
   if(Net.role&&!matchOver){
     Net.rr=new Set(); Net.rrOrder=standingOrder(players); Net.rrDeadline=performance.now()+RR_SECS*1000;
-    pb.innerHTML='<button class="btn enterKey" id="readyBtn" type="button">Ready</button>';
+    pb.innerHTML='<button class="btn" id="readyBtn" type="button">Ready</button>';
     pb.insertAdjacentHTML("beforebegin",'<p class="waitPill" id="rrStatus" role="status"></p>');
     $("readyBtn").onclick=e=>{if(e.currentTarget.classList.contains("waiting")) return; Sound.click(); pressRoundReady();};
     panelReady();
   } else if(Net.role==="client"){
-    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><button class="btn enterKey" id="again" type="button">Lobby</button>';
+    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><button class="btn" id="again" type="button">Lobby</button>';
     $("toMenu").onclick=()=>{leaveOnline();toMenu();}; $("again").onclick=()=>{Sound.click(); clientToLobby();};
   } else if(Net.role==="host"){
-    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><button class="btn enterKey" id="again" type="button">Lobby</button>';
+    pb.innerHTML='<button class="btn ghost" id="toMenu" type="button">Leave</button><button class="btn" id="again" type="button">Lobby</button>';
     $("toMenu").onclick=()=>{leaveOnline();toMenu();}; $("again").onclick=()=>{Sound.click(); openLobby(); hostSendLobby();};
   } else {
-    pb.innerHTML=matchOver?'<button class="btn ghost" id="toMenu" type="button">Home</button><button class="btn enterKey" id="again" type="button">New match</button>'
-      :`<button class="btn enterKey" id="nextBtn" type="button">${tie?"Start tiebreaker":"Next round"}</button>`;
+    pb.innerHTML=matchOver?'<button class="btn ghost" id="toMenu" type="button">Home</button><button class="btn" id="again" type="button">New match</button>'
+      :`<button class="btn" id="nextBtn" type="button">${tie?"Start tiebreaker":"Next round"}</button>`;
     if(matchOver){$("toMenu").onclick=toMenu;$("again").onclick=()=>{Sound.click();openCpuSetup();};}
     else $("nextBtn").onclick=()=>{Sound.click();startRound();};
   }
@@ -1750,6 +1781,11 @@ function enterTarget(){
   if(state==="panel"){for(const id of ["readyBtn","nextBtn","again"]){const b=$(id); if(vis(b)) return b;}}
   return null;
 }
+// Safari on a Mac only Tabs between text fields by default; an explicit tabindex brings buttons back into the Tab order.
+function tabbable(root){(root.querySelectorAll?root:document).querySelectorAll("button:not([tabindex])").forEach(b=>b.tabIndex=0);}
+tabbable(document);
+try{new MutationObserver(ms=>{for(const m of ms) for(const n of m.addedNodes) if(n.nodeType===1){ if(n.matches("button:not([tabindex])")) n.tabIndex=0; tabbable(n);} })
+  .observe(document.body,{childList:true,subtree:true});}catch(_){}
 // (":focus-visible" can't tell these apart: Chrome turns it on for a clicked button as soon as any key is pressed)
 let tabbing=false, kbFocus=null;
 window.addEventListener("keydown",e=>{if(e.key==="Tab") tabbing=true;},true);
@@ -2360,7 +2396,7 @@ if(pendingCode){mode="online"; setTimeout(()=>{Sound.init(); openOnline();},0);}
 // ---------- Camera ----------
 const camC=new THREE.Vector3(0,0,1), camU=new THREE.Vector3(0,1,0), oldC=new THREE.Vector3(), qq=new THREE.Quaternion();
 const look=new THREE.Vector3(), camDir=new THREE.Vector3(), camHd=new THREE.Vector3();
-const CAM_FOLLOW=4.5;   // how fast the view swings round behind the runner (1/s)
+const CAM_FOLLOW=10;   // how fast the view swings round behind the runner (1/s)
 let CAM_LEAD=0.5;       // how far ahead of the runner (rad on the globe) the view is centred
 const camAim=new THREE.Vector3();
 const BASE_FOV=42; let camZoom=1;
@@ -2402,7 +2438,7 @@ function updateCamera(dt){
     const chase=state==="play"||state==="count"||state==="ending"||!!celeb;
     // aim a little ahead of the runner so the screen shows where you're going, not where you've been
     camAim.copy(target.p); if(chase&&!celeb) camAim.multiplyScalar(Math.cos(CAM_LEAD)).addScaledVector(target.h,Math.sin(CAM_LEAD));
-    oldC.copy(camC); camC.lerp(camAim,1-Math.exp(-6*dt)).normalize();
+    oldC.copy(camC); camC.lerp(camAim,1-Math.exp(-(chase?9:6)*dt)).normalize();
     qq.setFromUnitVectors(oldC,camC); camU.applyQuaternion(qq);
     // chase view: screen-up swings round to the runner's heading, so "forward" is always up the screen
     if(chase){
@@ -2455,8 +2491,11 @@ function syncFigures(){
       rg.scale.set(sc,1,sc); fill.material.opacity=f>=1?0.95:0.8;}
     const hp=pl.fig.userData.hpad, hov=pl.hovering&&state==="play";
     if(hp&&hp.visible!==hov) hp.visible=hov;
-    if(hov){const t=performance.now()/1000, f=Math.sin(t*19), w=pl.fig.userData.wings;
-      w[0].rotation.z=-(0.25+0.55*f); w[1].rotation.z=0.25+0.55*f;
+    if(hov){const t=performance.now()/1000, w=pl.fig.userData.wings;
+      for(const piv of w){const sd=piv.userData.sd, beat=a=>0.05+0.62*(0.5+0.5*Math.sin(a));  // 0.05..0.67 rad above level
+        const ph=t*26;
+        piv.rotation.set(0,sd*0.18*Math.sin(ph+1.2),sd*beat(ph));                         // up/down + a little sweep fore/aft
+        piv.userData.ghost.rotation.set(0,sd*0.18*Math.sin(ph+0.6),sd*beat(ph-0.9));}     // the blur lags just behind
       pl.fig.position.addScaledVector(pl.p,0.06*Math.sin(t*8));
       legs[0].rotation.x=Math.sin(t*20)*0.6; legs[1].rotation.x=-Math.sin(t*20)*0.6;}
   }
@@ -2467,7 +2506,7 @@ function syncBoostUI(){
   if(!show) return;
   const ready=me.boost>=1&&me.bt<0;
   boostBar.style.setProperty("--p",me.bt>=0?0:me.boost.toFixed(3));
-  if(boostBar.classList.contains("ready")!==ready){boostBar.classList.toggle("ready",ready); boostLbl.textContent=ready?"Swipe up to boost":"Boost";}
+  if(boostBar.classList.contains("ready")!==ready){boostBar.classList.toggle("ready",ready); boostLbl.innerHTML=ready?(KEYBOARD_UI?'<kbd>Shift</kbd> to boost':"Swipe up to boost"):"Boost";}
 }
 
 function resize(){
