@@ -56,7 +56,7 @@ html{background:var(--space)}
 #stage{position:absolute;inset:0;touch-action:none}
 #c{display:block;width:100%;height:100%}
 
-#hud{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 0;
+#hud{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 20px) 16px 0;
   display:flex;gap:8px;align-items:flex-start;pointer-events:none}
 #chips{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
 .chip{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:999px;background:var(--panel);
@@ -94,7 +94,7 @@ html{background:var(--space)}
 
 
 .sheet{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;
-  padding-top:calc(env(safe-area-inset-top,0px) + 56px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px + var(--kb,0px));
+  padding-top:calc(env(safe-area-inset-top,0px) + 66px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px + var(--kb,0px));
   transition:padding-bottom .25s cubic-bezier(.2,.8,.2,1);
   background:rgba(8,11,26,.55)}
 .card{width:min(380px,100%);max-height:100%;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--line);
@@ -138,7 +138,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 .move{font-size:11px;margin-left:6px;font-variant-numeric:tabular-nums}
 .move.up{color:var(--up)} .move.down{color:var(--down)}
 .chip.me{border-color:var(--me,var(--you))}
-#toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 54px);z-index:8;max-width:calc(100% - 32px);box-sizing:border-box;
+#toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 64px);z-index:8;max-width:calc(100% - 32px);box-sizing:border-box;
   padding:9px 16px;border-radius:999px;background:var(--card-solid);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.4);
   font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;
   opacity:0;transform:translate(-50%,-10px);transition:opacity .25s,transform .25s cubic-bezier(.2,.8,.2,1)}
@@ -207,9 +207,9 @@ h1{font-size:44px}
 .lgStars path{animation:lgTw 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 .lgStars path:nth-child(2){animation-delay:.8s}.lgStars path:nth-child(3){animation-delay:1.6s}
 @keyframes lgTw{50%{opacity:.3;transform:scale(.6)}}
-#homeBtn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:16px;z-index:8}
-#globalSound{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:16px;z-index:8}
-#charSel .card{align-self:stretch;height:auto;max-height:760px;overflow:hidden;gap:12px;box-sizing:border-box}
+#homeBtn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 20px);left:16px;z-index:8}
+#globalSound{position:absolute;top:calc(env(safe-area-inset-top,0px) + 20px);right:16px;z-index:8}
+#charSel .card{align-self:center;height:min(760px,100%);max-height:760px;overflow:hidden;gap:12px;box-sizing:border-box}
 .carousel{position:relative;margin-inline:-20px;display:flex;flex:1 1 auto;min-height:0}
 .track{flex:1;min-width:0;overflow:hidden;touch-action:none}
 .strip{display:flex;width:300%;height:100%;will-change:transform}
@@ -319,6 +319,36 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
 #boostLbl kbd{display:inline-block;font:800 10px/1 var(--font-body);letter-spacing:.06em;padding:3px 5px 2px;margin-right:2px;
   border:1.5px solid currentColor;border-radius:5px;box-shadow:0 1.5px 0 currentColor;vertical-align:1px}
 .pauseBtns{display:flex;flex-direction:column;gap:10px}
+#panel .card{position:relative}
+.cardCorner{position:absolute;top:16px;right:16px}
+#settingsBtn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 20px);right:60px;z-index:8}
+#settings .seg button{font-size:15px}
+#settings .seg.two{grid-template-columns:1fr 1fr}
+.keyList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.keyList li{display:grid;grid-template-columns:minmax(150px,auto) 1fr;align-items:center;gap:14px;font-size:16px;color:var(--muted)}
+.keyList .keys{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--ink);font-weight:800}
+.keyList .keys em{font-style:normal;font-weight:600;font-size:13px;color:var(--muted)}
+.keyList kbd{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;box-sizing:border-box;padding:0 9px;
+  font:800 14px/1 var(--font-body);color:var(--ink);border:1.5px solid rgba(243,240,255,.55);border-radius:8px;box-shadow:0 2.5px 0 rgba(243,240,255,.35);background:rgba(243,240,255,.06)}
+.keyList kbd .ka{width:16px;height:16px;display:block}
+body.touch .keyList li{grid-template-columns:130px 1fr;font-size:15px}
+/* smooth switching in the Controls card */
+#settings .seg button{transition:background-color .18s,color .18s,border-color .18s}
+#settings .setRow{transition:opacity .16s ease}
+#settings .setRow.fading{opacity:0}
+body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
+/* the round joystick under the thumb */
+#joy{position:absolute;width:186px;height:186px;margin:-93px 0 0 -93px;border-radius:50%;
+  border:2px solid rgba(243,240,255,.35);background:rgba(243,240,255,.06);pointer-events:none;z-index:1}
+#knob{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(243,240,255,.55)}
+/* corner steering buttons (touch, "Buttons"): the rest of the screen is for jumping, fluttering, boosting */
+#pads{position:absolute;inset:0;pointer-events:none;z-index:1}
+#pads .pad{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);width:84px;height:84px;border-radius:50%;
+  border:2px solid rgba(243,240,255,.32);background:rgba(243,240,255,.07);transition:background .08s,border-color .08s,transform .08s}
+#pads .pad.l{left:18px} #pads .pad.r{right:18px}
+#pads .pad.on{background:rgba(243,240,255,.22);border-color:rgba(243,240,255,.6);transform:scale(.94)}
+#pads i{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border:solid rgba(243,240,255,.85);border-width:0 0 3.5px 3.5px}
+#pads .l i{transform:translateX(3px) rotate(45deg)} #pads .r i{transform:translateX(-3px) rotate(-135deg)}
 .seg.two{grid-template-columns:1fr 1fr}
 
 .pauseBtns.row{flex-direction:row}
@@ -502,6 +532,48 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
     </div>
   </section>
 
+  <div id="joy" hidden><div id="knob"></div></div>
+  <div id="pads" hidden aria-hidden="true"><div class="pad l"><i></i></div><div class="pad r"><i></i></div></div>
+  <section id="settings" class="sheet" hidden>
+    <div class="card">
+      <div class="label">Settings</div>
+      <h2>Controls</h2>
+      <div class="setRow touchOnly">
+        <div class="label" id="schemeLbl">Steering</div>
+        <div class="seg" id="schemeSeg" role="radiogroup" aria-labelledby="schemeLbl">
+          <button type="button" role="radio" data-ctl="drag" aria-checked="true" tabindex="0">Slide</button>
+          <button type="button" role="radio" data-ctl="buttons" aria-checked="false" tabindex="-1">Buttons</button>
+          <button type="button" role="radio" data-ctl="stick" aria-checked="false" tabindex="-1">Joystick</button>
+        </div>
+        <p class="lead setHint" id="schemeHint" aria-live="polite"></p>
+      </div>
+      <div class="setRow touchOnly" id="dirRow">
+        <div class="label" id="dirLbl">Slide direction</div>
+        <div class="seg two" id="dirSeg" role="radiogroup" aria-labelledby="dirLbl">
+          <button type="button" role="radio" data-dir="steer" aria-checked="true" tabindex="0">Turn runner</button>
+          <button type="button" role="radio" data-dir="spin" aria-checked="false" tabindex="-1">Spin planet</button>
+        </div>
+        <p class="lead setHint" id="dirHint" aria-live="polite"></p>
+      </div>
+      <div class="setRow">
+        <div class="label">Moves</div>
+        <ul class="keyList keysOnly">
+          <li><span class="keys"><kbd aria-label="Left arrow"><svg class="ka" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3.5M7.5 3.5 3 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd><kbd aria-label="Right arrow"><svg class="ka" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd></span>Steer</li>
+          <li><span class="keys"><kbd>Space</kbd></span>Jump</li>
+          <li><span class="keys"><kbd>Space</kbd> <em>hold in the air</em></span>Flutter</li>
+          <li><span class="keys"><kbd>Shift</kbd></span>Boost</li>
+          <li><span class="keys"><kbd>Esc</kbd></span>Pause</li>
+        </ul>
+        <ul class="keyList touchOnly">
+          <li><span class="keys">Tap</span>Jump</li>
+          <li><span class="keys">Hold in the air</span>Flutter</li>
+          <li><span class="keys">Flick up</span>Boost</li>
+        </ul>
+      </div>
+      <button class="btn" id="settingsDone" type="button">Done</button>
+    </div>
+  </section>
+
   <section id="pause" class="sheet" hidden>
     <div class="card">
       <div class="label" id="pauseLabel">Paused</div>
@@ -509,6 +581,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
       <p class="lead" id="pauseNote" hidden></p>
       <div id="pauseBtns" class="pauseBtns">
         <button class="btn" id="resumeBtn" type="button">Resume</button>
+        <button class="btn ghost" id="pauseCtlBtn" type="button">Controls</button>
         <button class="btn ghost" id="quitBtn" type="button">Quit to home</button>
       </div>
     </div>
@@ -516,6 +589,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
 
   <section id="panel" class="sheet" hidden>
     <div class="card">
+      <button id="panelCtl" class="iconBtn cardCorner" type="button" aria-label="Controls" title="Controls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
       <div class="label" id="panelLabel">Round 1</div>
       <h2 id="panelTitle"></h2>
       <ol id="results"></ol>
@@ -524,6 +598,7 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
       </div>
     </div>
   </section>
+  <button id="settingsBtn" class="iconBtn" type="button" aria-label="Settings" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
   <button id="globalSound" class="iconBtn" type="button" aria-label="Sound" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 9.5v5h4l5 4v-13l-5 4H3z" fill="currentColor" stroke="none"/><path class="w" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
   <button id="homeBtn" class="iconBtn" type="button" aria-label="Home" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7"/><path d="M6 9.5V20h4.5v-5.5h3V20H18V9.5"/></svg></button>
   <canvas id="rain" hidden></canvas>
@@ -576,7 +651,7 @@ const POINTS_TO_WIN = 30;
 const $ = id => document.getElementById(id);
 const canvas=$("c"), stage=$("stage"), hud=$("hud"), chips=$("chips"), roundTag=$("roundTag");
 const msg=$("msg"), msgBig=$("msgBig"), msgSmall=$("msgSmall"), ffBtn=$("ffBtn");
-const menu=$("menu"), panel=$("panel");
+const joy=$("joy"), knob=$("knob"), menu=$("menu"), panel=$("panel");
 
 // stars
 (function(){const s=$("stars");let h="";for(let i=0;i<90;i++){const o=(Math.random()*.6+.15).toFixed(2);
@@ -1220,9 +1295,10 @@ const keys=new Set();
 // held as "jump as soon as you can" and fired the instant the round started.
 let goAt=0; const JUMP_LOCK_MS=350;
 function tryJump(){const me=meP(); if(!me||!me.alive) return; if(state!=="play"||performance.now()-goAt<JUMP_LOCK_MS) return; me.jumpBuf=0.14;}
-function onGo(){goAt=performance.now(); keyTurn=0; dragPending=0; hoverSpent=false; const me=meP(); if(me){me.jumpBuf=0;} hoverHeld=false; hoverPtr=null;}
+function onGo(){goAt=performance.now(); keyTurn=0; dragPending=0; padTurn=0; hoverSpent=false; const me=meP(); if(me){me.jumpBuf=0;} hoverHeld=false; hoverPtr=null;}
 // Hover: tap to jump, then press again and hold while in the air. The first finger (steering) never counts.
-let hoverHeld=false, hoverPtr=null, hoverUsed=false, hoverSpent=false;
+let hoverHeld=false, hoverPtr=null, hoverUsed=false, hoverSpent=false, hoverArmAt=0;
+const HOVER_ARM=90;   // ms a finger put down in the air must stay put before it flutters
 // One flutter per jump: once you've fluttered and let go, the next press before landing is an ordinary
 // press (steering, or a buffered jump), not another flutter.
 const airborne=me=>!!me&&me.alive&&state==="play"&&(me.jt>=0||me.jumpBuf>0);
@@ -1238,33 +1314,43 @@ stage.addEventListener("pointerdown",e=>{
   if(state!=="play"&&state!=="count") return;
   e.preventDefault();
   if(isSpectator()){cycleSpec(); return;}
-  const r={x:e.clientX,y:e.clientY,lx:e.clientX,t:performance.now(),moved:false,flick:false,air:false};
+  const r={x:e.clientX,y:e.clientY,lx:e.clientX,t:performance.now(),moved:false,flick:false,air:false,pad:padHit(e.clientX,e.clientY)};
   ptrs.set(e.pointerId,r);
-  if(airborne(meP())&&!hoverSpent){hoverHeld=true; hoverPtr=e.pointerId; hoverUsed=false; r.air=true;}
-  if(joyId===null){joyId=e.pointerId;joyX=e.clientX;joyY=e.clientY;joyDX=joyDY=0;}   // first finger steers; others jump
+  if(!r.pad){   // a corner steering button only ever steers
+    if(airborne(meP())&&!hoverSpent){hoverHeld=true; hoverPtr=e.pointerId; hoverUsed=false; hoverArmAt=performance.now()+HOVER_ARM; r.air=true;}
+    if(joyId===null&&CTL!=="buttons"){joyId=e.pointerId;joyX=e.clientX;joyY=e.clientY;joyDX=joyDY=0;}   // first finger steers; others jump
+  }
   try{stage.setPointerCapture(e.pointerId);}catch(_){}
 });
 stage.addEventListener("pointermove",e=>{
   const r=ptrs.get(e.pointerId); if(!r) return;
+  if(r.pad){const z=padHit(e.clientX,e.clientY); if(z) r.pad=z; return;}   // slide onto the other button to switch
   const ddx=e.clientX-r.x, ddy=e.clientY-r.y, age=performance.now()-r.t;
   if(Math.hypot(ddx,ddy)>10) r.moved=true;
+  if(e.pointerId===hoverPtr&&!hoverUsed&&performance.now()<hoverArmAt&&Math.abs(ddx)>12){hoverHeld=false; hoverPtr=null; r.air=false;}   // slid off before it fluttered: steering
   const upward=-ddy>8 && -ddy>1.3*Math.abs(ddx);
   if(age<FLICK_MS && upward) r.flick=true; else if(r.flick && !upward) r.flick=false;
-  if(e.pointerId===joyId){
-    // sideways movement turns; ignored during an upward flick (boost) and while in the air (can't steer there)
+  if(e.pointerId===joyId&&CTL==="drag"){
+    // sideways movement turns (on the ground and in the air); ignored during an upward flick (boost)
     const ddx2=e.clientX-r.lx; r.lx=e.clientX;
-    if(joyActive()&&!airborne(meP())) dragPending=Math.max(-DRAG_BACKLOG,Math.min(DRAG_BACKLOG,dragPending+ddx2*dragK()));
+    if(joyActive()) dragPending=Math.max(-DRAG_BACKLOG,Math.min(DRAG_BACKLOG,dragPending+(DRAG_DIR==="spin"?-1:1)*ddx2*dragK()));
     return;
+  }
+  if(e.pointerId===joyId){
+    joyDX=e.clientX-joyX; joyDY=e.clientY-joyY;
+    if(r.moved&&joyActive()){joy.hidden=false; joy.style.left=joyX+"px"; joy.style.top=joyY+"px";
+      const l=Math.hypot(joyDX,joyDY), c=Math.min(1,JOY_FULL/(l||1)); knob.style.transform=`translate(${joyDX*c}px,${joyDY*c}px)`;}
   }
 });
 function endPtr(e){
   const r=ptrs.get(e.pointerId); if(!r) return; ptrs.delete(e.pointerId);
   const age=performance.now()-r.t, up=r.y-e.clientY, side=Math.abs(e.clientX-r.x);
+  if(r.pad) return;   // steering button: nothing else happens on release
   if(e.pointerId===hoverPtr){hoverHeld=false; hoverPtr=null; if(hoverUsed) hoverSpent=true;}
   if(r.air&&hoverUsed){ /* that press was a hover, not a new jump */ }
   else if(age<280 && up>40 && up>1.3*side){ pressBoost(); }
   else if(!r.moved && age<260) tryJump();
-  if(e.pointerId===joyId){joyId=null;joyDX=joyDY=0;}
+  if(e.pointerId===joyId){joyId=null;joyDX=joyDY=0;joy.hidden=true;knob.style.transform="";}
 }
 stage.addEventListener("pointerup",endPtr); stage.addEventListener("pointercancel",endPtr);
 stage.addEventListener("contextmenu",e=>e.preventDefault());
@@ -1275,7 +1361,7 @@ window.addEventListener("keydown",e=>{
   if(e.target&&e.target.closest&&e.target.closest("input,textarea")) return;   // typing a name
   if(state==="select"&&(e.code==="ArrowLeft"||e.code==="ArrowRight")){shiftChar(e.code==="ArrowLeft"?-1:1);return;}
   if(e.code==="Space"&&!(state==="play"||state==="count"||isSpectator())) return;  // menus: Space presses the focused button as usual
-  if(e.code==="Space"){e.preventDefault(); if(e.repeat) return; if(isSpectator()){cycleSpec(); return;} if(airborne(meP())&&!hoverSpent){hoverHeld=true; hoverUsed=false;} else tryJump(); return;}
+  if(e.code==="Space"){e.preventDefault(); if(e.repeat) return; if(isSpectator()){cycleSpec(); return;} if(airborne(meP())&&!hoverSpent){hoverHeld=true; hoverUsed=false; hoverArmAt=0;} else tryJump(); return;}
   if((e.code==="KeyB"||e.code==="ShiftLeft"||e.code==="ShiftRight")&&!e.repeat&&state==="play"){pressBoost();return;}
   keys.add(e.code);
 });
@@ -1285,18 +1371,86 @@ const camRight=new THREE.Vector3(), camUpW=new THREE.Vector3(), want=new THREE.V
 // Touch steering, "Drag": slide a finger sideways to spin the planet round the runner. It sets the angle, not
 // the turn speed: a sideways drag of half the screen width is a U-turn, a small drag a small correction, and
 // when the finger stops the runner runs straight wherever the finger is. Lift and drag again for more. Turning
-// can't go faster than the runner's own turn rate, so a quick swipe is caught up over a moment. Holding the
-// finger still at the very left/right edge of the screen keeps turning that way, for long curves.
+// can't go faster than the runner's own turn rate, so a quick swipe is caught up over a moment (never more
+// than a bit, so a long drag never keeps spinning after the finger stops).
 // The rest: tap = jump (any finger), hold in the air = flutter, flick up = boost.
 let keyTurn=0;
 let dragPending=0;
-const DRAG_EDGE=30, DRAG_BACKLOG=1.6;     // px edge band for continuous turning; most rad of turn that can wait
-const dragK=()=>Math.PI/(0.5*Math.max(320,innerWidth));   // rad per px
+const DRAG_BACKLOG=0.8;     // most turn (rad) that can wait to be caught up after a fast swipe
+const dragK=()=>Math.PI/(0.5*Math.max(320,innerWidth));   // rad per px: half the screen width = a U-turn
+// Touch steering scheme, picked under Settings → Controls (Drag is the default):
+//  drag   – slide sideways to spin the planet round the runner (sets the angle, see above)
+//  buttons – hold the arrow buttons in the bottom corners (like the arrow keys)
+//  stick  – a round joystick: how far to the side = how hard you turn
+// Which way a drag turns: "steer" = drag right, turn right (like looking around in most touch games);
+// "spin" = push the planet like a ball: drag right = the planet turns right = you turn left.
+const TOUCH_UI=(()=>{try{return matchMedia("(pointer:coarse)").matches||("ontouchstart" in window);}catch(_){return false;}})();
+document.body.classList.toggle("touch",TOUCH_UI);
+let CTL=(()=>{try{return localStorage.getItem("kd-ctl")||"drag";}catch(_){return "drag";}})();
+if(!["drag","buttons","stick"].includes(CTL)) CTL="drag";
+let DRAG_DIR=(()=>{try{return localStorage.getItem("kd-drag")==="spin"?"spin":"steer";}catch(_){return "steer";}})();
+const SCHEME_HINT={drag:"Slide your thumb left or right to turn. The further you slide, the more you turn. Hold still to run straight.",
+  buttons:"Hold the arrow buttons in the bottom corners to turn. Tap them for small corrections.",
+  stick:"Put your thumb down anywhere and push it sideways. The further you push, the sharper the turn."};
+const DIR_HINT={steer:"Slide right and the runner turns right.",
+  spin:"Slide right and the planet rolls right, like spinning a globe, so you turn left."};
+// Switching options: the card eases to its new height, a changed hint fades in, and the "Slide direction"
+// row fades out before it folds away (and fades in as it unfolds).
+function setHint(el,t){ if(el.textContent===t) return; el.textContent=t;
+  try{el.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:220,easing:"cubic-bezier(.2,.8,.2,1)"});}catch(_){} }
+function syncControlsUI(animate){
+  const radio=(sel,key,val)=>document.querySelectorAll(sel+" button").forEach(b=>{const on=b.dataset[key]===val; b.setAttribute("aria-checked",String(on)); b.tabIndex=on?0:-1;});
+  radio("#schemeSeg","ctl",CTL); radio("#dirSeg","dir",DRAG_DIR);
+  const card=$("settings").querySelector(".card"), row=$("dirRow"), wantRow=CTL==="drag";
+  const apply=()=>{ setHint($("schemeHint"),SCHEME_HINT[CTL]); setHint($("dirHint"),DIR_HINT[DRAG_DIR]); row.hidden=!wantRow; };
+  if(!animate||$("settings").hidden){ row.classList.remove("fading"); apply(); return; }
+  if(!wantRow&&!row.hidden){ row.classList.add("fading"); setTimeout(()=>{ morphCard(card,apply); row.classList.remove("fading"); },150); return; }
+  if(wantRow&&row.hidden){ row.classList.add("fading"); morphCard(card,apply); requestAnimationFrame(()=>requestAnimationFrame(()=>row.classList.remove("fading"))); return; }
+  morphCard(card,apply);
+}
+function setScheme(v,animate){CTL=["drag","buttons","stick"].includes(v)?v:"drag"; try{localStorage.setItem("kd-ctl",CTL);}catch(_){}
+  joyId=null; joy.hidden=true; dragPending=0; padTurn=0; syncControlsUI(animate);}
+function setDragDir(v,animate){DRAG_DIR=v==="spin"?"spin":"steer"; try{localStorage.setItem("kd-drag",DRAG_DIR);}catch(_){} syncControlsUI(animate);}
+// corner buttons: hold left/right to turn, exactly like the arrow keys (same ease-in); quick taps = nudges
+let padTurn=0;
+const PAD_SLOP=18;   // px of extra touch area around each button
+const padsEl=$("pads"), padL=padsEl.querySelector(".l"), padR=padsEl.querySelector(".r");
+function padHit(x,y){
+  if(CTL!=="buttons"||padsEl.hidden) return 0;
+  for(const [el,k] of [[padL,-1],[padR,1]]){const b=el.getBoundingClientRect();
+    if(x>=b.left-PAD_SLOP&&x<=b.right+PAD_SLOP&&y>=b.top-PAD_SLOP&&y<=b.bottom+PAD_SLOP) return k;}
+  return 0;
+}
+function padsHeld(){let l=false, r=false; for(const p of ptrs.values()){ if(p.pad<0) l=true; else if(p.pad>0) r=true; } return [l,r];}
+function padSteer(dt){
+  if(CTL!=="buttons"){padTurn=0; return null;}
+  const [l,r]=padsHeld();
+  if(!l&&!r){padTurn=0; return null;}
+  const k=l&&r?0:(l?-1:1); if(!k){padTurn=0; return 0;}
+  if(Math.sign(padTurn)!==k) padTurn=0;
+  padTurn=Math.max(-1,Math.min(1,padTurn+k*dt/0.12));
+  return Math.sign(padTurn)*(0.3+0.7*Math.abs(padTurn));
+}
+function syncPads(){
+  const me=meP(), show=TOUCH_UI&&CTL==="buttons"&&(state==="count"||state==="play")&&!!me&&(me.alive||state==="count")&&!me.sit&&$("pause").hidden;
+  if(padsEl.hidden!==!show) padsEl.hidden=!show;
+  if(!show) return;
+  const [l,r]=padsHeld(); padL.classList.toggle("on",l); padR.classList.toggle("on",r);
+}
+// analog joystick: how far the thumb is to the side = how hard you turn (straight-line response)
+let jsx=0, jsy=0, jsOn=false;
+const JOY_DEAD=8, JOY_FULL=70, JOY_MIN=0.12, JOY_MAX=0.75;   // px, px, share of the runner's turn rate
+function joySteer(){
+  if(CTL!=="stick") return null;
+  if(joyActive()){ if(!jsOn){jsx=joyDX;jsy=joyDY;jsOn=true;} else {jsx+=(joyDX-jsx)*0.5; jsy+=(joyDY-jsy)*0.5;} } else jsOn=false;
+  if(!jsOn) return null;
+  const a=Math.abs(jsx); if(a<=JOY_DEAD) return 0;
+  const u=Math.min(1,(a-JOY_DEAD)/(JOY_FULL-JOY_DEAD));
+  return Math.sign(jsx)*(JOY_MIN+(JOY_MAX-JOY_MIN)*u);
+}
 function dragTurn(pl,dt){
+  if(CTL!=="drag") return null;
   const r=joyId!==null?ptrs.get(joyId):null, lim=pl.turn*dt;
-  let edge=0;
-  if(r&&joyActive()){ if(r.lx<DRAG_EDGE) edge=-1; else if(r.lx>innerWidth-DRAG_EDGE) edge=1; }
-  if(edge){dragPending=0; keyTurn=Math.max(-1,Math.min(1,(Math.sign(keyTurn)===edge?keyTurn:0)+edge*dt/0.12)); return Math.sign(keyTurn)*(0.3+0.7*Math.abs(keyTurn))*lim;}
   if(!dragPending) return r?0:null;
   const a=Math.max(-lim,Math.min(lim,dragPending)); dragPending-=a;
   if(Math.abs(dragPending)<1e-4) dragPending=0;
@@ -1342,12 +1496,12 @@ function assist(pl,dt){
   for(const k of [0.35,-0.35,0.7,-0.7]) if(probeLine(pl,k,T)>T){pl.asCmd=k; return;}
 }
 function stepPlayer(pl,dt){
-  // steering (locked while airborne)
+  // steering: people can steer on the ground and in the air; computer runners turn on the ground
   if(pl.human||pl.remote){
-    if(pl.human){ if(pl.jt<0){
+    if(pl.human){
       const d=dragTurn(pl,dt);
       if(d!==null){ if(d) pl.h.applyAxisAngle(pl.p,-d); }
-      else {const k=keySteer(dt); if(k) pl.h.applyAxisAngle(pl.p,-k*pl.turn*dt);}} }
+      else {const ps=padSteer(dt), j=ps!==null?ps:joySteer(), k=j!==null?j:keySteer(dt); if(k) pl.h.applyAxisAngle(pl.p,-k*pl.turn*dt);} }
     else if(pl.jt<0&&pl.netHas) turnToward(pl,pl.netT,dt);
     assist(pl,dt);
     if(pl.asCmd){const a=pl.asCmd*pl.turn*dt; pl.h.applyAxisAngle(pl.p,a);
@@ -1361,7 +1515,7 @@ function stepPlayer(pl,dt){
   }
   // jump (+ hover: rise to the top of the arc, then hang there while held and time is left)
   if(pl.jt>=0){
-    const hold=pl.human?hoverHeld:pl.botHover, wasHover=pl.hovering;
+    const hold=pl.human?(hoverHeld&&performance.now()>=hoverArmAt):pl.botHover, wasHover=pl.hovering;
     pl.hovering=false;
     if(hold&&pl.fl>0){
       if(pl.jt<JT/2) pl.jt=Math.min(JT/2,pl.jt+dt);
@@ -1530,6 +1684,7 @@ function beginMatch(list){
   if(Net.role==="client"){state="wait"; showMsg("Get ready","");} else startRound();
 }
 function startRound(){
+  dropSettings();
   try{const a=document.activeElement; if(a&&a!==document.body&&a.blur) a.blur();}catch(_){}
   round++; roundScored=false; specT=null;
   setPlanetR(radiusFor(tieSet?tieSet.length:players.filter(p=>!p.left).length)); grid.clear(); timeScale=1; hud.hidden=false; roundTag.hidden=false; ffBtn.hidden=true; panel.hidden=true; celeb=null; stopRain();
@@ -1610,7 +1765,7 @@ function panelConfirmNow(on,pb,card){
   let q=$("panelAsk"); card.classList.toggle("asking",on);
   if(!on){ if(q) q.remove(); pb.innerHTML=panelBtnsHTML; for(const [id,fn] of panelBtnsWire){const b=$(id); if(b) b.onclick=fn;}
     if(Net.role&&typeof panelReady==="function"&&$("rrStatus")) panelReady();
-    const r=$("readyBtn"); if(r&&Net.rr&&Net.rr.has(Net.myId)){r.classList.add("isReady","waiting"); r.setAttribute("aria-disabled","true"); r.textContent="Waiting for other players…";}
+    const r=$("readyBtn"); if(r&&Net.rr&&Net.rr.has(Net.myId)){r.classList.add("isReady","waiting"); r.setAttribute("aria-disabled","true"); r.textContent="Ready ✓";}
     const back=$("panelQuit"); if(back) back.focus({preventScroll:true}); return; }
   const online=!!Net.role;
   const note=online?(Net.role==="host"?"As the host, leaving ends the match for all players.":"The match keeps going without you."):"Your score in this match will be lost.";
@@ -1723,7 +1878,7 @@ function tickRain(dt){
 }
 function toMenu(){setPlanetR(R_FULL);leaveOnline();hideSheets();state="menu";Sound.setMode("menu");panel.hidden=true;hud.hidden=true;roundTag.hidden=true;charSel.hidden=true;
   boostBar.hidden=true;hideMsg();stopRain();celeb=null;menu.hidden=false;
-  joyId=null; ptrs.clear();}
+  joy.hidden=true; joyId=null; ptrs.clear();}
 // Score chips: during a round the survivors stay in front; whoever crashes gets their points
 // right away (the number flips over) and slides to the back, in finishing order. At round end everything
 // settles into the overall standings. Each move is animated from where the chip was (FLIP).
@@ -1795,6 +1950,21 @@ function syncSetup(){
   $("diffHint").textContent=DIFF_HINT[diff];
 }
 document.querySelectorAll("#oppSeg button").forEach(b=>b.addEventListener("click",()=>{Sound.click(); opponents=+b.dataset.n; try{localStorage.setItem("kd-opp",opponents);}catch(_){} syncSetup();}));
+document.querySelectorAll("#schemeSeg button").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.ctl===CTL) return; Sound.click(); setScheme(b.dataset.ctl,true);}));
+document.querySelectorAll("#dirSeg button").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.dir===DRAG_DIR) return; Sound.click(); setDragDir(b.dataset.dir,true);}));
+setScheme(CTL);
+// Settings open in place of whatever card was showing (menu, lobby, character select, pause), never on top of it,
+// and Done puts that card back. In a paused match the game stays paused.
+let settingsBack=[];
+function openSettings(){
+  Sound.click(); settingsBack=[...document.querySelectorAll("section.sheet")].filter(x=>!x.hidden&&x.id!=="settings");
+  settingsBack.forEach(x=>x.hidden=true); $("settings").hidden=false; syncControlsUI();
+}
+function closeSettings(){ if($("settings").hidden) return; Sound.click(); $("settings").hidden=true; settingsBack.forEach(x=>x.hidden=false); settingsBack=[];
+  const back=$("pause").hidden?null:$("pauseCtlBtn"); if(back) back.focus({preventScroll:true}); }
+$("settingsBtn").onclick=openSettings; $("pauseCtlBtn").onclick=openSettings; $("panelCtl").onclick=openSettings;
+// a round that starts while the sheet is open (online, the host's call) closes it
+function dropSettings(){ if(!$("settings").hidden){$("settings").hidden=true;} settingsBack=[]; } $("settingsDone").onclick=closeSettings;
 document.querySelectorAll('[role="radiogroup"]').forEach(g=>g.addEventListener("keydown",e=>{
   const step={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key]; if(!step&&e.key!=="Home"&&e.key!=="End") return;
   const opts=[...g.querySelectorAll('[role="radio"]')], i=opts.indexOf(document.activeElement); if(i<0) return;
@@ -1829,7 +1999,7 @@ function openPause(confirm){
   paused=!online;
   pauseStep=(online||confirm)?"confirm":"menu";
   renderPause();
-  $("pause").hidden=false; joyId=null; ptrs.clear();
+  $("pause").hidden=false; joy.hidden=true; joyId=null; ptrs.clear();
 }
 function renderPause(){
   const online=!!Net.role, c=pauseStep==="confirm", note=$("pauseNote");
@@ -1842,6 +2012,7 @@ function renderPause(){
   // asking to leave: the two answers side by side, "Leave match" as the main (filled) one on the right,
   // the same as the question between rounds; otherwise Resume is the main action, stacked on top
   $("pauseBtns").classList.toggle("row",c);
+  $("pauseCtlBtn").hidden=c;
   $("resumeBtn").classList.toggle("ghost",c); $("quitBtn").classList.toggle("ghost",!c);
 }
 function closePause(){$("pause").hidden=true; paused=false;}
@@ -1867,6 +2038,7 @@ $("homeBtn").onclick=()=>{Sound.click(); if(!$("pause").hidden){closePause(); re
 // keeps the usual meaning (Enter presses that one); one that only has focus from a mouse click doesn't.
 function enterTarget(){
   const vis=b=>b&&!b.disabled&&!b.classList.contains("waiting")&&b.offsetParent!==null&&b.getAttribute("aria-disabled")!=="true";
+  if(!$("settings").hidden) return $("settingsDone");
   if(!$("notice").hidden) return $("noticeBtn");
   if(!$("pause").hidden) return $("resumeBtn");   // Resume / Keep playing: never the one that quits
   const pick={menu:"onlineBtn",online:"createBtn",cpuset:"setupNext",select:"charGo",lobby:"lobbyStart"}[state];   // always the filled button
@@ -1895,6 +2067,7 @@ window.addEventListener("keydown",e=>{
   e.preventDefault(); b.click();
 });
 window.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(e.target&&e.target.classList&&e.target.classList.contains("lnInp")) return;
+  if(!$("settings").hidden){closeSettings(); return;}
   if(state==="panel"&&$("pause").hidden){ if($("askStay")) panelConfirm(false); else if($("panelQuit")) panelConfirm(true); else if(!$("homeBtn").hidden) $("homeBtn").click(); return; } if(!$("pause").hidden) closePause(); else if(state!=="menu") $("homeBtn").click(); }});
 // hardware/gesture back (Android, desktop): back = home, or the pause menu during a match
 try{history.replaceState({tp:"menu"},"");}catch(_){}
@@ -2004,7 +2177,7 @@ function netFail(text){const wasJoin=Net.role==="client"; leaveOnline(); if(wasJ
 
 // ----- screens -----
 const onlineSheet=$("online"), lobbySheet=$("lobby");
-function hideSheets(){[menu,charSel,$("cpuSetup"),panel,onlineSheet,lobbySheet,$("joinSheet"),$("notice"),$("pause")].forEach(s=>s.hidden=true); paused=false;}
+function hideSheets(){[menu,charSel,$("cpuSetup"),panel,onlineSheet,lobbySheet,$("joinSheet"),$("notice"),$("pause"),$("settings")].forEach(s=>s.hidden=true); settingsBack=[]; paused=false;}
 function openOnline(){
   pushNav();
   hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain();
@@ -2143,7 +2316,7 @@ function panelReady(){
   [...$("results").children].forEach((li,k)=>{const pl=Net.rrOrder&&Net.rrOrder[k]; li.classList.toggle("rdy",!!(pl&&Net.rr.has(pl.peer)));});
 }
 function pressRoundReady(){
-  const b=$("readyBtn"); if(b){b.classList.add("isReady","waiting"); b.setAttribute("aria-disabled","true"); b.textContent="Waiting for other players…";}
+  const b=$("readyBtn"); if(b){b.classList.add("isReady","waiting"); b.setAttribute("aria-disabled","true"); b.textContent="Ready ✓";}
   if(Net.role==="client") toHost({t:"rready"});
   else {Net.rr.add(Net.myId); broadcast({t:"rr",ids:[...Net.rr]}); panelReady();}
 }
@@ -2352,6 +2525,7 @@ function clientData(d){
   }
 }
 function clientRound(d){
+  dropSettings();
   Net.rrDeadline=0; Net.evq=[]; Net.mySent=0; Net.sendAcc=1;
   round=d.round|0; roundScored=false; specT=null; panel.hidden=true; stopRain(); celeb=null; hideMsg();
   if(Number.isFinite(d.R)&&d.R>=4&&d.R<=R_FULL) setPlanetR(d.R); grid.clear();
@@ -2528,7 +2702,7 @@ function syncSpec(){
 // chase framing: [tilt back from straight overhead (rad), distance from the runner (×R), look-ahead (×R),
 // how far below the ground the aim point sits (×R), lens (°)]. Tuned so the runner sits ~60% down the
 // screen with a good stretch of ground ahead before the horizon.
-const CAM_TALL=[0.3,2.2,0.5,0.75,54], CAM_WIDE=[0.3,1.8,0.35,0.6,44];
+const CAM_TALL=[0.48,3.0,0.45,0.25,54], CAM_WIDE=[0.48,2.4,0.7,0.85,44];
 let camMix=0, camY=0;                       // 0 = overview, 1 = chase
 const chasePos=new THREE.Vector3(), chaseLook=new THREE.Vector3(), orbPos=new THREE.Vector3(), orbLook=new THREE.Vector3(), camUpV=new THREE.Vector3();
 function updateCamera(dt){
@@ -2625,7 +2799,7 @@ function syncBoostUI(){
   if(!show) return;
   const ready=me.boost>=1&&me.bt<0;
   boostBar.style.setProperty("--p",me.bt>=0?0:me.boost.toFixed(3));
-  if(boostBar.classList.contains("ready")!==ready){boostBar.classList.toggle("ready",ready); boostLbl.innerHTML=ready?(KEYBOARD_UI?'<kbd>Shift</kbd> to boost':"Swipe up to boost"):"Boost";}
+  if(boostBar.classList.contains("ready")!==ready){boostBar.classList.toggle("ready",ready); boostLbl.innerHTML=ready?(KEYBOARD_UI?'<kbd>Shift</kbd> to boost':"Flick up to boost"):"Boost";}
 }
 
 function resize(){
@@ -2674,6 +2848,8 @@ function frame(now){
   if(state==="ending"&&!paused){stateT-=dt; if(stateT<=0) showPanel();}
   {const gs=$("globalSound"), hb=$("homeBtn"), showHome=hud.hidden&&state!=="menu"&&$("pause").hidden;
    if(gs.hidden!==!hud.hidden) gs.hidden=!hud.hidden; if(hb.hidden!==!showHome) hb.hidden=!showHome;
+   syncPads();
+   const sb=$("settingsBtn"), noGear=!hud.hidden||!$("settings").hidden||!$("pause").hidden; if(sb.hidden!==noGear) sb.hidden=noGear;
    const mb=$("menuBtn"), noPause=state==="panel"; if(mb.hidden!==noPause) mb.hidden=noPause;
    }
   clientTick(dt); proxyFrame(dt); hostTick(dt); hostRoundTick();
