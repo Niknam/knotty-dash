@@ -325,13 +325,54 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
 #settings .seg button{font-size:15px}
 #settings .seg.two{grid-template-columns:1fr 1fr}
 .keyList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
-.keyList li{display:grid;grid-template-columns:minmax(150px,auto) 1fr;align-items:center;gap:14px;font-size:16px;color:var(--muted)}
+.keyList li{display:grid;grid-template-columns:170px 1fr;align-items:center;column-gap:28px;font-size:16px;color:var(--muted)}
 .keyList .keys{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--ink);font-weight:800}
 .keyList .keys em{font-style:normal;font-weight:600;font-size:13px;color:var(--muted)}
 .keyList kbd{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;box-sizing:border-box;padding:0 9px;
   font:800 14px/1 var(--font-body);color:var(--ink);border:1.5px solid rgba(243,240,255,.55);border-radius:8px;box-shadow:0 2.5px 0 rgba(243,240,255,.35);background:rgba(243,240,255,.06)}
 .keyList kbd .ka{width:16px;height:16px;display:block}
-body.touch .keyList li{grid-template-columns:130px 1fr;font-size:15px}
+body.touch .keyList li{grid-template-columns:136px 1fr;column-gap:24px;font-size:15px}
+.keyList{padding:12px 14px;border-radius:16px;background:rgba(243,240,255,.04);border:1px solid var(--line)}
+#settings .card{gap:0;box-sizing:border-box;width:min(422px,100%);max-height:100%;overflow:hidden;padding:0}
+#settings .setHead{padding:22px 20px 12px;flex:none}
+#settings .setBody{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  display:flex;flex-direction:column;gap:18px;padding:4px 20px 18px;border-block:1px solid transparent;transition:border-color .2s}
+#settings .setBody.scrolls{border-top-color:var(--line);border-bottom-color:var(--line)}
+#settings .setFoot{flex:none;padding:14px 20px 20px}
+#settings .setFoot .btn{width:100%}
+#settings .setRow{gap:10px}
+/* steering choices: one card per option, all visible at once, the chosen one marked */
+.optList{display:flex;flex-direction:column;gap:8px}
+.optCard{border:1.5px solid var(--line);border-radius:16px;background:rgba(243,240,255,.03);transition:border-color .18s,background-color .18s}
+.optCard.sel{border-color:var(--you);background:rgba(69,209,255,.08)}
+.opt{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:36px 1fr 22px;align-items:center;column-gap:14px;padding:12px 14px;
+  border-radius:15px;cursor:pointer}
+.opt .optIc{color:var(--muted);transition:color .18s} .opt .optIc svg{width:36px;height:36px;display:block}
+.opt b,.swRow b{display:block;font:800 16px/1.2 var(--font-body);color:var(--ink)}
+.opt small,.swRow small{display:block;font-size:13px;line-height:1.35;color:var(--muted);margin-top:3px}
+.opt .optCk{width:22px;height:22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--line);transition:background-color .18s,border-color .18s;display:grid;place-items:center}
+.opt .optCk svg{width:22px;height:22px;display:block;margin:-2px;opacity:0;transition:opacity .15s}
+.opt[aria-checked="true"] .optIc{color:var(--you)}
+.opt[aria-checked="true"] .optCk{border-color:var(--you);background:var(--you)}
+.opt[aria-checked="true"] .optCk svg{opacity:1}
+.opt:focus-visible,.swRow:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+@media (hover:hover){.optCard:not(.sel):hover{border-color:rgba(243,240,255,.35)}}
+/* the one Slide option, folded under Slide while it's chosen */
+.optSub{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .28s cubic-bezier(.2,.8,.2,1),opacity .2s}
+.optSub>div{overflow:hidden;min-height:0}
+.optSub.open{grid-template-rows:1fr;opacity:1}
+.optSubIn{padding:0 0 0 64px}
+.optSub.open .optSubIn{padding:4px 0 6px 64px}
+.optSub{margin-top:-8px} .optSub.open{margin-top:0}
+.subSeg button{font-size:14px!important;padding:9px 0}
+.subHint{display:block;font-size:13px;line-height:1.35;color:var(--muted);margin-top:8px}
+.swRow{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:1fr 44px;align-items:center;column-gap:14px;
+  padding:10px 14px 12px 64px;cursor:pointer}
+.sw{width:44px;height:26px;border-radius:13px;background:rgba(243,240,255,.18);position:relative;transition:background-color .2s}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#f3f0ff;transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.swRow[aria-checked="true"] .sw{background:var(--you)}
+.swRow[aria-checked="true"] .sw::after{transform:translateX(18px)}
+@media (prefers-reduced-motion:reduce){.optSub,.sw,.sw::after,.opt{transition:none}}
 /* smooth switching in the Controls card */
 #settings .seg button{transition:background-color .18s,color .18s,border-color .18s}
 #settings .setRow{transition:opacity .16s ease}
@@ -506,6 +547,7 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
         <input inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Digit 4">
       </div>
       <p class="status" id="joinStatus" role="status"></p>
+      <button class="btn" id="joinGo" type="button" hidden>Join</button>
       <button class="btn ghost" id="joinBack" type="button">Back</button>
     </div>
   </section>
@@ -536,27 +578,27 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
   <div id="pads" hidden aria-hidden="true"><div class="pad l"><i></i></div><div class="pad r"><i></i></div></div>
   <section id="settings" class="sheet" hidden>
     <div class="card">
-      <div class="label">Settings</div>
-      <h2>Controls</h2>
+      <h2 class="setHead">Controls</h2>
+      <div class="setBody" id="setBody">
       <div class="setRow touchOnly">
         <div class="label" id="schemeLbl">Steering</div>
-        <div class="seg" id="schemeSeg" role="radiogroup" aria-labelledby="schemeLbl">
-          <button type="button" role="radio" data-ctl="drag" aria-checked="true" tabindex="0">Slide</button>
-          <button type="button" role="radio" data-ctl="buttons" aria-checked="false" tabindex="-1">Buttons</button>
-          <button type="button" role="radio" data-ctl="stick" aria-checked="false" tabindex="-1">Joystick</button>
+        <div class="optList" id="schemeSeg" role="radiogroup" aria-labelledby="schemeLbl">
+          <div class="optCard" data-ctl="drag">
+            <button type="button" class="opt" role="radio" data-ctl="drag" aria-checked="true" tabindex="0"><span class="optIc"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M5 18h26M10 13l-5 5 5 5M26 13l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="18" r="4.5" fill="currentColor"/></svg></span><span class="optTx"><b>Slide</b><small>Slide left or right on the screen to turn.</small></span><span class="optCk" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M6.5 11.4l3 3 6-6.4" fill="none" stroke="#0c1124" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+          </div>
+          <div class="optSub" id="dirRow"><div class="optSubIn">
+              <div class="seg two subSeg" id="dirSeg" role="radiogroup" aria-label="Slide direction">
+                <button type="button" role="radio" data-dir="steer" aria-checked="true" tabindex="0">Turn runner</button>
+                <button type="button" role="radio" data-dir="spin" aria-checked="false" tabindex="-1">Spin planet</button>
+              </div>
+              <small class="subHint" id="dirHint"></small>
+            </div></div>
+          <div class="optCard" data-ctl="buttons"><button type="button" class="opt" role="radio" data-ctl="buttons" aria-checked="false" tabindex="-1"><span class="optIc"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="9.5" cy="18" r="7.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="26.5" cy="18" r="7.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M11 14.5 7.5 18l3.5 3.5M25 14.5l3.5 3.5-3.5 3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="optTx"><b>Buttons</b><small>Hold the arrow buttons in the bottom corners to turn. Tap them for small corrections.</small></span><span class="optCk" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M6.5 11.4l3 3 6-6.4" fill="none" stroke="#0c1124" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div>
+          <div class="optCard" data-ctl="stick"><button type="button" class="opt" role="radio" data-ctl="stick" aria-checked="false" tabindex="-1"><span class="optIc"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="23" cy="18" r="5.5" fill="currentColor"/></svg></span><span class="optTx"><b>Joystick</b><small>Touch anywhere and a joystick appears. Push it left or right. The further you push, the sharper the turn.</small></span><span class="optCk" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M6.5 11.4l3 3 6-6.4" fill="none" stroke="#0c1124" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div>
         </div>
-        <p class="lead setHint" id="schemeHint" aria-live="polite"></p>
-      </div>
-      <div class="setRow touchOnly" id="dirRow">
-        <div class="label" id="dirLbl">Slide direction</div>
-        <div class="seg two" id="dirSeg" role="radiogroup" aria-labelledby="dirLbl">
-          <button type="button" role="radio" data-dir="steer" aria-checked="true" tabindex="0">Turn runner</button>
-          <button type="button" role="radio" data-dir="spin" aria-checked="false" tabindex="-1">Spin planet</button>
-        </div>
-        <p class="lead setHint" id="dirHint" aria-live="polite"></p>
       </div>
       <div class="setRow">
-        <div class="label">Moves</div>
+        <div class="label touchOnly">Other moves</div><div class="label keysOnly">Keyboard</div>
         <ul class="keyList keysOnly">
           <li><span class="keys"><kbd aria-label="Left arrow"><svg class="ka" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3.5M7.5 3.5 3 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd><kbd aria-label="Right arrow"><svg class="ka" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd></span>Steer</li>
           <li><span class="keys"><kbd>Space</kbd></span>Jump</li>
@@ -570,7 +612,8 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
           <li><span class="keys">Flick up</span>Boost</li>
         </ul>
       </div>
-      <button class="btn" id="settingsDone" type="button">Done</button>
+      </div>
+      <div class="setFoot"><button class="btn" id="settingsDone" type="button">Done</button></div>
     </div>
   </section>
 
@@ -1317,8 +1360,12 @@ stage.addEventListener("pointerdown",e=>{
   const r={x:e.clientX,y:e.clientY,lx:e.clientX,t:performance.now(),moved:false,flick:false,air:false,pad:padHit(e.clientX,e.clientY)};
   ptrs.set(e.pointerId,r);
   if(!r.pad){   // a corner steering button only ever steers
-    if(airborne(meP())&&!hoverSpent){hoverHeld=true; hoverPtr=e.pointerId; hoverUsed=false; hoverArmAt=performance.now()+HOVER_ARM; r.air=true;}
-    if(joyId===null&&CTL!=="buttons"){joyId=e.pointerId;joyX=e.clientX;joyY=e.clientY;joyDX=joyDY=0;}   // first finger steers; others jump
+    // in the air: a fresh press can start the flutter, unless another finger is already holding one
+    if(airborne(meP())&&!hoverSpent&&hoverPtr===null){hoverHeld=true; hoverPtr=e.pointerId; hoverUsed=false; hoverArmAt=performance.now()+HOVER_ARM; r.air=true;}
+    // the first finger steers; a second finger takes over the steering if the first one is busy holding a
+    // flutter (so: flutter with one thumb, steer with the other); otherwise extra fingers just jump
+    const takeOver=joyId!==null&&joyId===hoverPtr&&e.pointerId!==hoverPtr;
+    if((joyId===null||takeOver)&&CTL!=="buttons"){joyId=e.pointerId;joyX=e.clientX;joyY=e.clientY;joyDX=joyDY=0;}
   }
   try{stage.setPointerCapture(e.pointerId);}catch(_){}
 });
@@ -1389,24 +1436,12 @@ document.body.classList.toggle("touch",TOUCH_UI);
 let CTL=(()=>{try{return localStorage.getItem("kd-ctl")||"drag";}catch(_){return "drag";}})();
 if(!["drag","buttons","stick"].includes(CTL)) CTL="drag";
 let DRAG_DIR=(()=>{try{return localStorage.getItem("kd-drag")==="spin"?"spin":"steer";}catch(_){return "steer";}})();
-const SCHEME_HINT={drag:"Slide your thumb left or right to turn. The further you slide, the more you turn. Hold still to run straight.",
-  buttons:"Hold the arrow buttons in the bottom corners to turn. Tap them for small corrections.",
-  stick:"Put your thumb down anywhere and push it sideways. The further you push, the sharper the turn."};
-const DIR_HINT={steer:"Slide right and the runner turns right.",
-  spin:"Slide right and the planet rolls right, like spinning a globe, so you turn left."};
-// Switching options: the card eases to its new height, a changed hint fades in, and the "Slide direction"
-// row fades out before it folds away (and fades in as it unfolds).
-function setHint(el,t){ if(el.textContent===t) return; el.textContent=t;
-  try{el.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:220,easing:"cubic-bezier(.2,.8,.2,1)"});}catch(_){} }
-function syncControlsUI(animate){
-  const radio=(sel,key,val)=>document.querySelectorAll(sel+" button").forEach(b=>{const on=b.dataset[key]===val; b.setAttribute("aria-checked",String(on)); b.tabIndex=on?0:-1;});
-  radio("#schemeSeg","ctl",CTL); radio("#dirSeg","dir",DRAG_DIR);
-  const card=$("settings").querySelector(".card"), row=$("dirRow"), wantRow=CTL==="drag";
-  const apply=()=>{ setHint($("schemeHint"),SCHEME_HINT[CTL]); setHint($("dirHint"),DIR_HINT[DRAG_DIR]); row.hidden=!wantRow; };
-  if(!animate||$("settings").hidden){ row.classList.remove("fading"); apply(); return; }
-  if(!wantRow&&!row.hidden){ row.classList.add("fading"); setTimeout(()=>{ morphCard(card,apply); row.classList.remove("fading"); },150); return; }
-  if(wantRow&&row.hidden){ row.classList.add("fading"); morphCard(card,apply); requestAnimationFrame(()=>requestAnimationFrame(()=>row.classList.remove("fading"))); return; }
-  morphCard(card,apply);
+
+function syncControlsUI(){
+  document.querySelectorAll("#schemeSeg .opt").forEach(b=>{const on=b.dataset.ctl===CTL; b.setAttribute("aria-checked",String(on)); b.tabIndex=on?0:-1; b.parentElement.classList.toggle("sel",on);});
+  const open=CTL==="drag"; $("dirRow").classList.toggle("open",open); setTimeout(syncSetScroll,320);
+  document.querySelectorAll("#dirSeg button").forEach(b=>{const on=b.dataset.dir===DRAG_DIR; b.setAttribute("aria-checked",String(on)); b.tabIndex=open&&on?0:-1;});
+  $("dirHint").textContent=DRAG_DIR==="spin"?"Slide right and the planet rolls right, like spinning a globe, so you turn left.":"Slide right and the runner turns right.";
 }
 function setScheme(v,animate){CTL=["drag","buttons","stick"].includes(v)?v:"drag"; try{localStorage.setItem("kd-ctl",CTL);}catch(_){}
   joyId=null; joy.hidden=true; dragPending=0; padTurn=0; syncControlsUI(animate);}
@@ -1950,15 +1985,17 @@ function syncSetup(){
   $("diffHint").textContent=DIFF_HINT[diff];
 }
 document.querySelectorAll("#oppSeg button").forEach(b=>b.addEventListener("click",()=>{Sound.click(); opponents=+b.dataset.n; try{localStorage.setItem("kd-opp",opponents);}catch(_){} syncSetup();}));
-document.querySelectorAll("#schemeSeg button").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.ctl===CTL) return; Sound.click(); setScheme(b.dataset.ctl,true);}));
-document.querySelectorAll("#dirSeg button").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.dir===DRAG_DIR) return; Sound.click(); setDragDir(b.dataset.dir,true);}));
+document.querySelectorAll("#schemeSeg .opt").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.ctl===CTL) return; Sound.click(); setScheme(b.dataset.ctl);}));
+document.querySelectorAll("#dirSeg button").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.dir===DRAG_DIR) return; Sound.click(); setDragDir(b.dataset.dir);}));
 setScheme(CTL);
 // Settings open in place of whatever card was showing (menu, lobby, character select, pause), never on top of it,
 // and Done puts that card back. In a paused match the game stays paused.
 let settingsBack=[];
+function syncSetScroll(){const b=$("setBody"); if(b) b.classList.toggle("scrolls",b.scrollHeight>b.clientHeight+1);}
+window.addEventListener("resize",()=>{ if(!$("settings").hidden) syncSetScroll(); });
 function openSettings(){
   Sound.click(); settingsBack=[...document.querySelectorAll("section.sheet")].filter(x=>!x.hidden&&x.id!=="settings");
-  settingsBack.forEach(x=>x.hidden=true); $("settings").hidden=false; syncControlsUI();
+  settingsBack.forEach(x=>x.hidden=true); $("settings").hidden=false; syncControlsUI(); $("setBody").scrollTop=0; requestAnimationFrame(syncSetScroll);
 }
 function closeSettings(){ if($("settings").hidden) return; Sound.click(); $("settings").hidden=true; settingsBack.forEach(x=>x.hidden=false); settingsBack=[];
   const back=$("pause").hidden?null:$("pauseCtlBtn"); if(back) back.focus({preventScroll:true}); }
@@ -1967,7 +2004,7 @@ $("settingsBtn").onclick=openSettings; $("pauseCtlBtn").onclick=openSettings; $(
 function dropSettings(){ if(!$("settings").hidden){$("settings").hidden=true;} settingsBack=[]; } $("settingsDone").onclick=closeSettings;
 document.querySelectorAll('[role="radiogroup"]').forEach(g=>g.addEventListener("keydown",e=>{
   const step={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key]; if(!step&&e.key!=="Home"&&e.key!=="End") return;
-  const opts=[...g.querySelectorAll('[role="radio"]')], i=opts.indexOf(document.activeElement); if(i<0) return;
+  const opts=[...g.querySelectorAll('[role="radio"]')].filter(r=>r.closest('[role="radiogroup"]')===g), i=opts.indexOf(document.activeElement); if(i<0) return;
   e.preventDefault(); e.stopPropagation();
   const j=e.key==="Home"?0:e.key==="End"?opts.length-1:(i+step+opts.length)%opts.length;
   opts[j].click(); opts[j].focus();          // selection follows focus, as in any radio group
@@ -2039,6 +2076,7 @@ $("homeBtn").onclick=()=>{Sound.click(); if(!$("pause").hidden){closePause(); re
 function enterTarget(){
   const vis=b=>b&&!b.disabled&&!b.classList.contains("waiting")&&b.offsetParent!==null&&b.getAttribute("aria-disabled")!=="true";
   if(!$("settings").hidden) return $("settingsDone");
+  if(!$("joinSheet").hidden) return $("joinGo").hidden?null:$("joinGo");
   if(!$("notice").hidden) return $("noticeBtn");
   if(!$("pause").hidden) return $("resumeBtn");   // Resume / Keep playing: never the one that quits
   const pick={menu:"onlineBtn",online:"createBtn",cpuset:"setupNext",select:"charGo",lobby:"lobbyStart"}[state];   // always the filled button
@@ -2194,26 +2232,32 @@ function openJoin(keepDigits){
   hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain();
   state="online"; $("joinSheet").hidden=false; $("otp").classList.remove("busy"); setOnlineStatus("");
   if(typeof Peer==="undefined") setOnlineStatus("Online play works when the game is opened from its own web address.",true);
-  if(pendingCode){otpSet(pendingCode); pendingCode="";} else if(!keepDigits) otpSet("");
+  if(pendingCode){otpSet(pendingCode); pendingCode=""; syncJoinGo(); otpCheck(); return;}   // came in through an invite link
+  if(!keepDigits) otpSet("");
+  syncJoinGo();
   const first=otpIns.find(i=>!i.value)||otpIns[3]; try{first.focus({preventScroll:true});}catch(_){}
 }
 function otpCheck(){
   const v=otpValue();
-  if(v.length===4){$("otp").classList.add("busy"); otpIns.forEach(i=>i.blur()); clientJoin(v);}
+  if(v.length===4){$("otp").classList.add("busy"); otpIns.forEach(i=>i.blur()); $("joinGo").hidden=true; clientJoin(v);}
 }
+// "Join" shows whenever all four digits are there and no attempt is running (e.g. after "No game found")
+function syncJoinGo(){ $("joinGo").hidden=!(otpValue().length===4&&!$("otp").classList.contains("busy")); }
+$("joinGo").onclick=()=>{Sound.click(); otpCheck();};
 otpIns.forEach((inp,k)=>{
   inp.addEventListener("input",()=>{
     const d=inp.value.replace(/\D/g,"");
     if(d.length>1){otpSet((otpValue().slice(0,k)+d).slice(0,4)); otpCheck(); return;}   // pasted or autofilled
     inp.value=d; inp.classList.toggle("filled",!!d);
     if(d&&k<3) otpIns[k+1].focus(); else if(d) otpCheck();
+    if(!d) syncJoinGo();
   });
   inp.addEventListener("keydown",e=>{
     if(e.key==="Backspace"&&!inp.value&&k>0){otpIns[k-1].value=""; otpIns[k-1].classList.remove("filled"); otpIns[k-1].focus(); e.preventDefault();}
     else if(e.key==="ArrowLeft"&&k>0) otpIns[k-1].focus();
     else if(e.key==="ArrowRight"&&k<3) otpIns[k+1].focus();
   });
-  inp.addEventListener("focus",()=>{$("otp").classList.remove("busy"); try{inp.select();}catch(_){}});
+  inp.addEventListener("focus",()=>{$("otp").classList.remove("busy"); syncJoinGo(); try{inp.select();}catch(_){}});
   inp.addEventListener("paste",e=>{const t=(e.clipboardData&&e.clipboardData.getData("text")||"").replace(/\D/g,"").slice(0,4);
     if(t){e.preventDefault(); otpSet(t); if(t.length===4) otpCheck(); else otpIns[t.length].focus();}});
 });
