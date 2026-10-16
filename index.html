@@ -52,6 +52,69 @@ html{background:var(--space)}
 .standalone #app{bottom:auto;height:var(--appH,100%)}
 #app{position:fixed;inset:0;background:radial-gradient(120% 80% at 50% 45%,var(--space-2) 0%,var(--space) 70%)}
 #stars{position:absolute;inset:0;pointer-events:none}
+/* Chaos twists: each one tints the sky, so a twist round looks different from the first frame */
+#sky{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .9s ease,background-color .9s ease;
+  background:radial-gradient(120% 85% at 50% 45%,var(--tw,#000) 0%,transparent 78%)}
+body[data-tw] #sky{opacity:.5}
+body[data-tw="lowgrav"]{--tw:#5b33d6}
+body[data-tw="turbo"]{--tw:#d4471c}
+body[data-tw="thick"]{--tw:#2f9a4e}
+body[data-tw="grounded"]{--tw:#8a5a2b}
+body[data-tw="tramp"]{--tw:#c8338f}
+body[data-tw="ice"]{--tw:#2a8fd8}
+body[data-tw="snake"]{--tw:#c79a10}
+body[data-tw="shrink"]{--tw:#b0243a}
+body.shrinkWarn #sky{animation:shrinkWarn 1.1s ease-out}
+@keyframes shrinkWarn{0%,40%,80%{opacity:1}20%,60%{opacity:.35}100%{opacity:.5}}
+body[data-tw="mines"]{--tw:#8a8f2a}
+body[data-tw="flight"]{--tw:#1d9bb5}
+body[data-tw="haunted"]{--tw:#1f7a3c}
+body[data-tw="xray"]{--tw:#1d4fb0}
+body[data-tw="rave"]{--tw:#9a1cff}
+body[data-tw="rave"] #sky{opacity:.8;animation:raveSky 2s linear infinite}
+@keyframes raveSky{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
+body[data-tw="holes"]{--tw:#4a1670}
+body[data-tw="portals"]{--tw:#12a89a}
+body[data-tw="potato"]{--tw:#c2410c}
+body[data-tw="subs"]{--tw:#0b5fa8}
+#app.tele::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:4;background:#fff;animation:teleF .45s ease-out forwards}
+@keyframes teleF{from{opacity:.9}to{opacity:0}}
+#bombTag{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 100px);padding:10px 18px 10px 12px;border-radius:18px;
+  background:rgba(12,17,36,.88);border:2px solid var(--bc,#ffcf3a);font:400 20px/1.1 var(--font-display);color:var(--ink);display:flex;gap:10px;align-items:center;pointer-events:none;
+  white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4);max-width:calc(100% - 32px)}
+#bombTag svg{width:26px;height:26px;color:var(--bc,#ffcf3a)}
+#bombTag b{font:400 26px/1 var(--font-display);min-width:1.3em;text-align:right;margin-left:4px}
+#bombTag.pop{animation:bombPop .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes bombPop{from{transform:translateX(-50%) scale(1.25)}}
+#bombTag.mine{background:#5a1010;border-color:#ff5a4a;animation:bombMine .4s ease-in-out infinite alternate}
+@keyframes bombMine{to{box-shadow:0 0 0 6px rgba(255,80,60,.25)}}
+#bombTag.hot b{color:#ff5a4a}
+body[data-tw="tie"]{--tw:#e0a10e}
+body[data-tw="tie"] #sky{animation:tiePulse .357s ease-in-out infinite alternate}
+@keyframes tiePulse{from{opacity:.38}to{opacity:.72}}
+body.twSpin #sky{transition:none}
+@media (prefers-reduced-motion:reduce){body[data-tw="tie"] #sky{animation:none;opacity:.55}}
+body[data-tw="dark"] #sky{opacity:1;background:#020803}
+/* Night vision: the picture goes green and grainy, with dark edges and faint scanlines */
+#nv{position:absolute;inset:0;pointer-events:none;display:none;overflow:hidden;
+  background:radial-gradient(ellipse 75% 62% at 50% 56%,transparent 38%,rgba(0,6,0,.72) 82%,#000 100%),
+    repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)}
+#nv .nvGrain{position:absolute;inset:-160px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .7 0 0 0 0 1 0 0 0 0 .7 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.32;animation:nvGrain .5s steps(5) infinite}
+@keyframes nvGrain{0%{transform:translate(0,0)}20%{transform:translate(-37px,61px)}40%{transform:translate(53px,-29px)}60%{transform:translate(-71px,-13px)}80%{transform:translate(19px,83px)}}
+#diveCue{position:absolute;left:50%;top:58%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;
+  font:400 18px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+#diveCue svg{width:52px;height:44px}
+#diveCue[data-st="soon"]{color:#ffcf3a;opacity:.85}
+#diveCue[data-st="now"]{color:#ff3b4a;animation:diveNow .18s ease-in-out infinite alternate}
+@keyframes diveNow{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.18)}}
+#speedLines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .3s}
+#hauntWarn{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;
+  background:radial-gradient(ellipse 80% 70% at 50% 50%,transparent 45%,rgba(60,255,120,.42) 100%);animation:hwPulse .5s ease-in-out infinite alternate}
+@keyframes hwPulse{from{filter:brightness(.8)}to{filter:brightness(1.3)}}
+body.nv #nv{display:block;animation:nvOn .5s steps(4,end) both}
+@keyframes nvOn{0%{opacity:0}30%{opacity:.8}45%{opacity:.2}100%{opacity:1}}
+body.nv #stage,body.nv #stars{filter:grayscale(1) sepia(1) hue-rotate(62deg) saturate(3.2) brightness(1.35) contrast(1.2)}
+@media (prefers-reduced-motion:reduce){#nv .nvGrain{animation:none}}
 #stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--ink)}
 #stage{position:absolute;inset:0;touch-action:none}
 #c{display:block;width:100%;height:100%}
@@ -164,6 +227,8 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 @keyframes crownPop{from{transform:scale(0) rotate(-25deg);opacity:0}}
 .tools{display:flex;gap:6px;pointer-events:auto;position:relative;z-index:8}
 #pause{z-index:7}
+.trackBtn{width:auto;gap:4px;padding:0 10px}
+.trackBtn b{font:800 12px var(--font-body)}
 .iconBtn{display:flex;align-items:center;justify-content:center;width:36px;height:31px;padding:0;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px}
 .iconBtn svg{width:18px;height:18px}
 .iconBtn[aria-pressed="false"]{color:var(--muted)}
@@ -320,6 +385,69 @@ button:disabled,button.waiting,button[aria-disabled="true"]{cursor:default}
   border:1.5px solid currentColor;border-radius:5px;box-shadow:0 1.5px 0 currentColor;vertical-align:1px}
 .pauseBtns{display:flex;flex-direction:column;gap:10px}
 #panel .card{position:relative}
+#modBanner{position:absolute;left:50%;top:calc(24% + 64px);transform:translateX(-50%);width:min(340px,calc(100% - 32px));z-index:6;pointer-events:none;
+  display:flex;align-items:center;gap:12px;padding:10px 18px 10px 12px;border-radius:18px;background:rgba(12,17,36,.82);border:1px solid rgba(255,207,58,.55);
+  box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:calc(100% - 32px);box-sizing:border-box;animation:modIn .45s cubic-bezier(.2,.8,.2,1) both}
+#modBanner.out{animation:modOut .35s ease forwards}
+#modBanner.spin .mTx{opacity:.55}
+#modBanner.land{animation:modLand .42s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes modLand{0%{transform:translateX(-50%) scale(1.14)}100%{transform:translateX(-50%) scale(1)}}
+#modBanner .mKick{display:block;font:800 11px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+#roundTag .rtIc{display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:5px;color:#ffcf3a}
+#roundTag .rtIc svg{width:100%;height:100%;display:block}
+#roundTag .rtTw{color:#ffcf3a}
+#roundTag.lab{pointer-events:auto;cursor:pointer;bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}
+#roundTag .labTag{display:inline-block;padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+#roundTag .labTag u{text-decoration:none;color:var(--ink)}
+.labLink{all:unset;box-sizing:border-box;cursor:pointer;align-self:center;display:flex;align-items:center;gap:7px;margin-top:2px;padding:8px 14px;border-radius:12px;
+  font:800 14px var(--font-body);color:var(--muted)}
+.labLink svg{width:18px;height:18px}
+.labLink:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+@media (hover:hover){.labLink:hover{color:var(--ink)}}
+.labGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.labTile{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px 10px;border-radius:14px;
+  border:1.5px solid var(--line);background:rgba(243,240,255,.03);font:800 12.5px/1.15 var(--font-body);color:var(--ink);text-align:center;-webkit-tap-highlight-color:transparent}
+.labTile .ltIc{color:#ffcf3a} .labTile .ltIc svg{width:26px;height:26px;display:block}
+.labTile.cur{border-color:var(--you);background:rgba(69,209,255,.1)}
+.labTile:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+@media (hover:hover){.labTile:not(.cur):hover{border-color:rgba(243,240,255,.35)}}
+#modBanner .mIc{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,207,58,.16);color:#ffcf3a}
+#modBanner .mIc svg{width:26px;height:26px}
+#modBanner b{display:block;font:400 22px/1 var(--font-display);color:#ffcf3a;letter-spacing:.02em;white-space:nowrap}
+#modBanner small{display:block;font-size:14px;color:var(--ink);margin-top:3px}
+@keyframes modIn{from{opacity:0;transform:translateX(-50%) scale(.96)}}
+@keyframes modOut{to{opacity:0;transform:translateX(-50%) scale(.97)}}
+/* Match setup: two quick picks in one grouped list (name left, compact control right),
+   then the rules as two tiles, since that's the choice that changes the game the most */
+.setupCard{gap:18px}
+.setGroup{border:1px solid var(--line);border-radius:16px;background:rgba(243,240,255,.03)}
+.setLine{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding:10px 10px 10px 16px}
+.setLine+.setLine{border-top:1px solid var(--line)}
+.setName{font:800 16px/1.2 var(--font-body);color:var(--ink)}
+.seg.mini{display:flex;gap:2px;padding:3px;border-radius:13px;background:rgba(4,7,20,.45);border:1px solid var(--line)}
+.seg.mini button{min-width:44px;padding:8px 12px;border:0;border-radius:10px;font-size:15px;color:var(--muted)}
+.seg.mini button[aria-checked="true"]{color:var(--space)}
+.setNote{flex-basis:100%;margin:0;font-size:13px;line-height:1.35;color:var(--muted)}
+.setLine .setNote{margin-top:-2px}
+.setSection{display:flex;flex-direction:column;gap:8px}
+.ruleTiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ruleTile{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;padding:12px 14px 14px;
+  border:1.5px solid var(--line);border-radius:16px;background:rgba(243,240,255,.03);transition:border-color .18s,background-color .18s;-webkit-tap-highlight-color:transparent}
+.ruleTile[aria-checked="true"]{border-color:var(--you);background:rgba(69,209,255,.08)}
+.ruleTile .rtTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ruleTile .rtIcon{color:var(--muted);transition:color .18s} .ruleTile .rtIcon svg{width:30px;height:30px;display:block}
+.ruleTile[aria-checked="true"] .rtIcon{color:var(--you)}
+.ruleTile b{font:800 16px/1.2 var(--font-body);color:var(--ink)}
+.ruleTile small{font-size:13px;line-height:1.35;color:var(--muted)}
+.ruleTile .optCk{width:22px;height:22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--line);transition:background-color .18s,border-color .18s;display:grid;place-items:center}
+.ruleTile .optCk svg{width:22px;height:22px;display:block;margin:-2px;opacity:0;transition:opacity .15s}
+.ruleTile[aria-checked="true"] .optCk{border-color:var(--you);background:var(--you)}
+.ruleTile[aria-checked="true"] .optCk svg{opacity:1}
+.ruleTile:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+@media (hover:hover){.ruleTile:not([aria-checked="true"]):not([aria-disabled="true"]):hover{border-color:rgba(243,240,255,.35)}}
+#lobbyRules .ruleTile[aria-disabled="true"]{cursor:default}
+#lobbyRules.guest .ruleTile:not([aria-checked="true"]){opacity:.45}
+#lobbyRules .setNote:empty{display:none}
 .cardCorner{position:absolute;top:16px;right:16px}
 #settingsBtn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 20px);right:60px;z-index:8}
 #settings .seg button{font-size:15px}
@@ -424,13 +552,20 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
 </head>
 <body>
 <div id="app">
+  <div id="sky"></div>
   <div id="stars"></div>
   <div id="stage"><canvas id="c"></canvas></div>
+  <div id="nv" aria-hidden="true"><i class="nvGrain"></i></div>
+  <div id="hauntWarn" aria-hidden="true"></div>
+  <div id="bombTag" hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="14" r="6.5" fill="currentColor"/><path d="M15.5 9.5 18 7M18 7l1.5-1.5M18 7h2.5"/></svg><span id="bombWho"></span><b id="bombTime"></b></div>
+  <canvas id="speedLines" aria-hidden="true"></canvas>
+  <div id="diveCue" hidden aria-hidden="true"><svg viewBox="0 0 48 40"><path d="M8 6l16 12L40 6M8 20l16 12 16-12" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Dive</span></div>
 
   <div id="hud" hidden>
     <div id="chips"></div>
     <div class="tools">
       <button id="soundBtn" class="iconBtn" type="button" aria-label="Sound" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 9.5v5h4l5 4v-13l-5 4H3z" fill="currentColor" stroke="none"/><path class="w" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+      <button id="trackBtn" class="iconBtn trackBtn" type="button" aria-label="Switch music track" title="Switch music track" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><b id="trackNum">1</b></button>
       <button id="menuBtn" class="iconBtn" type="button" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.5"/><rect x="13.5" y="5" width="4" height="14" rx="1.5"/></svg></button>
     </div>
   </div>
@@ -478,6 +613,17 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
       <p class="note" id="menuNote" hidden></p>
       <button class="btn" id="onlineBtn" type="button">Play with friends</button>
       <button class="btn ghost" id="startBtn" type="button">Play vs computer</button>
+      <button class="labLink" id="labBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5.5 9.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3"/><path d="M7.5 15h9"/></svg>Twist lab</button>
+    </div>
+  </section>
+
+  <section id="labSheet" class="sheet" hidden>
+    <div class="card">
+      <div class="label">Test mode</div>
+      <h2>Twist lab</h2>
+      <p class="lead">Pick a twist and play it over and over. Crash and the round starts again at once.</p>
+      <div class="labGrid" id="labGrid"></div>
+      <div class="row"><button class="btn ghost" id="labHome" type="button">Home</button><button class="btn" id="labResume" type="button" hidden>Resume</button></div>
     </div>
   </section>
 
@@ -502,25 +648,33 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
   </section>
 
   <section id="cpuSetup" class="sheet" hidden>
-    <div class="card">
-      <div class="label">Play vs computer</div>
-      <h2>Match setup</h2>
-      <div class="setRow">
-        <div class="label" id="oppLabel">Opponents</div>
-        <div class="seg" id="oppSeg" role="radiogroup" aria-labelledby="oppLabel">
-          <button type="button" role="radio" data-n="1" aria-checked="false" tabindex="-1">1</button>
-          <button type="button" role="radio" data-n="2" aria-checked="false" tabindex="-1">2</button>
-          <button type="button" role="radio" data-n="3" aria-checked="true" tabindex="0">3</button>
+    <div class="card setupCard">
+      <h2>Play vs computer</h2>
+      <div class="setGroup">
+        <div class="setLine">
+          <div class="setName" id="oppLabel">Opponents</div>
+          <div class="seg mini" id="oppSeg" role="radiogroup" aria-labelledby="oppLabel">
+            <button type="button" role="radio" data-n="1" aria-checked="false" tabindex="-1">1</button>
+            <button type="button" role="radio" data-n="2" aria-checked="false" tabindex="-1">2</button>
+            <button type="button" role="radio" data-n="3" aria-checked="true" tabindex="0">3</button>
+          </div>
+        </div>
+        <div class="setLine">
+          <div class="setName" id="diffLabel">Difficulty</div>
+          <div class="seg mini" id="diffSeg" role="radiogroup" aria-labelledby="diffLabel">
+            <button type="button" role="radio" data-d="easy" aria-checked="false" tabindex="-1">Easy</button>
+            <button type="button" role="radio" data-d="normal" aria-checked="true" tabindex="0">Normal</button>
+            <button type="button" role="radio" data-d="hard" aria-checked="false" tabindex="-1">Hard</button>
+          </div>
+          <p class="setNote" id="diffHint"></p>
         </div>
       </div>
-      <div class="setRow">
-        <div class="label" id="diffLabel">Difficulty</div>
-        <div class="seg" id="diffSeg" role="radiogroup" aria-labelledby="diffLabel">
-          <button type="button" role="radio" data-d="easy" aria-checked="false" tabindex="-1">Easy</button>
-          <button type="button" role="radio" data-d="normal" aria-checked="true" tabindex="0">Normal</button>
-          <button type="button" role="radio" data-d="hard" aria-checked="false" tabindex="-1">Hard</button>
+      <div class="setSection">
+        <div class="label" id="rulesLabel">Game mode</div>
+        <div class="ruleTiles" id="rulesSeg" role="radiogroup" aria-labelledby="rulesLabel">
+          <button type="button" class="ruleTile" role="radio" data-rules="classic" aria-checked="true" tabindex="0"><span class="rtTop"><span class="rtIcon"><svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="8" fill="none" stroke="currentColor" stroke-width="2.2"/><ellipse cx="15" cy="15" rx="13" ry="4.6" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-20 15 15)"/></svg></span><span class="optCk" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M6.5 11.4l3 3 6-6.4" fill="none" stroke="#0c1124" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span><b>Classic</b><small>The original game.</small></button>
+          <button type="button" class="ruleTile" role="radio" data-rules="chaos" aria-checked="false" tabindex="-1"><span class="rtTop"><span class="rtIcon"><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="5" y="5" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="10.5" cy="10.5" r="1.9" fill="currentColor"/><circle cx="15" cy="15" r="1.9" fill="currentColor"/><circle cx="19.5" cy="19.5" r="1.9" fill="currentColor"/></svg></span><span class="optCk" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M6.5 11.4l3 3 6-6.4" fill="none" stroke="#0c1124" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span><b>Chaos</b><small>A new twist every round.</small></button>
         </div>
-        <p class="lead setHint" id="diffHint"></p>
       </div>
       <div class="row"><button class="btn ghost" id="setupBack" type="button">Back</button><button class="btn" id="setupNext" type="button">Next</button></div>
     </div>
@@ -559,6 +713,14 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
         <button class="btn ghost small" id="shareBtn" type="button">Share</button>
       </div>
       <ol class="lobbyList" id="lobbyList"></ol>
+      <div class="setSection" id="lobbyRules">
+        <div class="label" id="lobbyRulesLabel">Game mode</div>
+        <div class="ruleTiles" id="lobbyRulesSeg" role="radiogroup" aria-labelledby="lobbyRulesLabel">
+          <button type="button" class="ruleTile" role="radio" data-rules="classic" aria-checked="true" tabindex="0"><span class="rtTop"><span class="rtIcon"><svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="8" fill="none" stroke="currentColor" stroke-width="2.2"/><ellipse cx="15" cy="15" rx="13" ry="4.6" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-20 15 15)"/></svg></span><span class="optCk" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M6.5 11.4l3 3 6-6.4" fill="none" stroke="#0c1124" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span><b>Classic</b><small>The original game.</small></button>
+          <button type="button" class="ruleTile" role="radio" data-rules="chaos" aria-checked="false" tabindex="-1"><span class="rtTop"><span class="rtIcon"><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="5" y="5" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="10.5" cy="10.5" r="1.9" fill="currentColor"/><circle cx="15" cy="15" r="1.9" fill="currentColor"/><circle cx="19.5" cy="19.5" r="1.9" fill="currentColor"/></svg></span><span class="optCk" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M6.5 11.4l3 3 6-6.4" fill="none" stroke="#0c1124" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span><b>Chaos</b><small>A new twist every round.</small></button>
+        </div>
+        <p class="setNote rulesHint"></p>
+      </div>
       <p class="status" id="lobbyStatus" role="status"></p>
       <div class="row"><button class="btn ghost" id="lobbyLeave" type="button">Leave</button><button class="btn" id="lobbyStart" type="button">Start</button></div>
     </div>
@@ -574,6 +736,7 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
     </div>
   </section>
 
+  <div id="modBanner" hidden aria-live="polite"><span class="mIc"></span><span class="mTx"><span class="mKick">Twist round</span><b></b><small></small></span></div>
   <div id="joy" hidden><div id="knob"></div></div>
   <div id="pads" hidden aria-hidden="true"><div class="pad l"><i></i></div><div class="pad r"><i></i></div></div>
   <section id="settings" class="sheet" hidden>
@@ -625,6 +788,7 @@ body.touch .keysOnly,body:not(.touch) .touchOnly{display:none}
       <div id="pauseBtns" class="pauseBtns">
         <button class="btn" id="resumeBtn" type="button">Resume</button>
         <button class="btn ghost" id="pauseCtlBtn" type="button">Controls</button>
+        <button class="btn ghost" id="labPauseBtn" type="button" hidden>Change twist</button>
         <button class="btn ghost" id="quitBtn" type="button">Quit to home</button>
       </div>
     </div>
@@ -676,11 +840,13 @@ const radiusFor=n=>n<=2?5.0:n===3?5.8:6.6;  // ~equal room per runner; ~17% smal
 const LAP = 8.9;                    // seconds per lap on the reference planet (sets the running speed)
 const SPEED = 2*Math.PI*R0/LAP;
 const TURN = 9.0;                   // rad/s max turn (U-turn ≈ 0.35 s)
-const TR = 0.22;                    // tube radius (slimmer tubes)
+let TR = 0.22;                      // tube radius (slimmer tubes); "Thick tubes" raises it for a round
+const TR0 = TR;
 const PR = 0.22;                    // player body radius
 const HP = 1.05;                    // player height
-const JH = 1.9;                     // jump apex (feet height)
-const JT = 0.36;                    // jump duration
+let JH = 1.9;                       // jump apex (feet height); "Low gravity" raises it for a round
+let JT = 0.36;                      // jump duration
+const JH0 = JH, JT0 = JT;
 const SP = 0.25;                    // distance between trail points
 const GRACE = 8;                    // own newest points that can't hurt you
 const STEP_LEN = 1.4;               // distance per footstep
@@ -702,7 +868,7 @@ const joy=$("joy"), knob=$("knob"), menu=$("menu"), panel=$("panel");
 
 // ---------- Sound (all synthesized with Web Audio) ----------
 const Sound=(function(){
-  const BPM=100, STEP16=60/BPM/4, BAR=STEP16*16;
+  const BPM=100; let STEP16=60/BPM/4, BAR=STEP16*16, twist=null, TW=null, echo=null, musSendG=null;
   const mtof=m=>440*Math.pow(2,(m-69)/12);
   let ctx=null, master, sfxBus, musicBus, musicTone, delayIn, noiseBuf;
   let sfxOn=true, musicOn=true, mode="menu", nextT=0, s16=0, bar=0;
@@ -737,10 +903,10 @@ const Sound=(function(){
     const sfxSend=ctx.createGain(); sfxSend.gain.value=0.18; sfxBus.connect(sfxSend); sfxSend.connect(rev);
     musicTone=ctx.createBiquadFilter(); musicTone.type="lowpass"; musicTone.frequency.value=5000; musicTone.Q.value=0.7;
     musicBus=ctx.createGain(); musicBus.gain.value=0; musicBus.connect(musicTone); musicTone.connect(master);
-    const musSend=ctx.createGain(); musSend.gain.value=0.35; musicTone.connect(musSend); musSend.connect(rev);
+    const musSend=musSendG=ctx.createGain(); musSend.gain.value=0.35; musicTone.connect(musSend); musSend.connect(rev);
     // tempo-synced echo for the arpeggio
     delayIn=ctx.createGain();
-    const dl=ctx.createDelay(1.5); dl.delayTime.value=STEP16*3;
+    const dl=echo=ctx.createDelay(1.5); dl.delayTime.value=STEP16*3;
     const fb=ctx.createGain(); fb.gain.value=0.33;
     const dlf=ctx.createBiquadFilter(); dlf.type="lowpass"; dlf.frequency.value=2600;
     delayIn.connect(dl); dl.connect(dlf); dlf.connect(fb); fb.connect(dl);
@@ -869,9 +1035,12 @@ const Sound=(function(){
     noise({t,dur:0.5,g:0.16*vol,f:260,f2:2400,q:0.8,a:0.03,dest:d});
     osc({type:"sawtooth",f:110,f2:420,t,dur:0.36,g:0.1*vol,lp:700,lp2:1800,dest:d});
     osc({f:85,f2:38,t,dur:0.26,g:0.38*vol,a:0.003,dest:d}); }
+  // boost refilled: a quiet rising charge-up (the same whoosh family as the boost itself) ending in a soft click,
+  // so it reads as "your boost is ready again" rather than as a reward jingle
   function boostReady(){ if(!ready()) return; const t=ctx.currentTime;
-    osc({type:"triangle",f:mtof(81),t,dur:0.16,g:0.09}); osc({type:"triangle",f:mtof(88),t:t+0.08,dur:0.32,g:0.09});
-    osc({f:mtof(100),t:t+0.08,dur:0.2,g:0.02}); }
+    noise({t,dur:0.22,g:0.05,f:500,f2:2600,q:1.2,a:0.12});
+    osc({type:"sawtooth",f:140,f2:420,t,dur:0.2,g:0.025,lp:900,lp2:2200});
+    osc({type:"triangle",f:1300,t:t+0.19,dur:0.05,g:0.03,a:0.001}); }
   function pop(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
     noise({t,dur:0.28,g:0.26*vol,type:"lowpass",f:4200,f2:280,a:0.001,dest:d});
     osc({f:190,f2:55,t,dur:0.22,g:0.26*vol,a:0.002,dest:d});
@@ -887,17 +1056,319 @@ const Sound=(function(){
     if(nextT<ctx.currentTime-0.2) nextT=ctx.currentTime+0.05;
     while(nextT<ctx.currentTime+0.15){ playStep(nextT,s16,bar); nextT+=STEP16; if(++s16===16){s16=0;bar++;} }
   }
+  // Every twist round has its own little theme, so you can tell what's going on with your eyes closed:
+  // space bells for low gravity, a drum'n'bass chase for turbo, a circus for thick tubes, a heartbeat in the dark,
+  // a stomp for grounded, glassy chimes on ice, a snake charmer, a ticking clock and a "Jaws" bass as the planet
+  // shrinks, spy-film surf guitar in the minefield, a soaring flute in flight, horror organ and bells in the
+  // haunted house, and boings on the trampolines.
+  const CHAOS=[{b:45,p:[57,60,64,67,71]},{b:41,p:[53,57,60,64,67]},{b:38,p:[50,53,57,60,64]},{b:40,p:[52,56,59,62,64]}];
+  const MAJOR=[{b:48,p:[60,64,67,72,76]},{b:43,p:[59,62,67,71,74]},{b:45,p:[57,60,64,69,72]},{b:41,p:[57,60,65,69,72]}];
+  const TWISTS={
+    lowgrav:{bpm:68,fn:space,lp:6000,send:0.95},
+    turbo:{bpm:172,fn:race,lp:10000},
+    thick:{bpm:138,fn:circus,lp:9000,chords:[{b:48,p:[60,64,67,72,76]},{b:43,p:[59,62,65,67,71]},{b:48,p:[60,64,67,72,76]},{b:41,p:[57,60,65,69,72]}]},
+    dark:{bpm:88,heart:true,noArp:true,lp:1100,send:0.6},
+    grounded:{bpm:84,fn:stomp,lp:5000},
+    ice:{bpm:92,fn:crystal,lp:11000,send:0.85},
+    snake:{bpm:126,fn:charmer,lp:9000,send:0.5},
+    shrink:{bpm:100,fn:urgent,lp:9000},
+    mines:{bpm:128,fn:bombsquad,lp:9000,send:0.4},
+    flight:{bpm:150,fn:chip,lp:12000,send:0.3},
+    xray:{bpm:96,fn:xrayM,lp:7000,send:0.8},
+    rave:{bpm:128,fn:raveM,lp:12000,send:0.35},
+    holes:{bpm:80,fn:holeM,lp:5000,send:0.9},
+    portals:{bpm:122,fn:warpM,lp:10000,send:0.6},
+    potato:{bpm:160,fn:potatoM,lp:9000,send:0.4},
+    subs:{bpm:100,fn:subM,lp:5500,send:0.85},
+    haunted:{bpm:132,fn:horror,lp:8500,send:0.6},
+    tramp:{bpm:126,fn:bounce,lp:9500,chords:MAJOR},
+    // tiebreaker: fast and bright, the "you've got the star" feeling
+    tie:{bpm:168,star:true,hats:true,lp:11000,chords:[{b:48,p:[60,64,67,72,74]},{b:46,p:[58,62,65,70,72]},{b:41,p:[57,60,65,69,72]},{b:43,p:[59,62,67,71,74]}]}
+  };
   function playStep(t,s,b){
     if(!musicOn) return;
-    const ch=CHORDS[b%4], drums=mode==="play"||mode==="dead";
+    const tw=TW&&mode!=="menu"?TW:null;
+    let ch=(tw?(tw.chords||CHAOS):CHORDS)[b%4]; const drums=mode==="play"||mode==="dead";
+    if(tw&&tw.tr) ch={b:ch.b+tw.tr,p:ch.p.map(n=>n+tw.tr)};
+    if(tw&&tw.fn){ tw.fn(t,s,b,ch,drums); return; }
     if(s===0) pad(t,ch);
-    if(mode!=="menu" && (s===0||s===6||s===8||s===14)) bass(t,ch.b,s===0?1:0.7);
-    if(mode==="menu" ? s%4===0 : ARP_ON[s]) arp(t,ch.p[ARP[s]]+12,mode==="menu"?0.05:0.06);
+    if(mode!=="menu"){
+      if(tw&&(tw.star||tw.bounce)){ if(s%2===0) bass(t,ch.b+(s%4===2?12:0),s===0?1:0.65); }
+      else if(tw&&tw.half){ if(s===0||s===10) bass(t,ch.b,s===0?1:0.6); }
+      else if(tw&&tw.choppy){ if(s===0||s===3||s===6||s===10||s===13) bass(t,ch.b,s===0?1:0.75); }
+      else if(s===0||s===6||s===8||s===14) bass(t,ch.b,s===0?1:0.7);
+      if(tw&&tw.heavy&&(s===0||s===8)) sub(t,ch.b-12);
+    }
+    const arpOn=tw?(tw.noArp?false:tw.star?true:tw.half?s%2===0:tw.choppy?ARP_ON[s]&&s%3!==2:ARP_ON[s]):(mode==="menu"?s%4===0:ARP_ON[s]);
+    if(arpOn){ const n=ch.p[tw&&tw.star?[0,1,2,3,4,3,2,1][s%8]:ARP[s]]+12;
+      arp(t,n,(mode==="menu"?0.05:0.06)*(tw&&tw.arpG||1)*(tw&&tw.star?0.85:1));
+      if(tw&&tw.bright) arp(t,n+12,0.02); }
+    if(tw&&tw.heart&&mode!=="menu"&&(s===0||s===3)) kick(t,s===0?0.45:0.3);
     if(drums){
-      if(s===0||s===8||(s===10&&b%2===1)) kick(t);
-      if(s===4||s===12) snare(t);
+      if(tw&&tw.heart){}
+      else if(tw&&tw.half){ if(s===0) kick(t); if(s===8) snare(t); }
+      else if(tw&&tw.star){ if(s%4===0) kick(t,0.45); if(s===4||s===12) snare(t); }
+      else{ if(s===0||s===8||(s===10&&b%2===1)||(tw&&tw.choppy&&s===11)) kick(t); if(s===4||s===12) snare(t); }
+      if(tw&&tw.hats) hat(t,s%4===2?1:s%2===0?0.6:0.35);
     }
   }
+  function circus(t,s,b,ch,drums){
+    if(s%4===0) bass(t,(s%8===0?ch.b:ch.b-5),1);                                  // oom
+    if(s%4===2) for(const m of ch.p.slice(1,4)) osc({type:"square",f:mtof(m),t,dur:0.09,g:0.022,a:0.003,lp:2600,dest:musicBus});   // pah
+    if(s%2===0){ const run=[4,3,2,1,2,3,4,3][(s>>1)%8]; let m=ch.p[run]+12; if(s===14&&b%2===1) m-=1;   // a chromatic slip now and then
+      calliope(t,m); }
+    if(drums){ if(s%4===0) kick(t,0.32); if(s%4===2) hat(t,1.3); if(s===0&&b%4===0) noise({t,dur:0.6,g:0.03,type:"highpass",f:5000,q:0.5,dest:musicBus}); }
+  }
+  // ----- twist themes -----
+  function vib(t,f,f2,dur,g,rate,depth,type="sine",lp){   // a held note with vibrato (theremin, flute, pungi)
+    const o=ctx.createOscillator(); o.type=type; o.frequency.setValueAtTime(f,t); if(f2) o.frequency.exponentialRampToValueAtTime(f2,t+dur*0.8);
+    const l=ctx.createOscillator(); l.frequency.value=rate; const lg=ctx.createGain(); lg.gain.value=f*depth; l.connect(lg); lg.connect(o.frequency);
+    const gn=ctx.createGain(); gn.gain.setValueAtTime(0.0001,t); gn.gain.linearRampToValueAtTime(g,t+Math.min(0.25,dur*0.3)); gn.gain.setValueAtTime(g,t+dur*0.7); gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    let node=o; if(lp){const f1=ctx.createBiquadFilter(); f1.type="lowpass"; f1.frequency.value=lp; o.connect(f1); node=f1;}
+    node.connect(gn); gn.connect(musicBus); o.start(t); l.start(t); o.stop(t+dur+0.05); l.stop(t+dur+0.05); }
+  function bellTone(m,t,g,dur){ const f=mtof(m); osc({f,t,dur,g,a:0.002,dest:musicBus}); osc({f:f*2.76,t,dur:dur*0.5,g:g*0.35,a:0.002,dest:musicBus}); osc({f:f*5.4,t,dur:dur*0.25,g:g*0.15,a:0.002,dest:musicBus}); }
+  function clap(t,g=0.07){ for(let k=0;k<3;k++) noise({t:t+k*0.012,dur:0.09,g,type:"bandpass",f:1400,q:1.2,a:0.001,dest:musicBus}); }
+  // low gravity: floating in space — slow pads, twinkling bells with long echoes, a far-off sci-fi blip
+  function space(t,s,b,ch,drums){
+    if(s===0) pad(t,ch);
+    if(s===0) bass(t,ch.b,0.6);
+    if(s%4===0||s===6){ const m=ch.p[[4,2,3,1,4,0][(s+b)%6]]+24; osc({f:mtof(m),t,dur:1.4,g:0.03,a:0.004,dest:musicBus}); osc({f:mtof(m),t,dur:0.6,g:0.03,dest:delayIn}); }
+    if(s===12&&b%2===1) osc({f:900,f2:2600,t,dur:0.25,g:0.012,dest:musicBus});
+    if(drums&&s===0) kick(t,0.25);
+  }
+  // turbo: drum'n'bass at 172 — a two-step breakbeat with ghost snares and rolling hats, a fat "reese" bass
+  // (two detuned saws with a moving filter), a stab now and then
+  function race(t,s,b,ch,drums){
+    if(s===0||s===8){ const m=ch.b+12+(s===8&&b%2===1?3:0);
+      for(const d of [-16,16]) osc({type:"sawtooth",f:mtof(m),t,dur:BAR*0.47,g:0.05,a:0.01,lp:380,lp2:1500,q:3,detune:d,dest:musicBus});
+      osc({f:mtof(m-12),t,dur:BAR*0.47,g:0.13,a:0.01,dest:musicBus}); }
+    // a soft electric-piano chord instead of the classic saw pad (liquid drum'n'bass), and a stab now and then
+    if(s===0||(s===6&&b%2===1)) for(const m of ch.p.slice(0,4)) osc({type:"triangle",f:mtof(m),t,dur:0.9,g:0.016,a:0.01,dest:musicBus});
+    if(s===0) for(const m of ch.p.slice(0,4)) osc({type:"sine",f:mtof(m+12),t,dur:0.5,g:0.006,dest:delayIn});
+    if(s===14&&b%4===3) for(const m of ch.p.slice(1,4)) osc({type:"sawtooth",f:mtof(m+12),t,dur:0.16,g:0.022,lp:3200,lp2:700,dest:musicBus});
+    if(drums){
+      if(s===0||s===10) kick(t,0.6);
+      if(s===4||s===12){ snare(t); clap(t,0.06); }
+      if(s===7||s===9||s===15) noise({t,dur:0.05,g:0.022,type:"bandpass",f:1900,q:1.2,dest:musicBus});
+      hat(t,s%4===2?1.4:s%2?0.55:0.9);
+    }
+  }
+  // grounded: heavy and stompy — stomp-stomp-clap, a fat low power chord, no melody
+  function stomp(t,s,b,ch,drums){
+    if(s===0){ for(const m of [ch.b,ch.b+7,ch.b+12]) osc({type:"square",f:mtof(m),t,dur:BAR*0.9,g:0.018,a:0.02,lp:700,dest:musicBus}); sub(t,ch.b-12); }
+    if(s===0||s===8) bass(t,ch.b,1);
+    if(drums){ if(s===0||s===2||s===8||s===10) kick(t,0.65); if(s===4||s===12) clap(t,0.09); }
+  }
+  // ice: glassy, sparkling — chimes up high with long echoes, a soft shaker, no kick
+  function crystal(t,s,b,ch,drums){
+    if(s===0) pad(t,ch);
+    if(s%2===0){ const m=ch.p[[0,2,4,3,1,4,2,3][(s>>1)%8]]+24; osc({type:"sine",f:mtof(m),t,dur:0.7,g:0.026,a:0.002,dest:musicBus}); osc({f:mtof(m+12),t,dur:0.3,g:0.01,dest:delayIn}); }
+    if(s===0&&b%2===0) for(const m of [88,91,95]) osc({f:mtof(m),t:t+Math.random()*0.08,dur:1.6,g:0.012,dest:musicBus});
+    if(s===0||s===8) bass(t,ch.b,0.5);
+    if(drums&&s%4===2) noise({t,dur:0.06,g:0.02,type:"highpass",f:6000,q:0.6,a:0.01,dest:musicBus});
+  }
+  // snake: snake-charmer meets action game — maqam Hijaz on D (D Eb F# G A Bb C) over a driving beat: a plucky
+  // bass line on eighths, darbuka plus kick and hats, the mizmar tune further back, and a fast scale run every
+  // fourth bar
+  const SNK=[
+    [[0,69,4],[4,70,2],[6,69,2],[8,66,3],[11,67,1],[12,66,2],[14,63,2]],
+    [[0,62,6],[6,63,1],[7,66,1],[8,67,2],[10,69,2],[12,70,1],[13,69,1],[14,67,2]],
+    [[0,74,3],[3,72,1],[4,70,2],[6,69,2],[8,70,1],[9,69,1],[10,67,1],[11,66,1],[12,67,4]],
+    [[0,66,2],[2,63,2],[4,62,4]]];
+  const SNB=[50,57,62,57,50,57,63,57], SNB2=[50,57,62,57,48,55,60,55], HJ=[62,63,66,67,69,70,72,74];
+  function charmer(t,s,b,ch,drums){
+    if(s===0) osc({type:"sawtooth",f:mtof(50),t,dur:BAR*1.02,g:0.018,a:0.1,lp:700,dest:musicBus});
+    if(s%2===0){ const m=(b%4===3?SNB2:SNB)[s>>1]; osc({type:"triangle",f:mtof(m),t,dur:0.2,g:0.1,a:0.002,dest:musicBus}); osc({type:"sawtooth",f:mtof(m),t,dur:0.14,g:0.025,lp:1500,lp2:300,dest:musicBus}); }
+    const ph=SNK[b%4];
+    for(const [st,m,len] of ph) if(st===s){ const dur=STEP16*len*0.98, f=mtof(m+12);
+      if(len>=3) osc({type:"sawtooth",f:mtof(m+13),t,dur:0.04,g:0.016,lp:2200,dest:musicBus});
+      vib(t+(len>=3?0.035:0),f,0,dur,0.028,len>=4?6:0.1,len>=4?0.012:0.001,"sawtooth",1700); }
+    if(b%4===3&&s>=8) { const m=HJ[s-8]+12; osc({type:"triangle",f:mtof(m),t,dur:0.1,g:0.04,a:0.002,dest:musicBus}); }
+    if(drums){
+      if(s===0||s===8||(s===6&&b%2===1)) kick(t,0.5);
+      if(s===4||s===12) clap(t,0.06);
+      if(s===2||s===10||s===14) noise({t,dur:0.05,g:0.06,type:"highpass",f:3000,q:0.9,a:0.001,dest:musicBus});
+      hat(t,s%2?0.5:0.9);
+    }
+  }
+  // shrinking planet: an action-film countdown — a staccato string ostinato in 16ths that changes every bar, brass
+  // hits, a driving kick and the ticking clock; and every time the planet shrinks, the key goes up a semitone
+  // (and the tempo up), so it keeps getting tenser
+  const OST=[[0,7,12,7,0,7,12,15],[0,7,12,7,0,8,12,8],[0,5,12,5,0,5,10,5],[0,7,11,7,0,7,11,14]];
+  function urgent(t,s,b,ch,drums){
+    const k=keyShift, c={b:ch.b+k,p:ch.p.map(n=>n+k)};
+    const m=c.b+12+OST[b%4][s%8];
+    osc({type:"sawtooth",f:mtof(m),t,dur:STEP16*0.7,g:0.032,a:0.003,lp:2400,lp2:900,dest:musicBus});
+    osc({type:"triangle",f:mtof(m+12),t,dur:STEP16*0.5,g:0.018,dest:musicBus});
+    if(s===0||s===8) bass(t,c.b,s===0?1:0.8);
+    if(s===0&&b%2===0) for(const n of c.p.slice(0,3)) osc({type:"sawtooth",f:mtof(n),t,dur:0.5,g:0.03,a:0.01,lp:1800,lp2:600,dest:musicBus});
+    if(s%4===0) osc({type:"square",f:s%8===0?2300:1800,t,dur:0.02,g:0.02,lp:6000,dest:musicBus});
+    if(drums){ if(s===0||s===8||s===10) kick(t,0.5); if(s===4||s===12) snare(t); if(s%2===0) hat(t,0.6); }
+  }
+  let keyShift=0;
+  // minefield: tiptoeing through a spy film — a plucked minor riff, a twangy guitar answer with echo,
+  // brushed snare, and a bomb-timer beep
+  const SPYR=[64,64,67,69,64,64,62,63];
+  function spy(t,s,b,ch,drums){
+    if(s%2===0){ const m=SPYR[s>>1]+(b%4===2?5:0);
+      osc({type:"triangle",f:mtof(m-12),t,dur:0.18,g:0.1,a:0.002,dest:musicBus}); osc({type:"sawtooth",f:mtof(m-12),t,dur:0.12,g:0.022,lp:2200,lp2:400,dest:musicBus}); }
+    if(b%2===1&&(s===0||s===3||s===6)){ const m=[76,74,71][s/3];
+      osc({type:"sawtooth",f:mtof(m),t,dur:0.38,g:0.032,lp:2800,lp2:700,dest:musicBus}); osc({type:"sawtooth",f:mtof(m),t,dur:0.3,g:0.02,lp:2000,dest:delayIn}); }
+    if(s===8) osc({f:1560,t,dur:0.06,g:0.022,dest:musicBus});
+    if(drums){ if(s===0||s===8) kick(t,0.35); if(s%4===2) noise({t,dur:0.09,g:0.026,type:"bandpass",f:3000,q:0.7,dest:musicBus}); if(s===12) snare(t); }
+  }
+  // flight, track 2: retro chiptune — square-wave lead, fast arpeggios, a triangle bass and noise drums, like a
+  // happy flying level in an old console game
+  const CHIP_CH=[{b:48,p:[60,64,67,72]},{b:45,p:[57,60,64,69]},{b:41,p:[53,57,60,65]},{b:43,p:[55,59,62,67]}];
+  const CHIP_M=[[0,79],[2,79],[4,84],[6,83],[8,81],[10,79],[12,76],[14,79],  [0,81],[2,79],[4,77],[6,76],[8,74],[10,76],[12,77],[14,79],
+                [0,81],[2,84],[4,88],[6,86],[8,84],[10,81],[12,79],[14,81],  [0,79],[3,77],[6,76],[8,74],[10,72],[12,74],[14,76]];
+  function chip(t,s,b,ch0,drums){
+    const ch=CHIP_CH[b%4], bar=b%4;
+    for(const [st,m] of CHIP_M.slice(bar*8,bar*8+8)) if(st===s) osc({type:"square",f:mtof(m),t,dur:STEP16*1.7,g:0.026,a:0.002,lp:6000,dest:musicBus});
+    osc({type:"square",f:mtof(ch.p[s%4]+12),t,dur:STEP16*0.8,g:0.009,a:0.001,lp:5000,dest:musicBus});
+    if(s%2===0) osc({type:"triangle",f:mtof(ch.b+(s%4===2?12:0)),t,dur:STEP16*1.6,g:0.13,a:0.002,dest:musicBus});
+    if(drums){ if(s===0||s===8) osc({f:150,f2:50,t,dur:0.1,g:0.3,a:0.001,dest:musicBus});
+      if(s===4||s===12) noise({t,dur:0.09,g:0.06,type:"highpass",f:1800,q:0.5,a:0.001,dest:musicBus});
+      if(s%2===1) noise({t,dur:0.025,g:0.02,type:"highpass",f:8000,q:0.5,a:0.001,dest:musicBus}); }
+  }
+  // minefield, track 2: "bomb squad" — tense and serious: a pulsing low synth in 16ths, war drums, a fast tick,
+  // string stabs and a rising whoosh every few bars
+  const BOMB_CH=[{b:45,p:[57,60,64]},{b:45,p:[57,60,64]},{b:41,p:[53,57,60]},{b:44,p:[56,59,64]}];
+  function bombsquad(t,s,b,ch0,drums){
+    const ch=BOMB_CH[b%4];
+    osc({type:"sawtooth",f:mtof(ch.b+12),t,dur:STEP16*0.8,g:s%4===0?0.06:0.035,a:0.003,lp:700,lp2:300,dest:musicBus});
+    if(s%2===0) osc({type:"square",f:2400,t,dur:0.012,g:0.012,lp:7000,dest:musicBus});
+    if(s===0&&b%2===0) for(const m of ch.p) for(const d of [-8,8]) osc({type:"sawtooth",f:mtof(m+12),t,dur:0.32,g:0.016,a:0.005,lp:2600,lp2:700,detune:d,dest:musicBus});
+    if(s===8&&b%4===3) noise({t,dur:BAR*0.5,g:0.05,f:300,f2:5000,q:1,a:BAR*0.45,dest:musicBus});
+    if(drums){ if(s===0||s===6||s===10) osc({f:110,f2:48,t,dur:0.32,g:0.42,a:0.002,dest:musicBus});
+      if(s===4||s===12){ snare(t); noise({t,dur:0.2,g:0.03,type:"lowpass",f:900,q:0.6,dest:musicBus}); }
+      if(s===14&&b%2===1) for(let k=0;k<3;k++) osc({f:180-k*25,f2:90,t:t+k*STEP16*0.66,dur:0.15,g:0.2,a:0.002,dest:musicBus}); }
+  }
+  // minefield 2: a thriller pulse — a 3+3+2 piano stab, low strings, a heartbeat that quickens over four bars
+  function thrillerM(t,s,b,ch0,drums){
+    const ch=[{b:45,p:[57,60,64]},{b:45,p:[57,60,65]},{b:43,p:[55,58,62]},{b:44,p:[56,59,62]}][b%4];
+    if(s===0||s===6||s===12) for(const m of ch.p) osc({type:"triangle",f:mtof(m+12),t,dur:0.3,g:0.03,a:0.002,dest:musicBus});
+    if(s===0) for(const m of [ch.b,ch.b+7]) osc({type:"sawtooth",f:mtof(m+12),t,dur:BAR*1.02,g:0.02,a:0.3,lp:900,dest:musicBus});
+    const hb=b%4<2?[0,8]:b%4===2?[0,4,8,12]:[0,2,4,6,8,10,12,14];
+    if(drums&&hb.includes(s)){ osc({f:70,f2:40,t,dur:0.16,g:0.4,a:0.002,dest:musicBus}); osc({f:60,f2:38,t:t+0.11,dur:0.14,g:0.25,a:0.002,dest:musicBus}); }
+    if(s%4===2) osc({type:"sine",f:mtof(88),t,dur:0.05,g:0.01,dest:musicBus});
+  }
+  // minefield 3: a war-film march — rolling snare, bass drum, a dark horn motif
+  const MARCH_H=[[0,57,4],[4,60,2],[6,64,2],[8,62,6],[14,60,2]];
+  function marchM(t,s,b,ch0,drums){
+    if(s===0||s===8) bass(t,b%4===2?41:45,1);
+    if(b%2===0) for(const [st,m,len] of MARCH_H) if(st===s){ for(const d of [-6,6]) osc({type:"sawtooth",f:mtof(m),t,dur:STEP16*len*0.95,g:0.04,a:0.03,lp:1300,detune:d,dest:musicBus}); }
+    if(b%2===1&&s===0) for(const m of [57,60,64]) osc({type:"sawtooth",f:mtof(m),t,dur:BAR*0.9,g:0.018,a:0.2,lp:1000,dest:musicBus});
+    if(drums){ if(s===0||s===8) osc({f:90,f2:45,t,dur:0.3,g:0.45,a:0.003,dest:musicBus});
+      if([0,2,3,4,6,8,10,11,12,14].includes(s)) noise({t,dur:0.07,g:[3,11].includes(s)?0.03:0.06,type:"bandpass",f:2600,q:0.8,a:0.001,dest:musicBus});
+      if(s===15&&b%2===1) for(let k=0;k<4;k++) noise({t:t+k*STEP16*0.25,dur:0.04,g:0.04,type:"bandpass",f:2800,q:0.8,dest:musicBus}); }
+  }
+  // minefield 4: minimal countdown — quiet ticks, a dark drone, sharp hits, a tone rising over four bars
+  function minimalM(t,s,b,ch0,drums){
+    osc({type:"square",f:s%4===0?2600:2100,t,dur:0.01,g:s%4===0?0.016:0.007,lp:8000,dest:musicBus});
+    if(s===0&&b%2===0){ osc({type:"sine",f:55,t,dur:BAR*2,g:0.12,a:0.4,dest:musicBus}); osc({type:"sawtooth",f:110,t,dur:BAR*2,g:0.015,a:0.4,lp:400,dest:musicBus}); }
+    if(s===0&&b%4===0) osc({type:"sine",f:440,f2:880,t,dur:BAR*4,g:0.012,a:1,lin:true,dest:musicBus});
+    if(drums&&((s===0&&b%2===0)||(s===10&&b%4===3))){ noise({t,dur:0.25,g:0.12,type:"lowpass",f:3000,f2:200,q:0.7,a:0.001,dest:musicBus}); osc({f:90,f2:35,t,dur:0.4,g:0.4,a:0.002,dest:musicBus}); }
+  }
+  // x-ray: a hospital at night — a heart-monitor beep, a cold low drone, glassy pads
+  function xrayM(t,s,b,ch0,drums){
+    const ch=CHAOS[b%4];
+    if(s===0) for(const m of ch.p.slice(0,3)) osc({type:"sine",f:mtof(m+12),t,dur:BAR*1.05,g:0.015,a:0.4,dest:musicBus});
+    if(s===0&&b%2===0) osc({type:"sawtooth",f:mtof(ch.b),t,dur:BAR*2,g:0.025,a:0.5,lp:500,dest:musicBus});
+    if(s===0||s===8){ osc({type:"sine",f:1000,t,dur:0.09,g:0.03,a:0.002,dest:musicBus}); osc({type:"sine",f:1000,t,dur:0.09,g:0.012,dest:delayIn}); }
+    if(s%4===2) osc({type:"triangle",f:mtof(ch.p[(s>>2)%5]+24),t,dur:0.4,g:0.012,dest:musicBus});
+    if(drums&&(s===0||s===10)) kick(t,0.3);
+  }
+  // rave: four-on-the-floor techno — offbeat open hats, claps, a squelchy acid bass line, a big chord stab
+  const ACID=[0,0,12,0,3,0,15,12,0,7,0,10,0,3,12,7];
+  function raveM(t,s,b,ch0,drums){
+    const root=b%4===3?43:45;
+    osc({type:"sawtooth",f:mtof(root+ACID[s]),t,dur:STEP16*0.9,g:0.05,a:0.002,lp:300+((s*7+b*3)%10)*180,lp2:250,q:8,dest:musicBus});
+    if(s===0&&b%2===0) for(const m of [57,60,64,67]) for(const d of [-12,12]) osc({type:"sawtooth",f:mtof(m+12),t,dur:0.35,g:0.012,lp:4000,lp2:900,detune:d,dest:musicBus});
+    if(drums){ if(s%4===0) kick(t,0.65); if(s%4===2) noise({t,dur:0.14,g:0.04,type:"highpass",f:7000,q:0.6,a:0.002,dest:musicBus});
+      if(s===4||s===12) clap(t,0.07); if(s%2===1) hat(t,0.5); }
+  }
+  // black holes: deep space dread — a low drone, tones that bend down as if pulled, a slow pulse
+  function holeM(t,s,b,ch0,drums){
+    if(s===0&&b%2===0){ osc({type:"sawtooth",f:mtof(33),t,dur:BAR*2.05,g:0.05,a:0.6,lp:220,dest:musicBus}); osc({type:"sine",f:mtof(45),t,dur:BAR*2,g:0.08,a:0.5,dest:musicBus}); }
+    if(s===4||s===12){ const m=[76,74,72,71][b%4]+(s===12?-5:0); osc({type:"sine",f:mtof(m),f2:mtof(m-7),t,dur:STEP16*7,g:0.03,a:0.05,dest:musicBus}); osc({f:mtof(m),f2:mtof(m-7),t,dur:STEP16*5,g:0.012,dest:delayIn}); }
+    if(s===0) for(const m of [57,60,63]) osc({type:"triangle",f:mtof(m),t,dur:BAR,g:0.012,a:0.4,dest:musicBus});
+    if(drums&&(s===0||s===8)) osc({f:60,f2:32,t,dur:0.5,g:0.35,a:0.004,dest:musicBus});
+  }
+  // portals: sci-fi bounce — a sparkling arpeggio, a warp sweep every two bars, a punchy beat
+  function warpM(t,s,b,ch0,drums){
+    const ch=[{b:45,p:[57,60,64,69]},{b:41,p:[53,57,60,65]},{b:43,p:[55,59,62,67]},{b:40,p:[52,56,59,64]}][b%4];
+    osc({type:"square",f:mtof(ch.p[[0,1,2,3,2,1][s%6]]+12),t,dur:STEP16*0.7,g:0.016,a:0.002,lp:3500,dest:musicBus});
+    if(s%4===0) osc({type:"sine",f:mtof(ch.p[(s>>2)%4]+24),t,dur:0.3,g:0.012,dest:delayIn});
+    if(s===0||s===6||s===10) bass(t,ch.b+12,0.8);
+    if(s===12&&b%2===1) osc({type:"sawtooth",f:200,f2:2400,t,dur:BAR*0.25,g:0.025,lp:3000,dest:musicBus});
+    if(drums){ if(s===0||s===8) kick(t,0.5); if(s===4||s===12) snare(t); if(s%2===0) hat(t,0.6); }
+  }
+  // hot potato: a frantic polka — oom-pah at 160, a squeezebox-ish tune, and a clock ticking through it
+  const POLKA=[[0,72],[2,76],[4,79],[6,76],[8,77],[10,74],[12,71],[14,74], [0,72],[2,76],[4,79],[6,84],[8,83],[10,79],[12,76],[14,72]];
+  function potatoM(t,s,b,ch0,drums){
+    const ch=[{b:48,p:[60,64,67]},{b:43,p:[55,59,62]},{b:48,p:[60,64,67]},{b:43,p:[55,59,65]}][b%4];
+    if(s%4===0) bass(t,s%8===0?ch.b+12:ch.b+7,1);
+    if(s%4===2) for(const m of ch.p) osc({type:"square",f:mtof(m),t,dur:0.08,g:0.015,lp:2500,dest:musicBus});
+    for(const [st,m] of POLKA.slice((b%2)*8,(b%2)*8+8)) if(st===s){ osc({type:"sawtooth",f:mtof(m),t,dur:STEP16*1.8,g:0.022,lp:2400,detune:-8,dest:musicBus}); osc({type:"sawtooth",f:mtof(m),t,dur:STEP16*1.8,g:0.022,lp:2400,detune:8,dest:musicBus}); }
+    if(s%4===0) osc({type:"square",f:s%8===0?2200:1700,t,dur:0.018,g:0.016,lp:6000,dest:musicBus});
+    if(drums){ if(s%4===0) kick(t,0.35); if(s%4===2) snare(t); }
+  }
+  // submarines: under the sea — sonar pings with long echoes, a bubbly arpeggio, a slow deep bass
+  function subM(t,s,b,ch0,drums){
+    const ch=[{b:45,p:[57,60,64,69]},{b:41,p:[53,57,60,65]},{b:43,p:[55,59,62,67]},{b:40,p:[52,56,59,64]}][b%4];
+    if(s===0&&b%2===0){ osc({f:1180,t,dur:0.6,g:0.04,a:0.002,dest:musicBus}); osc({f:1180,t,dur:0.5,g:0.03,dest:delayIn}); }
+    if(s%2===0){ const m=ch.p[[0,2,1,3,2,1,3,2][s>>1]]+12; osc({type:"sine",f:mtof(m),f2:mtof(m)*1.04,t,dur:0.22,g:0.035,a:0.004,dest:musicBus}); }
+    if(s===0||s===10) bass(t,ch.b+12,0.8);
+    if(s===0) for(const m of ch.p.slice(0,3)) osc({type:"sine",f:mtof(m),t,dur:BAR,g:0.012,a:0.4,dest:musicBus});
+    if(drums){ if(s===0||s===8) kick(t,0.3); if(s%4===2) noise({t,dur:0.08,g:0.015,type:"bandpass",f:1200,f2:3000,q:3,dest:musicBus}); }
+  }
+  // flight: cosy and bright, like a sunny little adventure game — a marimba tune with a swing, glockenspiel
+  // answers, a plucked bass, soft brushes, over warm seventh chords (F – Dm – Bb – C)
+  const FLY_CH=[{b:41,p:[53,57,60,64,69]},{b:38,p:[50,53,57,60,65]},{b:46,p:[50,53,57,62,65]},{b:48,p:[52,55,58,60,64]}];
+  const MAR=[[[0,72,2],[2,74,2],[4,77,3],[8,76,2],[10,74,2],[12,72,4]],[[0,69,2],[2,72,2],[4,74,6],[12,77,2],[14,76,2]],
+             [[0,74,2],[2,77,2],[4,81,3],[8,79,2],[10,77,2],[12,74,4]],[[0,76,2],[2,77,1],[3,79,1],[4,81,4],[10,79,2],[12,77,4]]];
+  function marimba(t,m,g){ const f=mtof(m); osc({f,t,dur:0.45,g,a:0.002,dest:musicBus}); osc({f:f*4,t,dur:0.08,g:g*0.35,a:0.001,dest:musicBus}); osc({type:"triangle",f,t,dur:0.25,g:g*0.4,dest:musicBus}); }
+  function soar(t,s,b,ch0,drums){
+    const ch=FLY_CH[b%4], sw=(s%4===2)?STEP16*0.3:0;   // a gentle swing on the off-beats
+    if(s===0||s===8||s===14) { const m=ch.b+12+(s===8?7:0); osc({type:"triangle",f:mtof(m),t,dur:0.26,g:0.11,a:0.003,dest:musicBus}); osc({f:mtof(m),t,dur:0.2,g:0.06,dest:musicBus}); }
+    if(s===0) for(const m of ch.p.slice(0,4)) osc({type:"sine",f:mtof(m),t,dur:BAR*0.95,g:0.012,a:0.12,dest:musicBus});
+    for(const [st,m,len] of MAR[b%4]) if(st===s) marimba(t+sw,m,0.07);
+    if(s===6||s===14) { const m=ch.p[[4,3][s>>3]]+24; osc({f:mtof(m),t:t+sw,dur:0.9,g:0.022,a:0.002,dest:musicBus}); osc({f:mtof(m),t:t+sw,dur:0.4,g:0.012,dest:delayIn}); }
+    if(drums){ if(s===0||s===10) kick(t,0.3); if(s===4||s===12) noise({t,dur:0.14,g:0.035,type:"bandpass",f:2200,q:0.5,a:0.01,dest:musicBus});
+      if(s%2===0) noise({t:t+sw,dur:0.05,g:0.015,type:"highpass",f:6500,q:0.6,a:0.008,dest:musicBus}); }
+  }
+  // haunted house: a Halloween romp — a bouncy pizzicato walking bass in E minor, spooky organ stabs on the
+  // off-beats, a theremin singing a creepy tune, celesta sparkles, a swinging beat with claps and bone-clicks,
+  // and now and then a church bell and a howl of wind
+  const HWN=[{b:52,p:[64,67,71,76,79]},{b:48,p:[60,64,67,72,76]},{b:45,p:[57,60,64,69,72]},{b:47,p:[59,63,66,71,75]}];
+  const THM=[[[0,76,4],[4,75,2],[6,76,2],[8,79,4],[12,78,4]],[[0,76,6],[6,71,2],[8,72,4],[12,71,4]],
+             [[0,69,4],[4,72,4],[8,76,4],[12,75,4]],[[0,71,8],[8,75,4],[12,78,4]]];
+  function horror(t,s,b,ch0,drums){
+    const ch=HWN[b%4];
+    if(s%2===0){ const k=s>>1, m=(k===7&&b%4===3)?ch.b+11:ch.b+[0,7,12,7,0,7,12,7][k];
+      osc({type:"triangle",f:mtof(m),t,dur:0.18,g:0.11,a:0.002,dest:musicBus}); osc({type:"sawtooth",f:mtof(m),t,dur:0.1,g:0.02,lp:1600,lp2:300,dest:musicBus}); }
+    if(s%4===2) for(const n of ch.p.slice(0,3)) osc({type:"square",f:mtof(n),t,dur:0.13,g:0.016,a:0.003,lp:1900,dest:musicBus});
+    for(const [st,m,len] of THM[b%4]) if(st===s) vib(t,mtof(m),0,STEP16*len*0.97,0.042,6,0.02,"sine");
+    if(s%4===0&&s!==0) osc({type:"triangle",f:mtof(ch.p[(s>>2)+1]+12),t,dur:0.3,g:0.022,a:0.002,dest:musicBus});
+    if(s===0&&b%4===0) bellTone(ch.b,t,0.07,2.5);
+    if(s===8&&b%4===2) noise({t,dur:2.2,g:0.03,f:350,f2:1200,q:2.5,a:0.9,dest:musicBus});
+    if(drums){ if(s===0||s===8||s===11) kick(t,0.45); if(s===4||s===12){ snare(t); clap(t,0.05); }
+      if(s%2===1) noise({t,dur:0.03,g:0.03,type:"bandpass",f:2600,q:3,dest:musicBus}); }
+  }
+  // trampolines: cartoon bounce — boinging bass notes that bend up, a xylophone, a spring now and then
+  function bounce(t,s,b,ch,drums){
+    if(s%4===0){ const m=ch.b+(s%8?7:0); osc({type:"triangle",f:mtof(m),f2:mtof(m)*1.5,t,dur:0.22,g:0.14,a:0.004,dest:musicBus}); osc({f:mtof(m),t,dur:0.18,g:0.12,dest:musicBus}); }
+    if(s%2===0){ const m=ch.p[[0,2,4,2,1,3,4,3][(s>>1)%8]]+12; osc({type:"triangle",f:mtof(m),t,dur:0.18,g:0.05,a:0.002,dest:musicBus}); osc({f:mtof(m)*4,t,dur:0.05,g:0.012,dest:musicBus}); }
+    if(s===14&&b%2===1) osc({type:"sine",f:300,f2:900,t,dur:0.3,g:0.03,dest:musicBus});
+    if(drums){ if(s===0||s===8) kick(t,0.4); if(s===4||s===12) snare(t); if(s%4===2) hat(t,0.8); }
+  }
+  function calliope(t,m){ const f=mtof(m);
+    osc({type:"square",f,t,dur:0.2,g:0.02,a:0.006,lp:3200,detune:-9,dest:musicBus});
+    osc({type:"triangle",f,t,dur:0.22,g:0.045,a:0.006,detune:9,dest:musicBus});
+    osc({type:"sine",f:f*2,t,dur:0.12,g:0.012,dest:musicBus}); }
+  function hat(t,v){ noise({t,dur:0.04,g:0.022*v,type:"highpass",f:7500,q:0.7,a:0.002,dest:musicBus}); }
+  function sub(t,m){ osc({type:"sawtooth",f:mtof(m),t,dur:STEP16*6,g:0.09,a:0.01,lp:420,lp2:120,dest:musicBus}); osc({f:mtof(m),t,dur:STEP16*6,g:0.2,a:0.01,dest:musicBus}); }
   function pad(t,ch){
     for(const m of ch.p.slice(0,4)) for(const det of [-9,9]){
       const o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=mtof(m); o.detune.value=det;
@@ -917,7 +1388,7 @@ const Sound=(function(){
     osc({type:"square",f,t,dur:0.16,g:g*0.22,a:0.004,lp:3400,lp2:600,dest:musicBus});
     osc({type:"triangle",f,t,dur:0.22,g:g*0.6,dest:delayIn});
   }
-  function kick(t){ osc({f:140,f2:42,t,dur:0.34,g:0.5,a:0.004,dest:musicBus}); }
+  function kick(t,g=0.5){ osc({f:140,f2:42,t,dur:0.34,g,a:0.004,dest:musicBus}); }
   // soft, round backbeat: a little body tone plus a short, darkened brush of noise
   function snare(t){ osc({type:"triangle",f:185,f2:140,t,dur:0.12,g:0.06,a:0.004,dest:musicBus});
     noise({t,dur:0.13,g:0.03,type:"lowpass",f:1500,f2:600,q:0.5,a:0.004,dest:musicBus}); }
@@ -926,9 +1397,84 @@ const Sound=(function(){
     musicBus.gain.cancelScheduledValues(t);
     musicBus.gain.setTargetAtTime(musicOn?(mode==="menu"?0.42:0.55):0,t,instant?0.01:0.35);
     musicTone.frequency.cancelScheduledValues(t);
-    musicTone.frequency.setTargetAtTime(mode==="dead"?600:(mode==="menu"?4500:8000),t,0.25);
+    const tw=TW&&mode!=="menu"?TW:null;
+    musicTone.frequency.setTargetAtTime(mode==="dead"?600:(mode==="menu"?4500:(tw&&tw.lp||8000)),t,0.25);
+    if(musSendG) musSendG.gain.setTargetAtTime(tw&&tw.send||0.35,t,0.3);
   }
-  return {init,step,jump,hoverStart,hoverStop,land,crash,count,roundEnd,matchEnd,click,whoosh,tally,boost,boostReady,pop,
+  // Some twists have a second track to try; the ♪ button in the corner switches (remembered per twist)
+  const TRACKS={
+    // (none at the moment: each twist has the one track that won)
+  };
+  let trackSel={}; try{trackSel=JSON.parse(localStorage.getItem("kd-tracks2")||"{}")||{};}catch(_){}
+  function trackCount(id){ return TRACKS[id]?TRACKS[id].length:1; }
+  function trackIndex(id){ return Math.min(trackCount(id)-1,trackSel[id]|0); }
+  function cycleTrack(){ if(!twist||trackCount(twist)<2) return 0; trackSel[twist]=(trackIndex(twist)+1)%trackCount(twist);
+    try{localStorage.setItem("kd-tracks2",JSON.stringify(trackSel));}catch(_){} setTwist(twist); return trackIndex(twist); }
+  function setTwist(id){ twist=id||null; TW=(TRACKS[twist]&&TRACKS[twist][trackIndex(twist)])||TWISTS[twist]||null;
+    STEP16=60/(TW?TW.bpm:BPM)/4; BAR=STEP16*16;
+    if(ctx&&echo) echo.delayTime.setTargetAtTime(STEP16*3,ctx.currentTime,0.05);
+    applyMode(); }
+  function rumble(){ if(!ready()) return; const t=ctx.currentTime;
+    noise({t,dur:0.95,g:0.18,type:"lowpass",f:160,f2:480,q:0.8,a:0.6}); osc({type:"sine",f:48,f2:62,t,dur:0.95,g:0.16,a:0.5}); }
+  // haunted house: a ghost's wail (a wobbling, falling "wooOOooo")
+  function wail(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
+    const o=ctx.createOscillator(); o.type="sine"; o.frequency.setValueAtTime(330,t); o.frequency.linearRampToValueAtTime(620,t+0.35); o.frequency.exponentialRampToValueAtTime(240,t+1.1);
+    const v=ctx.createOscillator(); v.frequency.value=7; const vg=ctx.createGain(); vg.gain.value=18; v.connect(vg); vg.connect(o.frequency);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.13*vol,t+0.18); g.gain.exponentialRampToValueAtTime(0.0001,t+1.2);
+    o.connect(g); g.connect(d); o.start(t); v.start(t); o.stop(t+1.25); v.stop(t+1.25);
+    noise({t,dur:1,g:0.04*vol,f:900,f2:400,q:2,a:0.2,dest:d}); }
+  // flight mode: a soft whoosh of wing beats while you're up in the air
+  // flight mode: a soft, steady wind while you're up (no flapping rhythm)
+  function flyStart(){ if(!ready()) return null; const t=ctx.currentTime;
+    const n=ctx.createBufferSource(); n.buffer=noiseBuf; n.loop=true;
+    const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=650; lp.Q.value=0.4;
+    const sway=ctx.createOscillator(); sway.frequency.value=0.35; const sg=ctx.createGain(); sg.gain.value=180; sway.connect(sg); sg.connect(lp.frequency);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.035,t+0.6);
+    n.connect(lp); lp.connect(g); g.connect(sfxBus); n.start(t); sway.start(t); return {g,src:[n,sway]}; }
+  // quick little footfalls, louder than the normal run so they're heard over the music
+  function patter(){ if(!ready()) return; const t=ctx.currentTime;
+    noise({t,dur:0.05,g:0.09,type:"lowpass",f:1600+Math.random()*500,q:0.6}); osc({f:160,f2:70,t,dur:0.06,g:0.09,a:0.002}); }
+  function dive(){ if(!ready()) return; const t=ctx.currentTime; noise({t,dur:0.35,g:0.12,f:2400,f2:300,q:1,a:0.02}); osc({type:"triangle",f:620,f2:220,t,dur:0.25,g:0.08}); }
+  // shrinking planet: a heavy falling "vwoooom" with a thump when it lands
+  function shrinkHit(){ if(!ready()) return; const t=ctx.currentTime;
+    osc({type:"sawtooth",f:240,f2:45,t,dur:0.85,g:0.14,lp:1400,lp2:200,a:0.02});
+    osc({type:"sine",f:120,f2:36,t,dur:0.9,g:0.35,a:0.02});
+    noise({t,dur:0.8,g:0.14,type:"lowpass",f:3200,f2:150,q:0.6,a:0.02});
+    osc({f:70,f2:30,t:t+0.7,dur:0.45,g:0.45,a:0.004}); noise({t:t+0.7,dur:0.25,g:0.12,type:"lowpass",f:900,q:0.5}); }
+  // the ghost rearing up to strike: a harsh rising screech
+  function slip(){ if(!ready()) return; const t=ctx.currentTime; noise({t,dur:0.22,g:0.09,type:"highpass",f:2500,f2:6000,q:0.7,a:0.01}); osc({type:"triangle",f:900,f2:500,t,dur:0.15,g:0.04}); }
+  function shriek(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
+    osc({type:"sawtooth",f:600,f2:1900,t,dur:0.32,g:0.07*vol,lp:3500,a:0.02,dest:d}); osc({type:"square",f:640,f2:2050,t,dur:0.3,g:0.03*vol,lp:3000,detune:30,dest:d});
+    noise({t,dur:0.3,g:0.08*vol,f:2500,f2:5000,q:2,dest:d}); }
+  function boing(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
+    const o=ctx.createOscillator(); o.type="triangle"; o.frequency.setValueAtTime(110,t); o.frequency.exponentialRampToValueAtTime(620,t+0.28);
+    const l=ctx.createOscillator(); l.frequency.value=22; const lg=ctx.createGain(); lg.gain.value=60; l.connect(lg); lg.connect(o.frequency);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.22*vol,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.6);
+    o.connect(g); g.connect(d); o.start(t); l.start(t); o.stop(t+0.65); l.stop(t+0.65);
+    noise({t:t+0.05,dur:0.7,g:0.1*vol,f:400,f2:3000,q:0.9,a:0.1,dest:d}); }
+  function warp(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
+    osc({type:"sine",f:300,f2:1800,t,dur:0.3,g:0.12*vol,a:0.01,dest:d}); osc({type:"square",f:900,f2:200,t:t+0.25,dur:0.3,g:0.03*vol,lp:3000,dest:d});
+    noise({t,dur:0.5,g:0.08*vol,f:800,f2:4000,q:2,a:0.05,dest:d}); }
+  function suck(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
+    osc({type:"sawtooth",f:400,f2:40,t,dur:1,g:0.12*vol,lp:1500,lp2:100,dest:d}); noise({t,dur:1,g:0.12*vol,f:3000,f2:100,q:1,dest:d}); }
+  function bombTick(pan=0,vol=1,hot){ if(!ready()) return; const t=ctx.currentTime, d=out(pan); osc({type:"square",f:hot?1900:1400,t,dur:0.04,g:0.05*vol,lp:5000,dest:d}); }
+  function blub(){ if(!ready()) return; const t=ctx.currentTime; for(let k=0;k<4;k++) osc({f:300+k*90,f2:700+k*120,t:t+k*0.05,dur:0.08,g:0.06}); noise({t,dur:0.3,g:0.05,type:"lowpass",f:900,q:0.7}); }
+  function bubble(){ if(!ready()) return; const t=ctx.currentTime, f=350+Math.random()*500; osc({f,f2:f*1.9,t,dur:0.06,g:0.05,a:0.002}); }
+  function splash(){ if(!ready()) return; const t=ctx.currentTime; noise({t,dur:0.35,g:0.12,type:"bandpass",f:1800,f2:500,q:0.6,a:0.005}); }
+  function setShift(k){ keyShift=k|0; }
+  function setBpm(b){ if(!TW) return; STEP16=60/b/4; BAR=STEP16*16; }
+  function boom(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
+    noise({t,dur:1.1,g:0.4*vol,type:"lowpass",f:2400,f2:90,q:0.5,a:0.003,dest:d});
+    osc({f:80,f2:28,t,dur:0.9,g:0.6*vol,a:0.003,dest:d}); osc({type:"sawtooth",f:160,f2:40,t,dur:0.5,g:0.08*vol,lp:900,dest:d}); }
+  function eat(pan=0,vol=1){ if(!ready()) return; const t=ctx.currentTime, d=out(pan);
+    osc({type:"triangle",f:mtof(84),f2:mtof(91),t,dur:0.12,g:0.12*vol,a:0.003,dest:d}); osc({f:mtof(96),t:t+0.06,dur:0.18,g:0.05*vol,dest:d}); }
+  // roulette ticks while the twist banner spins, then a hit when it lands
+  function tick(i){ if(!ready()) return; const t=ctx.currentTime; osc({type:"square",f:900+i*60,t,dur:0.035,g:0.025,lp:3000}); }
+  function reveal(){ if(!ready()) return; const t=ctx.currentTime;
+    noise({t,dur:0.5,g:0.1,f:400,f2:3800,q:1,a:0.01});
+    osc({f:110,f2:40,t,dur:0.45,g:0.35,a:0.003});
+    [57,64,69,72,76].forEach((m,i)=>osc({type:"sawtooth",f:mtof(m),t:t+0.005*i,dur:0.7,g:0.035,lp:2600,lp2:500})); }
+  return {init,step,jump,hoverStart,hoverStop,land,crash,count,roundEnd,matchEnd,click,whoosh,tally,boost,boostReady,pop,setTwist,tick,reveal,eat,setBpm,boom,rumble,wail,flyStart,dive,shrinkHit,boing,shriek,slip,patter,setShift,cycleTrack,trackCount,trackIndex,warp,suck,bombTick,blub,splash,bubble,get twist(){return twist;},
     setMode(m){mode=m;applyMode();},
     setMusic(b){musicOn=b;applyMode();save();},
     setSfx(b){sfxOn=b; if(ctx) sfxBus.gain.setTargetAtTime(b?1:0,ctx.currentTime,0.02); save();},
@@ -943,11 +1489,14 @@ const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(42,1,0.5,400);
 let camDist=50;
 
-scene.add(new THREE.HemisphereLight(0xdfe6ff,0x2a2350,0.55));
+const hemi=new THREE.HemisphereLight(0xdfe6ff,0x2a2350,0.55); scene.add(hemi);
 const sun=new THREE.DirectionalLight(0xfff3e2,0.95); scene.add(sun); scene.add(sun.target);
+// "Darkness": the planet's lights go down and a lantern travels with the runner the camera follows,
+// so only the ground close by is lit (tubes keep their faint glow, so nothing is truly invisible)
+const lantern=new THREE.PointLight(0xfff1dc,0,10,1.7); scene.add(lantern);   // always in the scene (intensity 0 when off), so switching never recompiles shaders
 
 // globe: faceted mini-planet with soft "continents" (built at full size, scaled to the current R)
-const planetGroup=new THREE.Group();
+const planetGroup=new THREE.Group(); let atmo=null, planetMat=null;
 (function(){
   const geo=new THREE.IcosahedronGeometry(R_FULL,5);
   const pos=geo.attributes.position, cols=[];
@@ -960,8 +1509,8 @@ const planetGroup=new THREE.Group();
     for(let j=0;j<3;j++) cols.push(c.r,c.g,c.b);
   }
   geo.setAttribute("color",new THREE.Float32BufferAttribute(cols,3));
-  planetGroup.add(new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:0.92})));
-  const glow=new THREE.Mesh(new THREE.SphereGeometry(R_FULL*1.07,48,32),
+  planetMat=new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:0.92}); planetGroup.add(new THREE.Mesh(geo,planetMat));
+  const glow=atmo=new THREE.Mesh(new THREE.SphereGeometry(R_FULL*1.07,48,32),
     new THREE.MeshBasicMaterial({color:0x8fb6ff,transparent:true,opacity:0.07,side:THREE.BackSide,depthWrite:false}));
   planetGroup.add(glow); scene.add(planetGroup);
 })();
@@ -1005,6 +1554,7 @@ const WING_GEO=(()=>{const g=new THREE.PlaneGeometry(0.82,0.31); g.translate(0.4
 
 // ---------- Trail (growing tube) ----------
 const capGeo=new THREE.SphereGeometry(TR,12,8);
+const tubeShadowMat=new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:0.3,depthWrite:false});
 class Trail{
   constructor(color){
     this.pts=new Float32Array(MAXP*3); this.n=0; this.dirty=0;
@@ -1024,13 +1574,36 @@ class Trail{
     this.mesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:col,roughness:0.42,metalness:0.05,emissive:col.clone().multiplyScalar(0.3)}));
     this.mesh.frustumCulled=false; scene.add(this.mesh);
     this.caps=[0,1].map(()=>{const c=new THREE.Mesh(capGeo,this.mesh.material); c.visible=false; this.mesh.add(c); return c;});
+    // Flight mode: the same tube squashed down onto the ground as a dark shadow, so you can tell where it hangs
+    this.shadow=new THREE.Mesh(g,tubeShadowMat); this.shadow.frustumCulled=false; this.shadow.visible=false; this.shadow.renderOrder=-1; scene.add(this.shadow);
   }
-  reset(){this.n=0;this.dirty=0;this.geo.setDrawRange(0,0); this.caps.forEach(c=>c.visible=false);}
+  // the planet got smaller: every point (and the tube around it) moves straight in by the same amount
+  shiftR(dR){ const P=this.pts, V=this.pos;
+    for(let i=0;i<this.n;i++){ const x=P[i*3],y=P[i*3+1],z=P[i*3+2], l=Math.hypot(x,y,z)||1, ux=x/l*dR, uy=y/l*dR, uz=z/l*dR;
+      P[i*3]+=ux; P[i*3+1]+=uy; P[i*3+2]+=uz;
+      for(let k=0;k<SEG;k++){ const o=(i*SEG+k)*3; V[o]+=ux; V[o+1]+=uy; V[o+2]+=uz; } }
+    this.dirty=0; }
+  // hide the piece of tube between points j and j+1 (their triangles collapse to nothing) and round off both ends
+  gap(j){ const a=this.geo.index.array, o=j*SEG*6; for(let k=0;k<SEG*6;k++) a[o+k]=j*SEG; this.geo.index.needsUpdate=true;
+    (this.gaps||(this.gaps=[])).push(j);
+    for(const q of [j,j+1]){ const c=new THREE.Mesh(capGeo,this.mesh.material); c.position.set(this.pts[q*3],this.pts[q*3+1],this.pts[q*3+2]); c.scale.setScalar(TR/TR0); this.mesh.add(c); (this.gapCaps||(this.gapCaps=[])).push(c); } }
+  ungap(){ if(!this.gaps||!this.gaps.length) return; const a=this.geo.index.array;
+    for(const j of this.gaps){ let o=j*SEG*6; for(let k=0;k<SEG;k++){ const A=j*SEG+k, B=j*SEG+(k+1)%SEG, C=A+SEG, D=B+SEG; a[o++]=A;a[o++]=B;a[o++]=C; a[o++]=B;a[o++]=D;a[o++]=C; } }
+    this.geo.index.needsUpdate=true; this.gaps=[]; for(const c of this.gapCaps||[]) this.mesh.remove(c); this.gapCaps=[]; }
+  reset(){this.ungap();this.n=0;this.t0=0;this.dirty=0;this.geo.setDrawRange(0,0); this.caps.forEach(c=>c.visible=false);}
   add(x,y,z,hx,hy,hz,code){
     if(this.n>=MAXP) return;
     const i=this.n, P=this.pts; P[i*3]=x;P[i*3+1]=y;P[i*3+2]=z;
     let tx,ty,tz;
     if(i>0){tx=x-P[i*3-3];ty=y-P[i*3-2];tz=z-P[i*3-1];} else {tx=hx;ty=hy;tz=hz;}
+    this.ring(i,x,y,z,tx,ty,tz);
+    if(i>0&&tx*tx+ty*ty+tz*tz>4) this.gap(i-1);   // a jump of more than 2 units: a teleport (or the like) — break the tube here
+    if(i===1){ this.ring(0,P[0],P[1],P[2],tx,ty,tz); this.dirty=0; }
+    this.n++; gridAdd(code*MAXP+i,x,y,z);
+    // Snake: everything behind the tail end is gone (it only ever moves forward, so a longer tail just waits)
+    if(curMod==="snake"&&this.owner) this.t0=Math.max(this.t0,this.n-snakeLen(this.owner));
+  }
+  ring(i,x,y,z,tx,ty,tz){
     let l=Math.hypot(tx,ty,tz)||1; tx/=l;ty/=l;tz/=l;
     let ux=x,uy=y,uz=z; l=Math.hypot(ux,uy,uz); ux/=l;uy/=l;uz/=l;
     let sx=ty*uz-tz*uy, sy=tz*ux-tx*uz, sz=tx*uy-ty*ux; l=Math.hypot(sx,sy,sz)||1; sx/=l;sy/=l;sz/=l;
@@ -1041,16 +1614,15 @@ class Trail{
       this.nor[o]=nx;this.nor[o+1]=ny;this.nor[o+2]=nz;
       this.pos[o]=x+nx*TR;this.pos[o+1]=y+ny*TR;this.pos[o+2]=z+nz*TR;
     }
-    this.n++; gridAdd(code*MAXP+i,x,y,z);
   }
   flush(){
     if(this.dirty===this.n) return;
     const off=this.dirty*SEG*3, cnt=(this.n-this.dirty)*SEG*3;
     this.pa.updateRange.offset=off; this.pa.updateRange.count=cnt; this.pa.needsUpdate=true;
     this.na.updateRange.offset=off; this.na.updateRange.count=cnt; this.na.needsUpdate=true;
-    this.geo.setDrawRange(0,Math.max(0,this.n-1)*SEG*6); this.dirty=this.n;
+    const t0=this.t0||0; this.geo.setDrawRange(t0*SEG*6,Math.max(0,this.n-1-t0)*SEG*6); this.dirty=this.n;
     const P=this.pts, [tail,head]=this.caps, k=(this.n-1)*3;
-    tail.position.set(P[0],P[1],P[2]); head.position.set(P[k],P[k+1],P[k+2]); tail.visible=head.visible=this.n>=2;
+    tail.position.set(P[t0*3],P[t0*3+1],P[t0*3+2]); head.position.set(P[k],P[k+1],P[k+2]); tail.visible=head.visible=this.n>=2;
   }
 }
 
@@ -1182,6 +1754,15 @@ function firework(pos,color){
     addFx(m,d,0.9+Math.random()*0.4,"spark");
   }
 }
+// Turbo: warm speed lines rush past around your runner the whole round
+function turboStreak(pl){
+  const m=new THREE.Mesh(streakGeo,basicMat(0xffb070,true));
+  bx.crossVectors(pl.p,pl.h); basis.makeBasis(bx,pl.p,pl.h); m.quaternion.setFromRotationMatrix(basis);
+  const side=(Math.random()<0.5?-1:1)*(0.7+Math.random()*1.6);
+  m.position.copy(pl.p).multiplyScalar(R+pl.y+0.2+Math.random()*1.8).addScaledVector(bx,side).addScaledVector(pl.h,1.5+Math.random()*2.5);
+  m.scale.set(1,1,1.6); addFx(m,pl.h.clone().multiplyScalar(-pl.speed*1.6),0.32,"streak");
+}
+let turboT=0;
 function streak(pl){
   const m=new THREE.Mesh(streakGeo,basicMat(0xffffff,true));
   bx.crossVectors(pl.p,pl.h); basis.makeBasis(bx,pl.p,pl.h); m.quaternion.setFromRotationMatrix(basis);
@@ -1200,11 +1781,11 @@ function tickFx(dt){
   for(let i=fx.length-1;i>=0;i--){
     const f=fx[i], m=f.m; f.life-=dt; const k=Math.max(0,f.life/f.max);
     nrm.copy(m.position).normalize();
-    if(f.kind==="shard"){f.v.addScaledVector(nrm,-14*dt); m.position.addScaledVector(f.v,dt);
+    if(f.kind==="shard"){f.v.addScaledVector(nrm,-14*fxG*dt); m.position.addScaledVector(f.v,dt);
       if(m.position.length()<R+0.08){m.position.setLength(R+0.08);f.v.multiplyScalar(0.4);}
       m.rotation.x+=dt*8;m.rotation.y+=dt*6; m.scale.setScalar(Math.max(0.01,k)); f.mat.opacity=k;}
     else if(f.kind==="conf"){
-      if(!f.landed){f.v.addScaledVector(nrm,-7*dt); f.v.multiplyScalar(1-1.5*dt); m.position.addScaledVector(f.v,dt);
+      if(!f.landed){f.v.addScaledVector(nrm,-7*fxG*dt); f.v.multiplyScalar(1-1.5*dt); m.position.addScaledVector(f.v,dt);
         m.rotation.x+=f.spin.x*dt; m.rotation.y+=f.spin.y*dt; m.rotation.z+=f.spin.z*dt;
         if(m.position.length()<R+0.03){m.position.setLength(R+0.03); f.landed=true;}}
       m.scale.setScalar(k<0.25?Math.max(0.01,k/0.25):1);}
@@ -1230,7 +1811,8 @@ function makePlayers(list){
     hoverMax:HOVER_BASE+(ch.hov-3)*HOVER_STEP, fl:1, flWait:0, flFull:true, hovering:false, botHover:false, puffT:0,
     boost:0,bt:-1,streakT:0,netT:new THREE.Vector3(),netHas:false,netJ:0,netB:0,left:false,forceOut:false,np:null,nh:null,ny:0,sb:[],pq:[],log:[],off:null,dieT:null,
     p:new THREE.Vector3(),h:new THREE.Vector3(),y:0,jt:-1,cool:0,acc:0,alive:true,rank:0,
-    turnCmd:0,think:0,jumpBuf:0,stride:0,stepN:0,trail:new Trail(col),fig:makeFigure(ch,local,null,col)};});
+    turnCmd:0,think:0,jumpBuf:0,stride:0,stepN:0,eaten:0,trail:new Trail(col),fig:makeFigure(ch,local,null,col)};});
+  for(const pl of players) pl.trail.owner=pl;
 }
 function meP(){return players.find(p=>p.human)||null;}
 function spawnDirs(n){
@@ -1239,12 +1821,835 @@ function spawnDirs(n){
   const s=1/Math.sqrt(3); return [[s,s,s],[s,-s,-s],[-s,s,-s],[-s,-s,s]];
 }
 
+// ---------- Chaos rules: a twist every round ----------
+// Classic = the game as it is. Chaos = every round gets one twist (never the same twice in a
+// row, never in a tiebreaker). The host (or this device vs computer) picks it; it travels with the round.
+const MOD_ICON=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const MODS={
+  lowgrav:{name:"Low gravity", desc:"Slow, floaty and sky-high jumps.", icon:MOD_ICON('<path d="M12 20V6M7 11l5-5 5 5"/><path d="M5 20h14"/>')},
+  turbo:{name:"Turbo", desc:"Everyone runs a lot faster.", icon:MOD_ICON('<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>')},
+  thick:{name:"Thick tubes", desc:"Tubes are much thicker.", icon:MOD_ICON('<path d="M4 12h16" stroke-width="7"/>')},
+  dark:{name:"Night vision", desc:"Pitch dark. Goggles see only so far.", icon:MOD_ICON('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>')},
+  grounded:{name:"Grounded", desc:"No jumping or fluttering this round.", icon:MOD_ICON('<path d="M12 3v11M7.5 9.5 12 14l4.5-4.5"/><path d="M3 19h18" stroke-width="3"/>')},
+  ice:{name:"Ice", desc:"Slippery! You slide through turns.", icon:MOD_ICON('<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5"/>')},
+  shrink:{name:"Shrinking planet", desc:"The planet shrinks as you run.", icon:MOD_ICON('<circle cx="12" cy="12" r="3.2"/><path d="M3 3l4.5 4.5M21 3l-4.5 4.5M3 21l4.5-4.5M21 21l-4.5-4.5M3 7.5V3h4.5M21 7.5V3h-4.5M3 16.5V21h4.5M21 16.5V21h-4.5"/>')},
+  flight:{name:"Flight mode", desc:"Everyone flies. Tap to dive under!", icon:MOD_ICON('<path d="M12 13c-2-4-6-6-10-5 2 3 5 5 10 5zM12 13c2-4 6-6 10-5-2 3-5 5-10 5z"/><path d="M12 13v6"/>')},
+  tramp:{name:"Trampolines", desc:"Bounce sky-high. Steer your landing!", icon:MOD_ICON('<ellipse cx="12" cy="15" rx="8" ry="2.6"/><path d="M5 16.5 4 21M19 16.5l1 4.5M12 12V3M8.5 6.5 12 3l3.5 3.5"/>')},
+  xray:{name:"X-ray", desc:"Tubes are see-through. Look closely!", icon:MOD_ICON('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 6v12M9 8h6M8.5 11h7M9 14h6"/>')},
+  rave:{name:"Rave", desc:"The strobe shows the tubes. Briefly.", icon:MOD_ICON('<path d="M12 3v3M5 6l2 2M19 6l-2 2"/><circle cx="12" cy="14" r="5"/><path d="M9.5 14h5M12 11.5v5"/>')},
+  portals:{name:"Portals", desc:"Run or jump in, pop out somewhere else!", icon:MOD_ICON('<ellipse cx="7" cy="12" rx="3" ry="7"/><ellipse cx="17" cy="12" rx="3" ry="7"/><path d="M10 12h4M12.5 10.5 14 12l-1.5 1.5"/>')},
+  potato:{name:"Hot potato", desc:"No tubes. Pass the bomb before it blows!", icon:MOD_ICON('<circle cx="11" cy="14" r="6.5"/><path d="M15.5 9.5 18 7M18 7l1.5-1.5M18 7h2.5M18 7V4.5"/>')},
+  subs:{name:"Submarines", desc:"An ocean planet. Dive under tubes!", icon:MOD_ICON('<path d="M3 14h15a3 3 0 0 0 0-6H8a5 5 0 0 0-5 6z"/><path d="M10 8V5h3M7 11h0M11 11h0"/><path d="M2 19c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"/>')},
+  haunted:{name:"Haunted house", desc:"Ghosts lurk here. Don't get caught!", icon:MOD_ICON('<path d="M5 21V11a7 7 0 0 1 14 0v10l-2.3-1.6-2.4 1.6-2.3-1.6-2.3 1.6-2.4-1.6z"/><circle cx="9.5" cy="11" r="1" fill="currentColor"/><circle cx="14.5" cy="11" r="1" fill="currentColor"/>')},
+  mines:{name:"Minefield", desc:"Mines everywhere. Jump over them!", icon:MOD_ICON('<circle cx="12" cy="13" r="6"/><path d="M12 3v4M12 19v2M3 13h3M18 13h3M5.6 6.6l2.1 2.1M18.4 6.6l-2.1 2.1"/>')},
+  snake:{name:"Snake", desc:"Short tails. Eat to grow longer.", icon:MOD_ICON('<path d="M4 17c0-3 3-3 5-3s5 0 5-3-3-3-5-3"/><circle cx="18" cy="17" r="2.2"/><path d="M9 8h0"/>')}
+};
+// the tiebreaker isn't a twist, but it gets the same treatment: its own banner, a golden sky and fast music
+const TIE={name:"Tiebreaker", desc:"Last one standing wins the match.", icon:MOD_ICON('<path d="M12 3.5l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.4l-5.1 2.8 1.1-5.7-4.3-4 5.8-.7z"/>')};
+let usedMods=new Set(), matchRules="classic", curMod=null, lastMod=null, modNoFlutter=false, STEPL=STEP_LEN, fxG=1;
+// Low gravity: everything floats. Jumps last more than twice as long and go much higher, the run slows a little
+// and turns into long bounding strides, and debris drifts down slowly.
+const LOWG={jh:2.3,jt:2.7,speed:0.76,stride:2.7,air:0.5}, TURBO={speed:1.6,turn:1.2};
+function chooseMod(){
+  if(labMod) return labMod==="normal"?null:labMod;
+  if(matchRules!=="chaos"||tieSet) return null;   // every round gets a twist (there are plenty now); never a tiebreaker
+  let ids=Object.keys(MODS).filter(k=>k!==lastMod&&!usedMods.has(k));
+  if(!ids.length){ usedMods.clear(); ids=Object.keys(MODS).filter(k=>k!==lastMod); }
+  const id=ids[Math.floor(Math.random()*ids.length)]; usedMods.add(id); return id;
+}
+function applyMod(id){
+  curMod=MODS[id]?id:null; if(curMod) lastMod=curMod;
+  const lg=curMod==="lowgrav", tb=curMod==="turbo";
+  JH=lg?JH0*LOWG.jh:JH0; JT=lg?JT0*LOWG.jt:JT0; STEPL=lg?STEP_LEN*LOWG.stride:STEP_LEN; fxG=lg?0.25:1;
+  setTubeRadius(curMod==="thick"?0.46:TR0);
+  for(const pl of players){ if(pl.baseSpeed==null){pl.baseSpeed=pl.speed; pl.baseTurn=pl.turn;}
+    pl.speed=pl.baseSpeed*(tb?TURBO.speed:lg?LOWG.speed:curMod==="haunted"?HAUNT_SPEED:1); pl.turn=pl.baseTurn*(tb?TURBO.turn:1); }
+  modNoFlutter=curMod==="grounded";   // Grounded: no jumps, and so no flutter either
+  for(const pl of players){ pl.v=null; pl.eaten=0; pl.slipTurn=0; pl.skid=0; pl.slipT=0; pl.portalCd=0; pl.lastP=null; if(pl.lt>=0&&pl.turnPre) pl.turn=pl.turnPre; pl.lt=-1; }
+  GY=curMod==="flight"?JH0:0; bombReset();
+  // Flight mode: lift everyone up before the start, and restart the tube up there
+  if(GY) for(const pl of players){ if(pl.sit) continue; pl.y=GY; if(!pl.remote&&pl.trail.n<=1){ pl.trail.reset(); dropPoint(pl); } }
+  // How the twist looks (sky, lights, music, food, the name at the bottom) waits until the banner has landed,
+  // so the screen doesn't give it away while the roulette is still spinning.
+  modShown=false;
+  clearFoods(); if(curMod==="snake"&&Net.role!=="client") spawnFoods();
+  clearMines(); if(curMod==="mines"&&Net.role!=="client") spawnMines();
+  clearHaunt(); if(curMod==="haunted"&&Net.role!=="client") spawnHaunt();
+  clearTramps(); if(curMod==="tramp"&&Net.role!=="client") spawnTramps();
+  clearHoles(); if(curMod==="holes"&&Net.role!=="client") spawnHoles();
+  clearPortals(); if(curMod==="portals"&&Net.role!=="client") spawnPortals();
+  shrinkR0=R; shrinkT=0; shrinkAcc=0; shrinkWarned=0; shrinkFx=0;
+  roundTag.textContent=tieSet?"Tiebreaker round":`Round ${round} · first to ${POINTS_TO_WIN}`;
+  if(curMod) showModBanner(); else { revealLook(); showModBanner(); }
+}
+let modShown=true;
+function revealLook(){
+  modShown=true; document.body.classList.remove("twSpin");
+  setDark(curMod==="dark"); twistLook(tieSet?"tie":curMod);
+  if(tieSet) roundTag.innerHTML=`<span class="rtTw"><span class="rtIc">${TIE.icon}</span>Tiebreaker round</span> · last one standing wins`;
+  else if(curMod) roundTag.innerHTML=`Round ${round} · <span class="rtTw"><span class="rtIc">${MODS[curMod].icon}</span>${MODS[curMod].name}</span> · first to ${POINTS_TO_WIN}`;
+  else roundTag.textContent=`Round ${round} · first to ${POINTS_TO_WIN}`;
+  for(const f of foods) f.m.visible=true;
+  for(const mn of mines) mn.m.visible=mn.on;
+  for(const t of tombs) t.m.visible=true; for(const g of ghouls) g.m.visible=true; for(const t of tramps) t.m.visible=true;
+  for(const h of holes) h.m.visible=true; for(const q of portals) q.m.visible=true;
+  labTag();
+}
+// while the roulette spins, the sky flicks through the twists' colours in step with it
+function peekLook(id){ document.body.classList.add("twSpin"); document.body.dataset.tw=id; }
+// Night vision: almost no light except a short-reaching lamp at your runner; tubes lose most of their glow,
+// so a tube a few steps away is a faint shape and anything further is gone. The CSS filter turns it green.
+function setDark(on){ hemi.intensity=on?0.012:0.55; sun.intensity=on?0:0.95; lantern.intensity=on?3.2:0; lantern.distance=R*1.1;
+  if(atmo) atmo.material.opacity=on?0.05:0.07;   // the faint rim stays, so you still see the planet's edge
+  for(const pl of players) if(pl.trail){const m=pl.trail.mesh.material; m.emissive.copy(m.color).multiplyScalar(on?0.05:0.3);}
+  document.body.classList.toggle("nv",on); }
+// How a twist round looks and sounds, on top of how it plays: the sky takes the twist's colour and the music changes.
+function twistLook(id){ if(id) document.body.dataset.tw=id; else delete document.body.dataset.tw; Sound.setTwist(id); Sound.setShift(0); setXray(id==="xray"); setSubs(id==="subs");
+  if(id==="haunted"){ hemi.intensity=0.22; sun.intensity=0.3; }
+  planetMat.color.set(id==="ice"?0xe4f5ff:id==="xray"?0x9fb8ff:id==="subs"?0x3f8fe0:0xffffff); planetMat.emissive.set(id==="ice"?0x0d2537:id==="xray"?0x0a1a3a:id==="subs"?0x082a55:0x000000); }
+function clearMods(){ curMod=null; lastMod=null; GY=0; clearHaunt(); clearTramps(); clearHoles(); clearPortals(); usedMods.clear(); clearMines(); JH=JH0; JT=JT0; STEPL=STEP_LEN; fxG=1; setTubeRadius(TR0); modNoFlutter=false; setDark(false); twistLook(null); clearFoods(); modShown=true; document.body.classList.remove("twSpin");
+  for(const pl of players){ if(pl.baseSpeed!=null) pl.speed=pl.baseSpeed; if(pl.baseTurn!=null) pl.turn=pl.baseTurn; } hideModBanner(true); }
+let modBannerT=0, spinT=0;
+function fillBanner(el,id,kick){ const m=id==="tie"?TIE:MODS[id]; el.querySelector(".mIc").innerHTML=m.icon; el.querySelector("b").textContent=m.name;
+  el.querySelector("small").textContent=m.desc; el.querySelector(".mKick").textContent=kick||"Twist round"; }
+function showModBanner(){
+  const el=$("modBanner"); clearTimeout(modBannerT); clearTimeout(spinT);
+  if(!curMod&&!tieSet){el.hidden=true; return;}
+  el.classList.remove("out","land","spin"); el.hidden=false; void el.offsetWidth;
+  if(!curMod){ fillBanner(el,"tie","Final showdown"); el.classList.add("land"); Sound.reveal(); return; }
+  // a roulette through the twists (slowing down), then it lands on this round's one
+  const ids=Object.keys(MODS), gaps=[55,55,60,65,75,90,110,135,170], start=Math.floor(Math.random()*ids.length);
+  const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const land=()=>{ fillBanner(el,curMod); el.classList.remove("spin"); void el.offsetWidth; el.classList.add("land"); Sound.reveal(); revealLook(); };
+  if(reduce){ land(); return; }
+  let i=0; el.classList.add("spin");
+  const tick=()=>{ if(i<gaps.length){ let id=ids[(start+i)%ids.length]; if(i===gaps.length-1&&id===curMod) id=ids[(start+i+1)%ids.length];
+      fillBanner(el,id); peekLook(id); Sound.tick(i); spinT=setTimeout(tick,gaps[i++]); }
+    else land(); };
+  tick();
+}
+function hideModBanner(now){const el=$("modBanner"); clearTimeout(modBannerT); clearTimeout(spinT); el.classList.remove("spin"); if(now||el.hidden){el.hidden=true; return;}
+  el.classList.add("out"); modBannerT=setTimeout(()=>{el.hidden=true; el.classList.remove("out");},380);}
+
+
+// ---------- Snake food ----------
+// Tails start short and stay short: the tail end follows you. Golden food makes yours longer, and it also
+// grows a little as you run, so a round can't go on for ever. The host (or this device vs computer) decides
+// who ate what and where new food appears.
+const SNAKE={L0:24, FOOD:14, GROW:0.1, R:0.8};
+const snakeLen=pl=>SNAKE.L0+(pl.eaten||0)*SNAKE.FOOD+Math.floor(pl.trail.n*SNAKE.GROW);
+const foodGeo=new THREE.IcosahedronGeometry(0.3,1);
+const foodMat=new THREE.MeshStandardMaterial({color:0xffd23f,emissive:0xffa800,emissiveIntensity:0.85,roughness:0.3,flatShading:true});
+let foods=[];
+function clearFoods(){ for(const f of foods) scene.remove(f.m); foods=[]; }
+function addFood(p){ const m=new THREE.Mesh(foodGeo,foodMat); m.visible=modShown; scene.add(m); const f={p:p.clone().normalize(),m,ph:Math.random()*6}; foods.push(f); return f; }
+function foodSpot(){
+  const v=new THREE.Vector3();
+  for(let tries=0;tries<40;tries++){
+    v.set(Math.random()*2-1,Math.random()*2-1,Math.random()*2-1); if(v.lengthSq()<0.05) continue; v.normalize();
+    let ok=true;
+    for(const pl of players) if(pl.alive&&pl.p.distanceTo(v)*R<2.2) {ok=false;break;}
+    for(const f of foods) if(ok&&f.p.distanceTo(v)*R<2.5) ok=false;
+    if(ok&&hitsTrail(v.x,v.y,v.z,0,-1,0,false)) ok=false;
+    if(ok) return v;
+  }
+  return v;
+}
+function spawnFoods(){ const n=players.filter(p=>!p.sit).length+2; for(let i=0;i<n;i++) addFood(foodSpot()); }
+function setFoods(list){ clearFoods(); for(const a of list) if(Array.isArray(a)&&a.length===3&&a.every(Number.isFinite)) addFood(new THREE.Vector3(a[0],a[1],a[2])); }
+function eatFx(pl,f){ const at=f.p.clone().multiplyScalar(R+0.45);
+  for(let i=0;i<10;i++){ const m=new THREE.Mesh(sparkGeo,basicMat(i%3?0xffd23f:0xffffff,true)); m.position.copy(at);
+    addFx(m,rv(1).normalize().multiplyScalar(2.5+Math.random()*2).addScaledVector(f.p,2),0.5+Math.random()*0.3,"spark"); }
+  if(pl&&pl.human) Sound.eat(0,1); else if(pl){ const s=spatial(pl); if(s.vol>0.2) Sound.eat(s.pan,s.vol*0.6); } }
+// host / vs computer: anyone close enough to a piece of food eats it, and a new one appears somewhere else
+function checkFood(){
+  if(curMod!=="snake"||Net.role==="client") return;
+  for(const pl of players){ if(!pl.alive||pl.y>1.6) continue;
+    for(let k=0;k<foods.length;k++){ const f=foods[k]; if(pl.p.distanceToSquared(f.p)*R*R>SNAKE.R*SNAKE.R) continue;
+      pl.eaten=(pl.eaten||0)+1; eatFx(pl,f); f.p.copy(foodSpot());
+      if(Net.role==="host") broadcast({t:"eat",i:pl.i,k,e:pl.eaten,p:f.p.toArray().map(r3)});
+    } }
+}
+function tickFoods(){ if(!foods.length) return; const t=performance.now()/1000;
+  for(const f of foods){ f.m.position.copy(f.p).multiplyScalar(R+0.42+0.12*Math.sin(t*3+f.ph)); f.m.rotation.set(t*1.3+f.ph,t*1.9,0); } }
+// bots: when nothing's in the way, head for the nearest food that's roughly in front
+function foodSteer(b){
+  let best=null, bd=-1; for(const f of foods){ const d=f.p.dot(b.p); if(d>bd){bd=d;best=f;} }
+  if(!best||bd<Math.cos(1.3)) return null;
+  iceX.copy(best.p).addScaledVector(b.p,-bd); if(iceX.lengthSq()<1e-6) return 0; iceX.normalize();
+  const side=foodX.crossVectors(b.p,b.h).dot(iceX), front=b.h.dot(iceX), a=Math.atan2(side,front);
+  if(Math.abs(a)>2.2) return null;
+  return Math.max(-0.8,Math.min(0.8,a*0.9));
+}
+const foodX=new THREE.Vector3();
+// tiebreaker: the runners still in it give off golden sparkles, like they're on a star
+let tieSparkT=0; const starGeo=new THREE.OctahedronGeometry(0.14,0);
+function tieSparkles(dt){
+  if(!tieSet||state!=="play") return; tieSparkT-=dt; if(tieSparkT>0) return; tieSparkT=0.05;
+  for(const pl of players){ if(!pl.alive) continue;
+    const m=new THREE.Mesh(starGeo,basicMat([0xffe27a,0xffffff,0xffb84d][(Math.random()*3)|0],true));
+    m.position.copy(pl.p).multiplyScalar(R+pl.y+0.3+Math.random()*0.8).add(rv(0.7));
+    addFx(m,rv(1.2).addScaledVector(pl.p,1.2),0.55,"spark"); }
+}
+
+
+// ---------- Minefield ----------
+// Spiky mines with a blinking light sit on the ground. Touch one and you're out (it goes off and is gone);
+// jump and you sail over it. They count as obstacles everywhere tubes do, so bots steer round them too.
+const MINE={R2:0.5*0.5, H:0.5};
+const mineBodyMat=new THREE.MeshStandardMaterial({color:0x30333f,roughness:0.35,metalness:0.6});
+const mineLightMat=new THREE.MeshBasicMaterial({color:0xff3b30});
+const mineBodyGeo=new THREE.SphereGeometry(0.3,16,12), mineSpikeGeo=new THREE.ConeGeometry(0.075,0.24,8), mineLightGeo=new THREE.SphereGeometry(0.085,10,8);
+let mines=[];
+function clearMines(){ for(const mn of mines) scene.remove(mn.m); mines=[]; }
+function addMine(p){
+  const g=new THREE.Group(); g.add(new THREE.Mesh(mineBodyGeo,mineBodyMat));
+  const dirs=[[1,0,0],[-1,0,0],[0,0,1],[0,0,-1],[0.7,0.7,0],[-0.7,0.7,0],[0,0.7,0.7],[0,0.7,-0.7]];
+  for(const d of dirs){ const c=new THREE.Mesh(mineSpikeGeo,mineBodyMat); const v=new THREE.Vector3(...d).normalize();
+    c.position.copy(v).multiplyScalar(0.33); c.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v); g.add(c); }
+  const l=new THREE.Mesh(mineLightGeo,mineLightMat); l.position.y=0.3; g.add(l);
+  const mn={p:p.clone().normalize(),m:g,on:true}; g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),mn.p);
+  g.visible=modShown; scene.add(g); mines.push(mn); return mn;
+}
+function spawnMines(){
+  const n=8+2*players.filter(p=>!p.sit).length, v=new THREE.Vector3();
+  for(let i=0,tries=0;i<n&&tries<400;tries++){
+    v.set(Math.random()*2-1,Math.random()*2-1,Math.random()*2-1); if(v.lengthSq()<0.05) continue; v.normalize();
+    let ok=true;
+    for(const pl of players) if(!pl.sit&&pl.p.distanceTo(v)*R<5){ok=false;break;}
+    for(const mn of mines) if(ok&&mn.p.distanceTo(v)*R<1.9) ok=false;
+    if(ok){ addMine(v); i++; }
+  }
+}
+function setMines(list){ clearMines(); for(const a of list) if(Array.isArray(a)&&a.length===3&&a.every(Number.isFinite)) addMine(new THREE.Vector3(a[0],a[1],a[2])); }
+function mineHit(px,py,pz,y){
+  if(y>=MINE.H) return false;
+  for(const mn of mines){ if(!mn.on) continue; const d=px*mn.p.x+py*mn.p.y+pz*mn.p.z; if(d<0.95) continue;
+    if((2-2*d)*R*R<MINE.R2) return true; }
+  return false;
+}
+// whoever crashes next to a mine set it off: it explodes and is gone (every device does this on every crash)
+function mineBlast(pl){
+  if(!mines.length) return false;
+  for(const mn of mines){ if(!mn.on||pl.p.distanceTo(mn.p)*R>0.8) continue;
+    mn.on=false; mn.m.visible=false; const at=mn.p.clone().multiplyScalar(R+0.4);
+    for(let i=0;i<26;i++){ const m=new THREE.Mesh(sparkGeo,basicMat([0xffd23f,0xff6a2a,0xffffff][i%3],true)); m.position.copy(at);
+      addFx(m,rv(1).normalize().multiplyScalar(3+Math.random()*4).addScaledVector(mn.p,3),0.6+Math.random()*0.4,"spark"); }
+    const s=pl.human?{pan:0,vol:1}:spatial(pl); Sound.boom(s.pan,s.vol); return true; }
+  return false;
+}
+function tickMines(){ if(!mines.length) return; const k=0.5+0.5*Math.sin(performance.now()/1000*7);
+  mineLightMat.color.setRGB(0.35+0.65*k,0.08+0.15*k,0.05);
+  for(const mn of mines) if(mn.on) mn.m.position.copy(mn.p).multiplyScalar(R+0.18); }
+
+// ---------- Shrinking planet ----------
+// The planet loses almost half its size over 40 s. Tubes stay where they are on the surface (they move in with it,
+// like drawings on a balloon going down), but they keep their thickness, so the open spaces close up.
+// Each device shrinks on its own clock; the music speeds up as it goes.
+// In pulses rather than smoothly: right after "Go!" and then every 4 s, a rumble, and the planet drops 8.5%
+// of its size in under a second: a red shell closes in on it, the view shakes and it lands with a thump. A steady shrink was too slow to notice; a jolt you're warned
+// about reads at once and gives a moment of "brace yourself".
+const SHRINK={first:0.9, every:4, by:0.085, min:0.45, dur:0.9, warn:0.9};
+const pulseAt=n=>SHRINK.first+(n-1)*SHRINK.every;
+let camLift=0, camFly=0;
+let shrinkR0=0, shrinkT=0, shrinkAcc=0, shrinkWarned=0, shrinkFx=0, camShake=0;
+// when it shrinks, a wireframe "ghost" of the old size stays behind for a moment, so you see the gap open up
+const shellMat=new THREE.MeshBasicMaterial({color:0xffd0d8,wireframe:true,transparent:true,opacity:0,depthWrite:false});
+const shell=new THREE.Mesh(new THREE.IcosahedronGeometry(1,3),shellMat); shell.visible=false; scene.add(shell);
+let shellR=0;
+let shellT=0;
+function shrinkPulse(){ shellT=1.5; shellR=R; shell.visible=true; camShake=0.9; Sound.shrinkHit();
+  // dust thrown up off the surface around you
+  const me=meP(), c=(me&&me.alive?me.p:camC);
+  for(let i=0;i<34;i++){ const v=rv(1).normalize(); v.addScaledVector(c,1.6).normalize(); if(v.dot(c)<0.6) continue;
+    const m=new THREE.Mesh(sparkGeo,basicMat(i%2?0xffe0b0:0xffffff,true)); m.position.copy(v).multiplyScalar(R+0.1);
+    addFx(m,v.clone().multiplyScalar(2.5+Math.random()*3).add(rv(2)),0.7+Math.random()*0.5,"spark"); }
+  if(atmo){ atmo.material.color.set(0xff3050); atmo.userData.flash=1; } }
+function tickShrinkFx(dt){
+  if(shellT>0){ shellT-=dt; const u=1-Math.max(0,shellT)/1.5; shell.scale.setScalar(shellR); shellMat.opacity=0.4*(1-u)*Math.min(1,u*8);
+    shell.rotation.y+=dt*0.2; if(shellT<=0) shell.visible=false; }
+  if(atmo&&atmo.userData.flash>0){ const f=atmo.userData.flash=Math.max(0,atmo.userData.flash-dt*1.2);
+    atmo.material.opacity=0.07+0.25*f; if(f<=0){ atmo.material.color.set(0x8fb6ff); atmo.material.opacity=curMod==="dark"?0.05:0.07; } }
+  if(camShake>0) camShake=Math.max(0,camShake-dt);
+}
+function tickShrink(dt){
+  if(curMod!=="shrink"||state!=="play") return;
+  shrinkT+=dt;
+  const n=shrinkT<SHRINK.first?0:Math.floor((shrinkT-SHRINK.first)/SHRINK.every)+1, maxN=Math.round((1-SHRINK.min)/SHRINK.by);
+  // warn before the next pulse
+  const next=n+1; if(next<=maxN&&shrinkWarned<next&&shrinkT>=pulseAt(next)-SHRINK.warn){ shrinkWarned=next; Sound.rumble();
+    document.body.classList.remove("shrinkWarn"); void document.body.offsetWidth; document.body.classList.add("shrinkWarn"); }
+  if(n<1) return;
+  if(n<=maxN&&shrinkFx<n){ shrinkFx=n; shrinkPulse(); }
+  const f=Math.min(1,(shrinkT-pulseAt(n))/SHRINK.dur), e=f>=1?1:1+3.2*Math.pow(f-1,3)+2.2*Math.pow(f-1,2),   // a little overshoot, then settles
+    amt=SHRINK.by*(Math.min(n,maxN)-1+(n>maxN?1:e));
+  const r=shrinkR0*Math.max(SHRINK.min,1-amt);
+  if(Math.abs(r-R)>1e-4){ const dR=r-R; R=r; planetGroup.scale.setScalar(R/R_FULL);
+    for(const pl of players) pl.trail.shiftR(dR);
+    grid.clear(); for(const pl of players){ const tr=pl.trail, Pp=tr.pts; for(let i=0;i<tr.n;i++) gridAdd(pl.i*MAXP+i,Pp[i*3],Pp[i*3+1],Pp[i*3+2]); }
+    lantern.distance=R*1.1; Sound.setBpm(100+6*Math.min(n,maxN)); Sound.setShift(Math.min(n,maxN)); }
+}
+
+
+// ---------- Haunted house ----------
+// Tombstones stand around the planet (solid, but low enough to jump), and glow-in-the-dark ghosts haunt it.
+// Some drift about from the start, some hide behind a tombstone. Get close and a ghost wails and gives chase
+// for a couple of seconds; if it touches you, you're out. They float through tubes. You can outrun them,
+// or jump over one. The host (or this device vs computer) moves the ghosts; whoever moves a runner decides
+// if it got caught.
+// They hunt now: they notice you from further off, chase for longer at nearly your speed, and when they're close
+// they rear up (a short warning: eyes go red, a shriek) and lunge.
+// They drift about at random. When a runner comes near, every so often a ghost rolls the dice: maybe it strikes,
+// maybe it doesn't. A strike is a short warning (it rears up, eyes go red, a shriek) and then a lunge. So you can
+// chance running past one — you just never know when it'll go for you. Hidden ones are a bit keener.
+// Runners are slowed down here (like running in a nightmare); the ghosts are slowed in step, so they can still be
+// escaped. Bigger planet (more players), more ghosts.
+const HAUNT_SPEED=0.74;
+const GHOUL={wander:0.4*HAUNT_SPEED, sense:3.4, roll:0.45, chance:0.28, chanceLurk:0.5, rest:1.8, turn:4.0, catchR:0.62, catchY:1.45,
+  lunge:1.5*HAUNT_SPEED, lungeT:0.55, windup:0.36};
+const GMODES=["wander","lurk","chase","rest","windup","lunge"];
+const TOMB={R2:0.55*0.55, H:1.05};
+let tombs=[], ghouls=[], ghoulNetT=0;
+const tombMat=new THREE.MeshStandardMaterial({color:0xd6dbe4,emissive:0x2c3a34,roughness:0.9,flatShading:true});
+const candleGeo=new THREE.CylinderGeometry(0.05,0.05,0.2,8), candleMat=new THREE.MeshStandardMaterial({color:0xf3ead6,roughness:0.6,emissive:0x3a2a10});
+const flameGeo=new THREE.ConeGeometry(0.045,0.13,8), flameMat=new THREE.MeshBasicMaterial({color:0xffb347});
+const tombBox=new THREE.BoxGeometry(0.8,0.7,0.24), tombTop=new THREE.CylinderGeometry(0.4,0.4,0.24,16,1,false,0,Math.PI);
+let ghoulGeo=null, ghoulEye=null, ghoulHalo=null;
+function ghoulHaloTex(){ if(ghoulHalo) return ghoulHalo; const c=document.createElement("canvas"); c.width=c.height=128; const x=c.getContext("2d");
+  const g=x.createRadialGradient(64,64,0,64,64,64); g.addColorStop(0,"rgba(140,255,170,.9)"); g.addColorStop(0.35,"rgba(80,255,130,.35)"); g.addColorStop(1,"rgba(40,255,100,0)");
+  x.fillStyle=g; x.fillRect(0,0,128,128); ghoulHalo=new THREE.CanvasTexture(c); return ghoulHalo; }
+function makeGhoulMesh(){
+  if(!ghoulGeo){ const pts=[[0,1.0],[0.17,0.97],[0.3,0.88],[0.39,0.74],[0.43,0.56],[0.43,0.2],[0.48,0.02]].map(a=>new THREE.Vector2(a[0],a[1]));
+    ghoulGeo=new THREE.LatheGeometry(pts,22); ghoulEye=new THREE.SphereGeometry(0.08,10,8); }
+  const g=new THREE.Group();
+  const mat=new THREE.MeshStandardMaterial({color:0x9dffbc,emissive:0x2dff6e,emissiveIntensity:0.75,roughness:0.5,transparent:true,opacity:0.72,side:THREE.DoubleSide,depthWrite:false});
+  g.add(new THREE.Mesh(ghoulGeo,mat));
+  const eyeM=new THREE.MeshBasicMaterial({color:0x06140b});   // goes red when it's about to strike
+  for(const x of [-0.13,0.13]){ const e=new THREE.Mesh(ghoulEye,eyeM); e.position.set(x,0.66,0.37); e.scale.set(1,1.5,0.6); g.add(e); }
+  const mouth=new THREE.Mesh(ghoulEye,eyeM); mouth.position.set(0,0.43,0.41); mouth.scale.set(1,0.7,0.5); g.add(mouth);
+  const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:ghoulHaloTex(),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:0.5}));
+  halo.scale.set(2.4,2.4,1); halo.position.y=0.55; g.add(halo);
+  g.userData={mat,halo,mouth,eyeM}; g.visible=modShown; scene.add(g); return g;
+}
+function clearHaunt(){ for(const t of tombs) scene.remove(t.m); for(const g of ghouls) scene.remove(g.m); tombs=[]; ghouls=[]; }
+function addTomb(p,rot){
+  const m=new THREE.Group(); const b=new THREE.Mesh(tombBox,tombMat); b.position.y=0.35; m.add(b);
+  const top=new THREE.Mesh(tombTop,tombMat); top.rotation.x=Math.PI/2; top.rotation.z=-Math.PI/2; top.position.y=0.7; m.add(top);
+  // a candle burning at its foot: a warm, flickering orange light — never green, so a glow by a stone is
+  // never mistaken for a ghost (the green ones are the ghosts)
+  const wax=new THREE.Mesh(candleGeo,candleMat); wax.position.set(0.28,0.1,0.22); m.add(wax);
+  const flame=new THREE.Mesh(flameGeo,flameMat); flame.position.set(0.28,0.25,0.22); m.add(flame);
+  const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:whiteGlowTex(),color:0xff9a3c,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:0.5}));
+  glow.scale.set(1.6,1.6,1); glow.position.set(0.28,0.3,0.22); m.add(glow); m.userData={flame,glow};
+  const t={p:p.clone().normalize(),rot,m}; m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),t.p); m.rotateY(rot);
+  m.visible=modShown; scene.add(m); tombs.push(t); return t;
+}
+function addGhoul(p,h,lurk){
+  const g={p:p.clone().normalize(),h:h.clone(),tp:p.clone().normalize(),th:h.clone(),mode:lurk!=null?"lurk":"wander",lurk,t:Math.random()*2,tgt:null,m:makeGhoulMesh(),y:lurk!=null?0.25:0.9,wob:Math.random()*6};
+  ghouls.push(g); return g;
+}
+const hTmp=new THREE.Vector3(), hTmp2=new THREE.Vector3();
+function randDir(v){ do{ v.set(Math.random()*2-1,Math.random()*2-1,Math.random()*2-1); }while(v.lengthSq()<0.05); return v.normalize(); }
+function spawnHaunt(){
+  const v=new THREE.Vector3(), far=(d)=>players.every(pl=>pl.sit||pl.p.distanceTo(v)*R>=d);
+  // how many: about six ghosts on the biggest planet (four players), fewer on smaller ones; four stones (three on a small one)
+  const total=Math.max(4,Math.round(6*(R/6.6)*(R/6.6))), nTomb=R<5.5?3:4;
+  for(let tries=0;tombs.length<nTomb&&tries<300;tries++){ randDir(v); if(!far(4.5)) continue; if(tombs.some(t=>t.p.distanceTo(v)*R<2.6)) continue; addTomb(v,Math.random()*6.28); }
+  // a ghost hides behind every other tombstone
+  tombs.forEach((t,k)=>{ if(k>=Math.ceil(total/3)) return; randDir(hTmp).addScaledVector(t.p,-hTmp.dot(t.p)).normalize();
+    v.copy(t.p).addScaledVector(hTmp,0.42/R).normalize(); addGhoul(v,hTmp.clone().negate(),k); });
+  // and the rest drift about — each placed as far as possible from the other ghosts and the stones, so they spread
+  // round the planet instead of bunching up on the side away from everyone
+  const nLurk=ghouls.length;
+  for(let n=0;n<total-nLurk;n++){ let best=null,bs=-1;
+    for(let k=0;k<60;k++){ randDir(hTmp2); if(!players.every(pl=>pl.sit||pl.p.distanceTo(hTmp2)*R>=4)) continue;
+      let m=99; for(const g of ghouls) m=Math.min(m,g.p.distanceTo(hTmp2)); for(const t of tombs) m=Math.min(m,t.p.distanceTo(hTmp2)*1.3);
+      if(m>bs){bs=m; best=hTmp2.clone();} }
+    if(best){ randDir(hTmp).addScaledVector(best,-hTmp.dot(best)).normalize(); addGhoul(best,hTmp.clone(),null); } }
+}
+function hauntFromNet(d){ clearHaunt();
+  if(Array.isArray(d.tombs)) for(const a of d.tombs) if(Array.isArray(a)&&a.length===4&&a.every(Number.isFinite)) addTomb(new THREE.Vector3(a[0],a[1],a[2]),a[3]);
+  if(Array.isArray(d.ghouls)) for(const a of d.ghouls) if(Array.isArray(a)&&a.length>=7&&a.slice(0,6).every(Number.isFinite))
+    addGhoul(new THREE.Vector3(a[0],a[1],a[2]),new THREE.Vector3(a[3],a[4],a[5]),a[6]>=0?a[6]:null);
+}
+function tombHit(px,py,pz,y){
+  if(y>=TOMB.H) return false;
+  for(const t of tombs){ const d=px*t.p.x+py*t.p.y+pz*t.p.z; if(d<0.95) continue; if((2-2*d)*R*R<TOMB.R2) return true; }
+  return false;
+}
+// is a ghost touching this runner? (checked by whoever moves the runner)
+function ghoulCatch(pl){
+  if(!ghouls.length||pl.y>=GHOUL.catchY) return false;
+  for(const g of ghouls) if(g.mode!=="rest"&&pl.p.distanceTo(g.p)*R<GHOUL.catchR) return true;
+  return false;
+}
+// bots: stay well clear of ghosts (a chasing one counts as bigger)
+function ghoulNear(p,y){ if(y>=GHOUL.catchY) return false;
+  for(const g of ghouls){ const r=g.mode==="windup"||g.mode==="lunge"?2.2:g.mode==="rest"?0:1.2; if(r&&p.distanceTo(g.p)*R<r) return true; } return false; }
+function steerToward(g,target,rate,dt){
+  hTmp.copy(target).addScaledVector(g.p,-target.dot(g.p)); if(hTmp.lengthSq()<1e-9) return; hTmp.normalize();
+  const a=Math.atan2(hTmp.dot(hTmp2.crossVectors(g.p,g.h)),hTmp.dot(g.h)), lim=rate*dt;
+  g.h.applyAxisAngle(g.p,Math.max(-lim,Math.min(lim,a)));
+}
+const EYE_DARK=new THREE.Color(0x06140b), EYE_RED=new THREE.Color(0xff2030);
+function tickHaunt(dt){
+  if(!ghouls.length&&!tombs.length) return;
+  const t=performance.now()/1000;
+  for(const tb of tombs){ tb.m.position.copy(tb.p).multiplyScalar(R);
+    const u=tb.m.userData; if(u&&u.flame){ const f=0.85+0.15*Math.sin(t*13+tb.rot*7)+0.08*Math.sin(t*31+tb.rot); u.flame.scale.set(1,f,1); u.glow.material.opacity=0.38+0.18*f; } }
+  const sim=state==="play"&&Net.role!=="client";
+  for(const g of ghouls){
+    if(sim){
+      g.t-=dt; if(g.cd>0) g.cd-=dt;
+      if(g.mode==="wander"||g.mode==="lurk"){
+        if(g.mode==="wander"){ if(g.t<=0){ g.t=1+Math.random()*2; g.turnTo=(Math.random()*2-1)*1.3;
+            // steer away from another ghost that's close, so they don't drift into a clump
+            for(const o of ghouls) if(o!==g&&o.p.distanceTo(g.p)*R<3.5){ hTmp.copy(g.p).sub(o.p); hTmp.addScaledVector(g.p,-hTmp.dot(g.p)).normalize();
+              g.turnTo=Math.sign(hTmp.dot(hTmp2.crossVectors(g.p,g.h)))*1.3; break; } }
+          g.h.applyAxisAngle(g.p,(g.turnTo||0)*dt); advance(g.p,g.h,SPEED*GHOUL.wander*dt); }
+        g.roll=(g.roll||Math.random()*GHOUL.roll)-dt;
+        if(g.roll<=0){ g.roll=GHOUL.roll;
+          let best=null,bd=GHOUL.sense; for(const pl of players) if(pl.alive&&pl.y<GHOUL.catchY){ const d=pl.p.distanceTo(g.p)*R; if(d<bd){bd=d;best=pl;} }
+          if(best&&Math.random()<(g.mode==="lurk"?GHOUL.chanceLurk:GHOUL.chance)){
+            if(g.mode==="lurk") g.pop=1; g.mode="windup"; g.tgt=best.i; g.t=GHOUL.windup; shriekAt(g); if(Net.role==="host") broadcast({t:"shriek",k:ghouls.indexOf(g)}); } }
+      } else if(g.mode==="windup"){   // rears up, turning to face where you're heading
+        const pl=players[g.tgt]; if(pl&&pl.alive){ hTmp2.copy(pl.p).addScaledVector(pl.h,1.6/R).normalize(); steerToward(g,hTmp2,GHOUL.turn*2,dt); }
+        if(g.t<=0){ g.mode="lunge"; g.t=GHOUL.lungeT; }
+      } else if(g.mode==="lunge"){
+        const pl=players[g.tgt]; if(pl&&pl.alive) steerToward(g,pl.p,GHOUL.turn*0.5,dt);
+        advance(g.p,g.h,SPEED*GHOUL.lunge*dt);
+        if(g.t<=0){ g.mode="rest"; g.t=GHOUL.rest; }
+      } else if(g.mode==="rest"){ advance(g.p,g.h,SPEED*0.2*dt); if(g.t<=0){ g.mode="wander"; g.t=0.5; g.roll=GHOUL.roll*2; } }
+      else { g.mode="wander"; }
+    } else if(Net.role==="client"&&state==="play"){
+      const k=1-Math.exp(-12*dt); g.p.lerp(g.tp,k).normalize(); g.h.lerp(g.th,k); g.h.addScaledVector(g.p,-g.h.dot(g.p)).normalize();
+    }
+    // looks: hidden ones crouch low and dim; hunters glow bright, trail green wisps, and swell and go red-eyed to strike
+    const hunt=g.mode==="chase"||g.mode==="windup"||g.mode==="lunge";
+    const wantY=g.mode==="lurk"?0.05:g.mode==="windup"?1.15:hunt?0.7:0.95, glow=g.mode==="lurk"?0.06:hunt?1:g.mode==="rest"?0.3:0.6;
+    g.y+=(wantY-g.y)*Math.min(1,dt*8); g.glow=g.glow==null?glow:g.glow+(glow-g.glow)*Math.min(1,dt*6);
+    g.pop=Math.max(0,(g.pop||0)-dt*2.5);
+    const u=g.m.userData, shake=g.mode==="windup"?0.06:0, y=g.y+0.1*Math.sin(t*2.4+g.wob);
+    bx.crossVectors(g.p,g.h); basis.makeBasis(bx,g.p,g.h); g.m.quaternion.setFromRotationMatrix(basis);
+    g.m.position.copy(g.p).multiplyScalar(R+y); if(shake) g.m.position.add(rv(shake));
+    const sc=(g.mode==="windup"?1.45:g.mode==="lunge"?1.35:hunt?1.2:g.mode==="lurk"?0.7:1)+0.5*g.pop;
+    g.m.scale.set(sc,sc,g.mode==="lunge"?sc*1.4:sc);
+    u.mat.opacity=0.3+0.5*g.glow; u.mat.emissiveIntensity=0.35+0.9*g.glow*(0.85+0.15*Math.sin(t*(hunt?11:5)+g.wob));
+    u.halo.material.opacity=0.15+0.55*g.glow; u.mouth.scale.y=g.mode==="windup"||g.mode==="lunge"?2:hunt?1.3:0.7;
+    u.eyeM.color.copy(g.mode==="windup"||g.mode==="lunge"?EYE_RED:EYE_DARK);
+    if(hunt&&state==="play"){ g.wispT=(g.wispT||0)-dt; if(g.wispT<=0){ g.wispT=0.05;
+      const m=new THREE.Mesh(sparkGeo,basicMat(0x6dff9a,true)); m.position.copy(g.m.position).add(rv(0.4));
+      addFx(m,g.h.clone().multiplyScalar(-1.5).addScaledVector(g.p,0.5),0.5,"spark"); } }
+  }
+  if(sim&&Net.role==="host"){ ghoulNetT-=dt; if(ghoulNetT<=0){ ghoulNetT=0.08;
+    broadcast({t:"hh",r:round,g:ghouls.map(g=>[...g.p.toArray(),...g.h.toArray()].map(r3).concat([GMODES.indexOf(g.mode)]))}); } }
+  hauntWarn();
+}
+// a green glow creeps in from the screen edges while a ghost is hunting close to you
+let hwOn=-1;
+function hauntWarn(){
+  const me=meP(); let w=0;
+  if(me&&me.alive&&state==="play") for(const g of ghouls) if(g.mode==="windup"||g.mode==="lunge"){
+    const d=me.p.distanceTo(g.p)*R; w=Math.max(w,Math.min(1,(5-d)/3)); }
+  w=Math.round(w*20)/20; if(w!==hwOn){ hwOn=w; $("hauntWarn").style.opacity=String(w); }
+}
+function shriekAt(g){ const s=spatialAt(g.p.clone().multiplyScalar(R+1)); if(s.vol>0.12) Sound.shriek(s.pan,Math.min(1,s.vol*1.2)); }
+function wailAt(g){ const s=spatialAt(g.p.clone().multiplyScalar(R+1)); if(s.vol>0.12) Sound.wail(s.pan,Math.min(1,s.vol*1.1)); }
+// a runner caught by a ghost: a green flash where it happened (every device, on every crash near a ghost)
+// what knocked a runner out (checked by whoever moves it, before a mine goes off and disappears)
+function crashCause(pl){
+  if(ghoulCatch(pl)) return "ghost";
+  if(holeHit(pl)) return "hole";
+  if(mines.length&&mineHit(pl.p.x,pl.p.y,pl.p.z,pl.y)) return "mine";
+  if(tombs.length&&tombHit(pl.p.x,pl.p.y,pl.p.z,pl.y)) return "tomb";
+  return "tube";
+}
+const OUT_MSG={bomb:"Kaboom!",hole:"Sucked in!",ghost:"Spooked!",mine:"Boom!",tomb:"Thud!",tube:"You're out"};
+const OUT_SUB={bomb:"The bomb went off in your hands",hole:"A black hole swallowed you",ghost:"A ghost caught you",mine:"You hit a mine",tomb:"You ran into a gravestone",tube:""};
+function outMsg(pl,place){ const c=pl.cause||"tube"; showMsg(OUT_MSG[c],[OUT_SUB[c],place].filter(Boolean).join(" · ")); }
+// the camera stays where you went out for a moment (longer for a blast), so you can see what happened
+let deathCam=null;
+function holdDeathCam(pl){ deathCam={p:pl.p.clone(),h:pl.h.clone(),y:pl.y,until:performance.now()+(pl.cause==="mine"?2300:pl.cause==="ghost"?1800:1200)}; }
+function bombBlast(pl){ const at=pl.p.clone().multiplyScalar(R+pl.y+1.2);
+  for(let i=0;i<30;i++){ const m=new THREE.Mesh(sparkGeo,basicMat([0xffd23f,0xff6a2a,0xffffff][i%3],true)); m.position.copy(at); addFx(m,rv(1).normalize().multiplyScalar(3+Math.random()*4),0.7,"spark"); }
+  const s=pl.human?{pan:0,vol:1}:spatial(pl); Sound.boom(s.pan,s.vol); camShake=Math.max(camShake,pl.human?0.6:0.2); }
+function ghoulFx(pl){
+  if(!ghouls.length||!ghouls.some(g=>pl.p.distanceTo(g.p)*R<1.2)) return;
+  const at=pl.p.clone().multiplyScalar(R+0.8);
+  for(let i=0;i<22;i++){ const m=new THREE.Mesh(sparkGeo,basicMat(i%3?0x6dff9a:0xe6ffee,true)); m.position.copy(at);
+    addFx(m,rv(1).normalize().multiplyScalar(2+Math.random()*3).addScaledVector(pl.p,2.5),0.7+Math.random()*0.4,"spark"); }
+  const s=pl.human?{pan:0,vol:1}:spatial(pl); Sound.wail(s.pan,s.vol);
+}
+
+
+// ---------- Flight mode helpers ----------
+const WARN_RED=new THREE.Color(0xff3344), WARN_RED2=new THREE.Color(0xffd0d4), fwP=new THREE.Vector3(), fwH=new THREE.Vector3();
+let fwT=0, fwOn=false;
+// Looks ahead along your path at your height: if a tube is coming, how many seconds away is it, and where?
+let fwT2=0; const fwHit=new THREE.Vector3();
+function flightWarn(pl){
+  const now=performance.now(); if(now<fwT) return fwOn; fwT=now+70;
+  fwOn=false; fwT2=0; if(!pl.alive||state!=="play"||pl.jt>=0) return fwOn;
+  fwP.copy(pl.p); fwH.copy(pl.h); const lim=pl.trail.n-1-GRACE;
+  for(let t=0.05;t<=0.95;t+=0.05){ advance(fwP,fwH,pl.speed*0.05); if(hitsTrail(fwP.x,fwP.y,fwP.z,GY,pl.i,lim)){ fwOn=true; fwT2=t; fwHit.copy(fwP); break; } }
+  return fwOn;
+}
+// The cue: a chevron pointing down shows up when a tube is coming at your height — amber while it's on its
+// way, red and pulsing when it's time to dive (the bottom of a dive comes about a fifth of a second after the tap).
+// A red mark also sits on the tube where you'd hit it.
+let hitMark=null;
+function syncDiveCue(){
+  const me=meP(), el=$("diveCue");
+  const on=!!GY&&!!me&&me.alive&&state==="play"&&me.jt<0&&flightWarn(me);
+  const st=!on?"":fwT2<=0.38?"now":"soon";
+  if(!el.hidden) el.hidden=true;
+  if(!hitMark){ hitMark=new THREE.Sprite(new THREE.SpriteMaterial({map:whiteGlowTex(),color:0xff3344,transparent:true,depthTest:false,blending:THREE.AdditiveBlending})); hitMark.scale.set(1.3,1.3,1); hitMark.visible=false; scene.add(hitMark); }
+  hitMark.visible=on; if(on){ hitMark.position.copy(fwHit).multiplyScalar(R+GY+TR); const k=st==="now"?1+0.25*Math.sin(performance.now()/50):0.8; hitMark.scale.set(1.3*k,1.3*k,1); hitMark.material.opacity=st==="now"?1:0.6; }
+}
+let _wg=null;
+function whiteGlowTex(){ if(_wg) return _wg; const c=document.createElement("canvas"); c.width=c.height=128; const x=c.getContext("2d");
+  const g=x.createRadialGradient(64,64,0,64,64,64); g.addColorStop(0,"rgba(255,255,255,1)"); g.addColorStop(0.3,"rgba(255,255,255,.55)"); g.addColorStop(1,"rgba(255,255,255,0)");
+  x.fillStyle=g; x.fillRect(0,0,128,128); _wg=new THREE.CanvasTexture(c); return _wg; }
+function syncShadows(){ const on=!!GY&&(state==="play"||state==="ending"||state==="count"), k=(R+0.03)/(R+GY+TR);
+  for(const pl of players){ const sh=pl.trail&&pl.trail.shadow; if(!sh) continue; if(sh.visible!==on) sh.visible=on; if(on) sh.scale.setScalar(k); } }
+
+
+// ---------- Trampolines ----------
+// Springy pads lie about the planet. Run over one and you're flung way up (high enough to see the whole planet
+// below), fly on in the direction you were going, and come down somewhere else. You can steer a little up
+// there; a ring on the ground shows where you'll land. Land on a tube and you're out. The tube you leave goes
+// up and over in a big arch. Whoever moves a runner decides when it bounces.
+const TRAMP={T:2.5, H:11, R:0.6, steer:0.45};
+let tramps=[];
+const trampRimMat=new THREE.MeshStandardMaterial({color:0xff4fa3,emissive:0x9a1f5c,emissiveIntensity:0.8,roughness:0.4});
+const trampMatMat=new THREE.MeshStandardMaterial({color:0x1b1f33,roughness:0.8});
+const trampRimGeo=new THREE.TorusGeometry(0.6,0.09,10,32), trampMatGeo=new THREE.CircleGeometry(0.56,32), trampLegGeo=new THREE.CylinderGeometry(0.04,0.04,0.22,6);
+function clearTramps(){ for(const t of tramps) scene.remove(t.m); tramps=[]; if(landRing) landRing.visible=false; }
+function addTramp(p){
+  const m=new THREE.Group();
+  const rim=new THREE.Mesh(trampRimGeo,trampRimMat); rim.rotation.x=Math.PI/2; rim.position.y=0.22; m.add(rim);
+  const mat=new THREE.Mesh(trampMatGeo,trampMatMat); mat.rotation.x=-Math.PI/2; mat.position.y=0.2; m.add(mat);
+  for(let k=0;k<4;k++){ const l=new THREE.Mesh(trampLegGeo,trampRimMat); const a=k*Math.PI/2+0.4; l.position.set(Math.cos(a)*0.5,0.1,Math.sin(a)*0.5); m.add(l); }
+  const t={p:p.clone().normalize(),m,mat,sq:0}; m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),t.p);
+  m.visible=modShown; scene.add(m); tramps.push(t); return t;
+}
+function spawnTramps(){ const v=new THREE.Vector3();
+  for(let tries=0;tramps.length<6&&tries<300;tries++){ randDir(v);
+    if(players.some(pl=>!pl.sit&&pl.p.distanceTo(v)*R<4.5)) continue; if(tramps.some(t=>t.p.distanceTo(v)*R<3)) continue; addTramp(v); } }
+function setTramps(list){ clearTramps(); for(const a of list) if(Array.isArray(a)&&a.length===3&&a.every(Number.isFinite)) addTramp(new THREE.Vector3(a[0],a[1],a[2])); }
+function trampSquash(pl){ let best=null,bd=1.5; for(const t of tramps){ const d=pl.p.distanceTo(t.p)*R; if(d<bd){bd=d;best=t;} } if(best) best.sq=1; }
+// called from stepPlayer for runners this device moves
+function trampCheck(pl){
+  if(curMod!=="tramp"||pl.lt>=0||pl.jt>=0||pl.y>0.35) return;
+  for(const t of tramps) if(pl.p.distanceTo(t.p)*R<TRAMP.R){ launch(pl); return; }
+}
+function launch(pl){
+  pl.lt=0; pl.ltT=TRAMP.T; pl.ltH=TRAMP.H; pl.ltDrop=false; pl.jt=-1; pl.hovering=false; pl.botHover=false; pl.jumpBuf=0; pl.turnPre=pl.turn; pl.turn*=TRAMP.steer;
+  trampSquash(pl); hostFx("t",pl);
+  if(pl.human) Sound.boing(0,1); else { const s=spatial(pl); if(s.vol>0.25) Sound.boing(s.pan,s.vol*0.6); }
+}
+let landRing=null; const lrP=new THREE.Vector3(), lrH=new THREE.Vector3();
+function tickTramp(dt){
+  if(!tramps.length) return;
+  for(const t of tramps){ t.sq=Math.max(0,t.sq-dt*2.2); const k=Math.sin(t.sq*Math.PI*3)*t.sq;
+    t.m.position.copy(t.p).multiplyScalar(R); t.mat.position.y=0.2-0.12*k; t.mat.scale.setScalar(1-0.04*k); }
+  // other people's bounces (they arrive as height in the position stream): squash the pad and play the sound
+  for(const pl of players) if(pl.remote&&pl.alive){ if(!pl.lFx&&pl.y>2.5){ pl.lFx=true; trampSquash(pl); const s=spatial(pl); if(s.vol>0.25) Sound.boing(s.pan,s.vol*0.6); } else if(pl.lFx&&pl.y<0.4) pl.lFx=false; }
+}
+function tickLandRing(){
+  // where you'll land, if you keep going straight (after a trampoline bounce or a portal drop)
+  const me=meP();
+  if(me&&me.alive&&me.lt>=0&&state==="play"){
+    if(!landRing){ landRing=new THREE.Mesh(new THREE.RingGeometry(0.42,0.62,40),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.85,side:THREE.DoubleSide,depthWrite:false})); scene.add(landRing); }
+    lrP.copy(me.p); lrH.copy(me.h); advance(lrP,lrH,me.speed*Math.max(0,(me.ltT||TRAMP.T)-me.lt));
+    landRing.visible=true; landRing.position.copy(lrP).multiplyScalar(R+0.05); landRing.quaternion.setFromUnitVectors(Z_AXIS,lrP);
+    const s=1+0.15*Math.sin(performance.now()/120); landRing.scale.setScalar(s); landRing.material.color.set(me.color);
+  } else if(landRing&&landRing.visible) landRing.visible=false;
+}
+const Z_AXIS=new THREE.Vector3(0,0,1);
+
+
+// ---------- Twist lab (test mode) ----------
+// Pick any twist (or none) and play it against the computer over and over: crash and the round starts again
+// at once, with no countdown and fresh tubes. Tap the label at the bottom (or Pause → Change twist) to switch.
+let labMod=null, labRestartT=0;
+const LAB_NORMAL={name:"Normal",icon:MOD_ICON('<circle cx="12" cy="12" r="7.5"/><path d="M4.5 12h15"/>')};
+const labInfo=id=>id==="normal"?LAB_NORMAL:MODS[id];
+function buildLabGrid(){
+  const g=$("labGrid");
+  g.innerHTML=["normal",...Object.keys(MODS)].map(id=>{const m=labInfo(id); return `<button type="button" class="labTile" data-id="${id}"><span class="ltIc">${m.icon}</span><span>${m.name}</span></button>`;}).join("");
+  g.querySelectorAll(".labTile").forEach(b=>b.addEventListener("click",()=>{ Sound.click(); pickLab(b.dataset.id); }));
+}
+function openLab(){
+  Sound.init(); buildLabGrid();
+  $("labGrid").querySelectorAll(".labTile").forEach(b=>b.classList.toggle("cur",b.dataset.id===labMod));
+  if(labMod&&inMatchState()){ paused=true; joy.hidden=true; joyId=null; ptrs.clear(); $("labResume").hidden=false; $("labSheet").hidden=false; return; }
+  pushNav(); mode="cpu"; state="labset"; hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true;
+  $("labResume").hidden=true; $("labSheet").hidden=false;
+}
+function pickLab(id){
+  $("labSheet").hidden=true;
+  if(labMod&&inMatchState()){ labMod=id; paused=false; labRestart(); return; }
+  labMod=id; mode="cpu"; startMatch();
+}
+function labRestart(){
+  labRestartT=0; for(const pl of players) pl.score=0; round=0;
+  startRound();
+  state="play"; stateT=0; hideModBanner(true); if(!modShown) revealLook();
+  hideMsg(); onGo(); Sound.setMode("play"); ffBtn.hidden=true; timeScale=1; renderChips();
+}
+function labTag(){
+  if(!labMod){ roundTag.classList.remove("lab"); return; }
+  const m=labInfo(labMod); roundTag.classList.add("lab");
+  roundTag.innerHTML=`<span class="labTag">Twist lab · <span class="rtTw"><span class="rtIc">${m.icon}</span>${m.name}</span> · <u>Change</u></span>`;
+}
+
+
+// ---------- Turbo: speed lines ----------
+// Anime/comic-style focus lines: thin white wedges rushing in from the edges of the screen toward a clear
+// middle, redrawn a dozen times a second so they flicker. More and longer while you boost.
+const slCv=document.getElementById("speedLines"), slCx=slCv.getContext("2d"); let slT=0, slOn=false;
+function drawSpeedLines(){
+  const me=meP(), on=curMod==="turbo"&&state==="play"&&!!me&&me.alive&&!paused;
+  if(on!==slOn){ slOn=on; slCv.style.opacity=on?"1":"0"; }
+  if(!on) return;
+  const now=performance.now(); if(now<slT) return; slT=now+70;
+  const w=slCv.clientWidth, h=slCv.clientHeight; if(slCv.width!==w||slCv.height!==h){ slCv.width=w; slCv.height=h; }
+  slCx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h*0.52, maxR=Math.hypot(w,h)*0.62, boost=me.bt>=0?1:0, n=80+boost*40;
+  for(let i=0;i<n;i++){
+    const a=Math.random()*Math.PI*2, ca=Math.cos(a), sa=Math.sin(a);
+    // keep the middle clear: an oval hole, a bit taller than wide
+    const r0=maxR*(0.5+Math.random()*0.3-boost*0.12), r1=maxR*1.05, wd=1.5+Math.random()*(5+boost*3);
+    const nx=-sa, ny=ca;
+    slCx.fillStyle=`rgba(255,255,255,${(0.22+Math.random()*0.33+boost*0.1).toFixed(2)})`;
+    slCx.beginPath(); slCx.moveTo(cx+ca*r0*0.8,cy+sa*r0);
+    slCx.lineTo(cx+ca*r1+nx*wd,cy+sa*r1+ny*wd); slCx.lineTo(cx+ca*r1-nx*wd,cy+sa*r1-ny*wd); slCx.closePath(); slCx.fill();
+  }
+}
+
+
+// ♪ button: shown in a twist round that has more than one track to choose from
+function syncTrackBtn(){ const b=$("trackBtn"), id=Sound.twist, n=id?Sound.trackCount(id):1, on=n>1&&(state==="play"||state==="count");
+  if(b.hidden!==!on) b.hidden=!on; if(on){ const k=String(Sound.trackIndex(id)+1)+"/"+n; if($("trackNum").textContent!==k) $("trackNum").textContent=k; } }
+$("trackBtn").onclick=e=>{ e.stopPropagation(); Sound.init(); Sound.cycleTrack(); syncTrackBtn(); $("trackBtn").blur(); };
+
+
+// ---------- X-ray, Rave, Black holes, Portals ----------
+// X-ray: the tubes turn to faint, see-through glass.
+function setXray(on){
+  for(const pl of players) if(pl.trail){ const m=pl.trail.mesh.material;
+    if(m.transparent!==on){ m.transparent=on; m.depthWrite=!on; m.needsUpdate=true; }
+    m.opacity=on?0.17:1; m.emissive.copy(m.color).multiplyScalar(on?0.9:0.3); }
+}
+// Rave: dark, with a strobe on every beat (128 BPM) that lights everything for a split second, a new colour each time
+let raveHue=0, raveWas=false;
+function tickRave(){
+  if(curMod!=="rave"||!modShown){ if(raveWas){ raveWas=false; setDark(curMod==="dark"); twistLook(curMod); } return; }
+  raveWas=true;
+  const ph=(performance.now()/1000*128/60)%1, flash=ph<0.13&&(state==="play"||state==="count");
+  if(flash&&!tickRave.on) raveHue=(raveHue+0.37)%1;
+  tickRave.on=flash;
+  hemi.intensity=flash?1.25:0.025; sun.intensity=flash?1.0:0; lantern.intensity=0.9; lantern.distance=R*0.45;
+  planetMat.color.setHSL(raveHue,flash?0.6:0.2,flash?0.7:0.4);
+  for(const pl of players) if(pl.trail){ const m=pl.trail.mesh.material; m.emissive.copy(m.color).multiplyScalar(flash?0.9:0.0); }
+  if(atmo) atmo.material.opacity=flash?0.25:0.02;
+}
+// Black holes: two, on opposite sides of the planet. They bend your path toward them (more the closer you are);
+// get too close and you're gone.
+const HOLE={reach:7, pull:3.0, drift:1.6, kill:0.6};
+let holes=[];
+let _diskTex=null;
+function diskTex(){ if(_diskTex) return _diskTex; const c=document.createElement("canvas"); c.width=c.height=256; const x=c.getContext("2d");
+  const g=x.createRadialGradient(128,128,40,128,128,128); g.addColorStop(0,"rgba(255,230,160,1)"); g.addColorStop(0.25,"rgba(255,140,40,.9)"); g.addColorStop(0.55,"rgba(170,40,200,.5)"); g.addColorStop(1,"rgba(60,0,90,0)");
+  x.fillStyle=g; x.fillRect(0,0,256,256); x.globalCompositeOperation="destination-out"; x.lineWidth=10;
+  for(let k=0;k<6;k++){ x.beginPath(); for(let a=0;a<4;a+=0.05){ const r=45+a*20; x.lineTo(128+Math.cos(a+k*1.05)*r,128+Math.sin(a+k*1.05)*r); } x.strokeStyle="rgba(0,0,0,.35)"; x.stroke(); }
+  _diskTex=new THREE.CanvasTexture(c); return _diskTex; }
+function clearHoles(){ for(const h of holes) scene.remove(h.m); holes=[]; }
+function addHole(p){
+  const m=new THREE.Group();
+  const core=new THREE.Mesh(new THREE.SphereGeometry(0.5,24,16),new THREE.MeshBasicMaterial({color:0x000000})); core.position.y=0.15; m.add(core);
+  const disk=new THREE.Mesh(new THREE.RingGeometry(0.45,1.7,48),new THREE.MeshBasicMaterial({map:diskTex(),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
+  disk.rotation.x=-Math.PI/2; disk.position.y=0.06; m.add(disk);
+  const h={p:p.clone().normalize(),m,disk}; m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),h.p); m.visible=modShown; scene.add(m); holes.push(h); return h;
+}
+function spawnHoles(){
+  let best=null,bs=-1; const v=new THREE.Vector3();
+  for(let k=0;k<40;k++){ randDir(v); let m=99; for(const pl of players) if(!pl.sit) m=Math.min(m,Math.min(pl.p.distanceTo(v),pl.p.distanceTo(v.clone().negate()))); if(m>bs){bs=m;best=v.clone();} }
+  addHole(best); addHole(best.clone().negate());
+}
+function setHoles(list){ clearHoles(); for(const a of list) if(Array.isArray(a)&&a.length===3&&a.every(Number.isFinite)) addHole(new THREE.Vector3(a[0],a[1],a[2])); }
+const hpT=new THREE.Vector3(), hpS=new THREE.Vector3();
+// bend heading h (at p) toward the holes; used for runners and in the bots' look-ahead
+function holePull(p,h,dt){
+  for(const ho of holes){ const d=p.distanceTo(ho.p)*R; if(d>HOLE.reach||d<1e-3) continue;
+    hpT.copy(ho.p).addScaledVector(p,-ho.p.dot(p)); if(hpT.lengthSq()<1e-9) continue; hpT.normalize();
+    const a=Math.atan2(hpT.dot(hpS.crossVectors(p,h)),hpT.dot(h)), k=HOLE.pull/(d*0.5+0.5);
+    h.applyAxisAngle(p,Math.sign(a)*Math.min(Math.abs(a),k*dt));
+    // and you slide toward it a little, like gravity
+    p.addScaledVector(hpT,HOLE.drift/(d*0.5+0.6)*dt/R).normalize(); h.addScaledVector(p,-h.dot(p)).normalize(); }
+}
+const holeHit=pl=>holes.length>0&&pl.y<1.2&&holes.some(ho=>pl.p.distanceTo(ho.p)*R<HOLE.kill);
+function holeFx(pl){ if(!holes.length||!holes.some(ho=>pl.p.distanceTo(ho.p)*R<1.2)) return; const s=pl.human?{pan:0,vol:1}:spatial(pl); Sound.suck(s.pan,s.vol); }
+// Portals: three pairs of swirling pads. Run onto one and you come out of its twin somewhere else, dropped from
+// a little way up so you have a moment to steer before you land.
+const PORTAL={R:0.6, drop:3.2, T:0.9, cd:1.4};
+const PORTAL_COL=[0x3ee6ff,0xffa53e,0xff4fd8];
+let portals=[];
+let _swTex=null;
+function swirlTex(){ if(_swTex) return _swTex; const c=document.createElement("canvas"); c.width=c.height=256; const x=c.getContext("2d");
+  const g=x.createRadialGradient(128,128,0,128,128,128); g.addColorStop(0,"rgba(255,255,255,1)"); g.addColorStop(0.7,"rgba(255,255,255,.5)"); g.addColorStop(1,"rgba(255,255,255,0)");
+  x.fillStyle=g; x.fillRect(0,0,256,256); x.globalCompositeOperation="destination-out"; x.lineWidth=14;
+  for(let k=0;k<4;k++){ x.beginPath(); for(let a=0;a<5;a+=0.05){ const r=a*24; x.lineTo(128+Math.cos(a+k*1.57)*r,128+Math.sin(a+k*1.57)*r); } x.strokeStyle="rgba(0,0,0,.6)"; x.stroke(); }
+  _swTex=new THREE.CanvasTexture(c); return _swTex; }
+function clearPortals(){ for(const q of portals) scene.remove(q.m); portals=[]; }
+function addPortal(p,pair){
+  const col=PORTAL_COL[pair%3], m=new THREE.Group();
+  const disk=new THREE.Mesh(new THREE.CircleGeometry(0.62,40),new THREE.MeshBasicMaterial({map:swirlTex(),color:col,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+  disk.rotation.x=-Math.PI/2; disk.position.y=0.05; m.add(disk);
+  const pillar=new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.6,2.6,24,1,true),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.18,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
+  pillar.position.y=1.3; m.add(pillar);
+  const q={p:p.clone().normalize(),pair,m,disk}; m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),q.p); m.visible=modShown; scene.add(m); portals.push(q); return q;
+}
+function spawnPortals(){ const v=new THREE.Vector3();
+  for(let pair=0;pair<3;pair++) for(let e=0;e<2;e++) for(let tries=0;tries<200;tries++){ randDir(v);
+    if(players.some(pl=>!pl.sit&&pl.p.distanceTo(v)*R<3.5)) continue; if(portals.some(q=>q.p.distanceTo(v)*R<(q.pair===pair?R*1.6:3))) continue; addPortal(v,pair); break; } }
+function setPortals(list){ clearPortals(); for(const a of list) if(Array.isArray(a)&&a.length===4&&a.every(Number.isFinite)) addPortal(new THREE.Vector3(a[0],a[1],a[2]),a[3]|0); }
+function portalCheck(pl){
+  if(!portals.length||(pl.portalCd||0)>0) return;   // over it in the air counts too
+  for(const q of portals){ if(pl.p.distanceTo(q.p)*R>=PORTAL.R) continue;
+    const to=portals.find(o=>o!==q&&o.pair===q.pair); if(!to) return;
+    portalFx(pl.p.clone(),q.pair); pl.p.copy(to.p); pl.h.addScaledVector(pl.p,-pl.h.dot(pl.p)); if(pl.h.lengthSq()<1e-6) randDir(pl.h).addScaledVector(pl.p,-pl.h.dot(pl.p)); pl.h.normalize();
+    if(pl.v) pl.v.copy(pl.h);
+    // you come out at the top of a jump and hang there for a moment (a free flutter), so you can pick your way down
+    pl.portalCd=PORTAL.cd; pl.lt=-1; pl.jt=JT/2; pl.y=yAt(pl.jt); pl.autoHover=0.75; pl.fl=1; if(pl.human){ hoverSpent=false; teleFlash(); }
+    portalFx(pl.p.clone(),q.pair); if(pl.human) Sound.warp(0,1); else { const s=spatial(pl); if(s.vol>0.2) Sound.warp(s.pan,s.vol*0.6); }
+    return; }
+}
+// your own teleport: a white flash and the view jumps straight there (no swinging round the planet)
+function teleFlash(){ const me=meP(); if(me){ camC.copy(me.p); camU.copy(me.h); }
+  const a=$("app"); a.classList.remove("tele"); void a.offsetWidth; a.classList.add("tele"); }
+// no tube is laid close to a portal, so coming out of one never puts you straight into someone's tube
+const nearPortal=p=>portals.length>0&&portals.some(q=>p.distanceTo(q.p)*R<1.5);
+function portalFx(p,pair){ const at=p.multiplyScalar(R+0.5);
+  for(let i=0;i<16;i++){ const m=new THREE.Mesh(sparkGeo,basicMat(i%2?PORTAL_COL[pair%3]:0xffffff,true)); m.position.copy(at); addFx(m,rv(1).normalize().multiplyScalar(2+Math.random()*2),0.5,"spark"); } }
+function tickOrbs(dt){
+  const t=performance.now()/1000;
+  for(const h of holes){ h.m.position.copy(h.p).multiplyScalar(R); h.disk.rotation.z=-t*1.6; }
+  for(const q of portals){ q.m.position.copy(q.p).multiplyScalar(R); q.disk.rotation.z=t*2.4; }
+  for(const pl of players) if(pl.portalCd>0) pl.portalCd-=dt;
+  // other people's teleports show up as a jump in their position: sparkle where they came out
+  for(const pl of players) if(pl.remote&&pl.alive&&portals.length){ if(pl.lastP&&pl.lastP.distanceTo(pl.p)*R>2.5){ portalFx(pl.p.clone(),0); } (pl.lastP||(pl.lastP=new THREE.Vector3())).copy(pl.p); }
+}
+
+
+// ---------- Hot potato ----------
+// A bomb with a fuse. Whoever holds it passes it on by getting close to someone else (who can't pass it straight
+// back for a moment). When the fuse runs out, the holder is out; a moment later a new bomb lands on someone. Tubes
+// still count as usual, and the order people go out in is the result, as in any round. The host (or this device vs
+// computer) runs the bomb.
+const BOMB={fuse:10, first:1.5, again:1.6, passR:1.15, passCd:0.7};
+let bomb={h:-1,t:0,wait:0,cd:0}, bombMesh=null, bombRing=null, bombNetT=0;
+function bombReset(){ bomb={h:-1,t:BOMB.fuse,wait:BOMB.first,cd:0}; if(bombMesh) bombMesh.visible=false; $("bombTag").hidden=true; }
+function makeBombMesh(){ const g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(0.3,20,14),new THREE.MeshStandardMaterial({color:0x1c1c22,roughness:0.35,metalness:0.4})));
+  const fuse=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.035,0.18,6),new THREE.MeshStandardMaterial({color:0xc9b48a})); fuse.position.y=0.36; g.add(fuse);
+  const spark=new THREE.Sprite(new THREE.SpriteMaterial({map:whiteGlowTex(),color:0xffb03a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})); spark.position.y=0.48; spark.scale.set(0.5,0.5,1); g.add(spark);
+  g.userData={spark}; scene.add(g); return g; }
+function tickBomb(dt){
+  const tag=$("bombTag");
+  if(curMod!=="potato"||!modShown||!(state==="play"||state==="ending")){ if(bombMesh&&bombMesh.visible) bombMesh.visible=false; if(bombRing) bombRing.visible=false; if(!tag.hidden) tag.hidden=true; return; }
+  const host=Net.role!=="client";
+  if(host&&state==="play"){
+    if(bomb.h<0){ bomb.wait-=dt; if(bomb.wait<=0){ const al=players.filter(p=>p.alive); if(al.length>1){ bomb.h=al[(Math.random()*al.length)|0].i; bomb.t=BOMB.fuse; bomb.cd=0.5; bombSend(); Sound.click(); } } }
+    else {
+      const hp=players[bomb.h];
+      if(!hp||!hp.alive){ bomb.h=-1; bomb.wait=BOMB.again; bombSend(); }
+      else { bomb.t-=dt; bomb.cd-=dt;
+        if(bomb.t<=0){ hp.cause="bomb"; hp.forceOut=true; bomb.h=-1; bomb.wait=BOMB.again; bombSend(); }
+        else if(bomb.cd<=0) for(const o of players){ if(o===hp||!o.alive||o.y>1.5||hp.y>1.5) continue;
+          if(o.p.distanceTo(hp.p)*R<BOMB.passR){ bomb.h=o.i; bomb.cd=BOMB.passCd; bombSend(); bombPassFx(hp,o); break; } }
+        bombNetT-=dt; if(bombNetT<=0){ bombNetT=0.5; if(Net.role==="host") bombSend(); } }
+    }
+  } else if(!host&&bomb.h>=0&&state==="play") bomb.t=Math.max(0,bomb.t-dt);
+  // the bomb sits over the holder's head, its fuse spitting sparks; it ticks, faster near the end
+  const hp=bomb.h>=0?players[bomb.h]:null, show=!!hp&&hp.alive;
+  if(show){ if(!bombMesh) bombMesh=makeBombMesh(); bombMesh.visible=true;
+    bombMesh.position.copy(hp.p).multiplyScalar(R+hp.y+HP+0.45); bombMesh.quaternion.setFromUnitVectors(Y_AXIS,hp.p);
+    const k=bomb.t<3?1+0.25*Math.sin(performance.now()/40):1; bombMesh.scale.setScalar(k); bombMesh.userData.spark.material.opacity=0.6+0.4*Math.random();
+    const tick=bomb.t<3?0.25:bomb.t<6?0.5:1; tickBomb.acc=(tickBomb.acc||0)+dt; if(tickBomb.acc>=tick&&state==="play"){ tickBomb.acc=0; const s=hp.human?{pan:0,vol:1}:spatial(hp); Sound.bombTick(s.pan,Math.max(0.35,s.vol),bomb.t<3); }
+    if(!bombRing){ bombRing=new THREE.Mesh(new THREE.RingGeometry(0.6,0.85,40),new THREE.MeshBasicMaterial({color:0xff3b30,transparent:true,side:THREE.DoubleSide,depthWrite:false})); scene.add(bombRing); }
+    bombRing.visible=true; bombRing.position.copy(hp.p).multiplyScalar(R+0.05); bombRing.quaternion.setFromUnitVectors(Z_AXIS,hp.p);
+    bombRing.scale.setScalar(1+0.15*Math.sin(performance.now()/90)); bombRing.material.opacity=0.6+0.3*Math.sin(performance.now()/90);
+  } else { if(bombMesh) bombMesh.visible=false; if(bombRing) bombRing.visible=false; }
+  const me=meP(), mine=show&&me&&hp===me;
+  if(tag.hidden===!!show) tag.hidden=!show;
+  if(show){ const who=mine?"You got the bomb! Pass it on!":`${esc(hp.name)} got the bomb`;
+    if(tag.dataset.who!==who){ tag.dataset.who=who; tag.style.setProperty("--bc",mine?"#ff5a4a":hexc(hp.color));
+      $("bombWho").innerHTML=mine?who:`<span style="color:${hexc(hp.color)}">${esc(hp.name)}</span> got the bomb`;
+      tag.classList.remove("pop"); void tag.offsetWidth; tag.classList.add("pop"); }
+    $("bombTime").textContent=Math.ceil(bomb.t); tag.classList.toggle("mine",!!mine); tag.classList.toggle("hot",bomb.t<3); }
+}
+const Y_AXIS=new THREE.Vector3(0,1,0);
+function bombSend(){ if(Net.role==="host") broadcast({t:"bomb",r:round,h:bomb.h,tl:+bomb.t.toFixed(2)}); }
+function bombPassFx(a,b){ const s=b.human||a.human?{pan:0,vol:1}:spatial(b); Sound.whoosh(); }
+// bots: the one with the bomb goes after the nearest runner; the others keep away from it
+function bombSteer(b){
+  if(curMod!=="potato"||bomb.h<0) return null; const hp=players[bomb.h]; if(!hp||!hp.alive) return null;
+  let tgt=null; if(hp===b){ let bd=99; for(const o of players) if(o!==b&&o.alive){ const d=o.p.distanceTo(b.p); if(d<bd){bd=d;tgt=o;} } }
+  else if(hp.p.distanceTo(b.p)*R<5) tgt=hp; else return null;
+  if(!tgt) return null;
+  foodX.copy(tgt.p).addScaledVector(b.p,-tgt.p.dot(b.p)); if(foodX.lengthSq()<1e-8) return null; foodX.normalize();
+  let a=Math.atan2(foodX.dot(hpS.crossVectors(b.p,b.h)),foodX.dot(b.h)); if(hp!==b) a=a>0?a-Math.PI:a+Math.PI;
+  return Math.max(-0.9,Math.min(0.9,a*0.9));
+}
+
+// ---------- Submarines ----------
+// An ocean planet: you're a little submarine riding the surface, and a "jump" is a dive under it (the water is
+// see-through, with a sandy sea floor below), so you pass under tubes instead of over them.
+let SUBM=false, seabed=null;
+function makeSub(col){
+  const g=new THREE.Group(), mat=new THREE.MeshStandardMaterial({color:col,roughness:0.45,metalness:0.15}), dark=new THREE.MeshStandardMaterial({color:new THREE.Color(col).multiplyScalar(0.55),roughness:0.5});
+  const hull=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,0.9,16),mat); hull.rotation.x=Math.PI/2; hull.position.y=0.22; g.add(hull);
+  for(const z of [-0.45,0.45]){ const e=new THREE.Mesh(new THREE.SphereGeometry(0.3,16,10),mat); e.position.set(0,0.22,z); e.scale.z=z>0?1.1:0.8; g.add(e); }
+  const tower=new THREE.Mesh(new THREE.BoxGeometry(0.22,0.3,0.36),dark); tower.position.set(0,0.6,0.05); g.add(tower);
+  const scope=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.3,6),dark); scope.position.set(0,0.85,0.12); g.add(scope);
+  const lens=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.06,0.12),dark); lens.position.set(0,0.98,0.16); g.add(lens);
+  const win=new THREE.MeshBasicMaterial({color:0xfff6c8});
+  for(const z of [0.25,0,-0.25]) for(const x of [-0.3,0.3]){ const w=new THREE.Mesh(new THREE.CircleGeometry(0.06,12),win); w.position.set(x*1.01,0.27,z); w.rotation.y=x>0?Math.PI/2:-Math.PI/2; g.add(w); }
+  const prop=new THREE.Group(); for(const r of [0,Math.PI/2]){ const bl=new THREE.Mesh(new THREE.BoxGeometry(0.04,0.32,0.03),dark); bl.rotation.z=r; prop.add(bl); }
+  prop.position.set(0,0.22,-0.8); g.add(prop); g.userData={prop}; return g;
+}
+function setSubs(on){
+  SUBM=on;
+  // (the water is solid: you can't see tubes through the planet)
+  for(const pl of players){ const f=pl.fig;
+    if(on){ if(!pl.sub){ pl.sub=makeSub(pl.color); f.add(pl.sub); }
+      pl.sub.visible=true; if(!pl.subHid){ pl.subHid=[]; for(const c of f.children){ if(c===pl.sub||c===f.userData.ring||c===f.userData.hpad) continue; if(c.visible){ c.visible=false; pl.subHid.push(c); } } } }
+    else { if(pl.sub) pl.sub.visible=false; if(pl.subHid){ for(const c of pl.subHid) c.visible=true; pl.subHid=null; } } }
+}
+function tickSubs(dt){
+  if(!SUBM) return;
+  const t=performance.now()/1000;
+  for(const pl of players){ if(!pl.sub||!pl.alive) continue; pl.sub.userData.prop.rotation.z=t*14;
+    // bob on the waves at the surface; bubbles when under
+    // under water only the tower and periscope stay above the surface, cutting through it
+    if(pl.y>-0.05) pl.sub.position.y=0.04*Math.sin(t*3+pl.i); else pl.sub.position.y=Math.max(0,-pl.y-0.6);
+    pl.sub.rotation.x=pl.jt>=0?(pl.jt<JT/2?0.35:-0.35):0;
+    if(pl.y<-0.2&&state==="play"){ pl.bubT=(pl.bubT||0)-dt; if(pl.bubT<=0){ pl.bubT=0.05;
+      const m=new THREE.Mesh(sparkGeo,basicMat(0xdff6ff,true)); m.position.copy(pl.p).multiplyScalar(R+pl.y+0.3).addScaledVector(pl.h,-0.6/1).add(rv(0.2)); addFx(m,pl.p.clone().multiplyScalar(1.5).add(rv(0.4)),0.6,"spark"); } } }
+}
+
 // ---------- Collision ----------
-const HIT_V=PR+TR;        // vertical reach: decides jump clearance and tunnels (unchanged)
-const HIT_H=0.36;         // sideways reach: lets you get closer to a tube before it counts
-const IV2=1/(HIT_V*HIT_V), IH2=1/(HIT_H*HIT_H), REACH2=Math.max(HIT_V,HIT_H)**2;
+let HIT_V=PR+TR;          // vertical reach: decides jump clearance and tunnels
+let HIT_H=0.36;           // sideways reach: lets you get closer to a tube before it counts
+let IV2=1/(HIT_V*HIT_V), IH2=1/(HIT_H*HIT_H), REACH2=Math.max(HIT_V,HIT_H)**2;
+function setTubeRadius(tr){ TR=tr; HIT_V=PR+TR; HIT_H=0.36+(TR-TR0); IV2=1/(HIT_V*HIT_V); IH2=1/(HIT_H*HIT_H); REACH2=Math.max(HIT_V,HIT_H)**2;
+  for(const pl of players) if(pl.trail) pl.trail.caps.forEach(c=>c.scale.setScalar(TR/TR0)); }
 // body = vertical segment along p from R+y+PR to R+y+HP-PR
 function hitsTrail(px,py,pz,y,self,selfLimit,onlySelf){
+  if(mines.length&&!onlySelf&&mineHit(px,py,pz,y)) return true;
+  if(tombs.length&&!onlySelf&&tombHit(px,py,pz,y)) return true;
   const a=R+y+PR, b=R+y+HP-PR, m=(a+b)/2;
   const cx=Math.floor(px*m/CELL), cy=Math.floor(py*m/CELL), cz=Math.floor(pz*m/CELL);
   for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)for(let dz=-1;dz<=1;dz++){
@@ -1252,7 +2657,8 @@ function hitsTrail(px,py,pz,y,self,selfLimit,onlySelf){
     for(let j=0;j<arr.length;j++){
       const code=arr[j], pi=(code/MAXP)|0, idx=code-pi*MAXP;
       if(pi===self ? idx>selfLimit : onlySelf) continue;
-      const P=players[pi].trail.pts, qx=P[idx*3], qy=P[idx*3+1], qz=P[idx*3+2];
+      const TRL=players[pi].trail; if(idx<TRL.t0) continue;
+      const P=TRL.pts, qx=P[idx*3], qy=P[idx*3+1], qz=P[idx*3+2];
       const qp=qx*px+qy*py+qz*pz, t=qp<a?a:(qp>b?b:qp), v=qp-t;
       const h2=qx*qx+qy*qy+qz*qz-qp*qp;
       if(h2*IH2+v*v*IV2<1) return true;
@@ -1261,6 +2667,8 @@ function hitsTrail(px,py,pz,y,self,selfLimit,onlySelf){
   return false;
 }
 const jumpY=t=>JH*4*(t/JT)*(1-t/JT);
+let GY=0;                                         // Flight mode: everyone's normal height is up in the air
+const yAt=t=>SUBM?-0.62*jumpY(t):GY?GY-jumpY(t):jumpY(t);            // ...and the jump becomes a dive down to the ground and back
 function advance(p,h,dist,extra){
   tmpA.crossVectors(p,h).normalize();
   const ang=dist/R; p.applyAxisAngle(tmpA,ang).normalize(); h.applyAxisAngle(tmpA,ang);
@@ -1268,8 +2676,12 @@ function advance(p,h,dist,extra){
   if(extra){extra.applyAxisAngle(tmpA,ang); extra.addScaledVector(p,-extra.dot(p)).normalize();}
 }
 
+// Ice: the direction you move in swings round toward where you face, but only gradually (a slide)
+const ICE_K=1.8, iceX=new THREE.Vector3();
+function iceDrift(p,v,h,dt){ v.addScaledVector(p,-v.dot(p)).normalize();
+  const a=Math.atan2(iceX.crossVectors(v,h).dot(p),v.dot(h)); v.applyAxisAngle(p,a*(1-Math.exp(-ICE_K*dt))); }
 // ---------- Bots ----------
-const sp=new THREE.Vector3(), sh=new THREE.Vector3();
+const sp=new THREE.Vector3(), sh=new THREE.Vector3(), sv=new THREE.Vector3();
 // A bot's plan: steer k for a moment, then straighten out (how people actually steer), and see how long
 // that stays clear of tubes and of where the other runners' heads are heading.
 const op=new THREE.Vector3(), oh=new THREE.Vector3(), others=[];
@@ -1277,12 +2689,16 @@ function probe(b,k,jump,hov){
   sp.copy(b.p); sh.copy(b.h);
   const D=botD(); let jt=b.jt, t=0, hl=hov?b.hoverMax*b.fl:0; const dt=0.06, H=D.look, lim=b.trail.n-1-GRACE;
   if(jump) jt=0;
+  const ice=curMod==="ice"; if(ice) sv.copy(b.v||b.h);
   others.length=0; if(D.avoid) for(const o of players) if(o!==b&&o.alive) others.push(o);
   while(t<H){
     if(jt<0&&t<BOT_STEER) sh.applyAxisAngle(sp,k*b.turn*D.turn*dt);
-    advance(sp,sh,b.speed*dt); t+=dt;
-    let y=0; if(jt>=0){ if(hl>0&&jt>=JT/2) hl-=dt; else jt+=dt; if(jt<JT) y=jumpY(jt); else jt=-1;}
+    const spd=b.speed*(curMod==="lowgrav"&&jt>=0?LOWG.air:1);
+    if(ice){ if(jt>=0) sv.copy(sh); else iceDrift(sp,sv,sh,dt); advance(sp,sv,spd*dt,sh); } else advance(sp,sh,spd*dt); t+=dt;
+    let y=GY; if(jt>=0){ if(hl>0&&jt>=JT/2) hl-=dt; else jt+=dt; if(jt<JT) y=yAt(jt)*(ice?0.62:1); else jt=-1;}
     if(hitsTrail(sp.x,sp.y,sp.z,y,b.i,lim)) return t;
+    if(ghouls.length&&t<1.4&&ghoulNear(sp,y)) return t;
+    if(holes.length){ holePull(sp,sh,dt); if(y<1.2&&holes.some(ho=>sp.distanceTo(ho.p)*R<1.1)) return t; }
     if(t<1.2) for(const o of others){ // don't cut right in front of someone (their tube will be there)
       op.copy(o.p); oh.copy(o.h); advance(op,oh,o.speed*t);
       if(op.distanceToSquared(sp)*R*R<0.8) return t+0.15;
@@ -1302,7 +2718,9 @@ const DIFF={
 };
 let diff="normal";
 const BOT_STEER=0.7;
-const botD=()=>DIFF[diff]||DIFF.normal;
+// Night vision: computer runners only see as far as the goggles reach, so they react later and less surely
+const botD=()=>{ const D=DIFF[diff]||DIFF.normal; if(curMod!=="dark") return D;
+  return D.nv||(D.nv=Object.assign({},D,{look:D.look*0.5,jumpAt:D.jumpAt*0.75,noise:D.noise+0.06,think:[D.think[0]+0.04,D.think[1]]})); };
 function botThink(b){
   const D=botD(); let best=-1,bestK=b.turnTarget||0;
   for(const k of [-1,-0.6,-0.3,0,0.3,0.6,1]){
@@ -1317,7 +2735,9 @@ function botThink(b){
     const k=[-0.6,-0.35,-0.15,0,0,0.15,0.35,0.6][(Math.random()*8)|0];
     if(probe(b,k,false)>D.look) b.turnTarget=k;
   }
-  if(b.jt<0 && b.cool<=0 && best<D.jumpAt && Math.random()<D.jumpP){   // jump when it's getting tight
+  if(curMod==="potato"&&best>D.look*0.5){ const k=bombSteer(b); if(k!==null&&probe(b,k,false)>D.look*0.5) b.turnTarget=k; }
+  if(curMod==="snake"&&best>D.look*0.7){ const k=foodSteer(b); if(k!==null&&probe(b,k,false)>D.look*0.7) b.turnTarget=k; }
+  if(!modNoFlutter && b.jt<0 && !(b.lt>=0) && b.cool<=0 && best<D.jumpAt && Math.random()<D.jumpP){   // jump when it's getting tight
     let done=false;
     for(const k of [-0.3,0,0.3]){
       const s=probe(b,k,true);
@@ -1337,8 +2757,8 @@ const keys=new Set();
 // No jumping during the countdown or the first moment after "Go!": a tap in the countdown used to be
 // held as "jump as soon as you can" and fired the instant the round started.
 let goAt=0; const JUMP_LOCK_MS=350;
-function tryJump(){const me=meP(); if(!me||!me.alive) return; if(state!=="play"||performance.now()-goAt<JUMP_LOCK_MS) return; me.jumpBuf=0.14;}
-function onGo(){goAt=performance.now(); keyTurn=0; dragPending=0; padTurn=0; hoverSpent=false; const me=meP(); if(me){me.jumpBuf=0;} hoverHeld=false; hoverPtr=null;}
+function tryJump(){const me=meP(); if(!me||!me.alive||modNoFlutter||me.lt>=0) return; if(state!=="play"||performance.now()-goAt<JUMP_LOCK_MS) return; me.jumpBuf=0.22;}
+function onGo(){if(!modShown) revealLook(); if(curMod||tieSet) hideModBanner(); goAt=performance.now(); keyTurn=0; dragPending=0; padTurn=0; hoverSpent=false; const me=meP(); if(me){me.jumpBuf=0;} hoverHeld=false; hoverPtr=null;}
 // Hover: tap to jump, then press again and hold while in the air. The first finger (steering) never counts.
 let hoverHeld=false, hoverPtr=null, hoverUsed=false, hoverSpent=false, hoverArmAt=0;
 const HOVER_ARM=90;   // ms a finger put down in the air must stay put before it flutters
@@ -1541,24 +2961,29 @@ function stepPlayer(pl,dt){
     assist(pl,dt);
     if(pl.asCmd){const a=pl.asCmd*pl.turn*dt; pl.h.applyAxisAngle(pl.p,a);
       if(pl.remote&&pl.netHas) pl.netT.applyAxisAngle(pl.p,a);}
-    if(pl.jumpBuf>0){pl.jumpBuf-=dt; if(pl.jt<0&&pl.cool<=0){pl.jt=0;pl.jumpBuf=0;onJump(pl);}}
+    if(pl.jumpBuf>0){pl.jumpBuf-=dt; if(pl.jt<0&&!(pl.lt>=0)&&pl.cool<=0&&!modNoFlutter){pl.jt=0;pl.jumpBuf=0;onJump(pl);}}
   } else {
     const D=botD();
     pl.think-=dt; if(pl.think<=0){pl.think=D.think[0]+Math.random()*D.think[1]; botThink(pl);}   // reaction time
     {const rate=(pl.urgent?D.urgent:D.stick)*dt, d=(pl.turnTarget||0)-pl.turnCmd; pl.turnCmd+=Math.max(-rate,Math.min(rate,d));}  // ease the stick
-    if(pl.jt<0) pl.h.applyAxisAngle(pl.p,pl.turnCmd*pl.turn*D.turn*dt);
+    if(pl.jt<0&&!(pl.lt>=0)) pl.h.applyAxisAngle(pl.p,pl.turnCmd*pl.turn*D.turn*dt);
   }
+  // Trampolines: a long, high bounce
+  if(pl.lt>=0){ pl.lt+=dt; const u=pl.lt/(pl.ltT||TRAMP.T);
+    if(u>=1){ pl.lt=-1; pl.y=GY; pl.cool=0.15; if(pl.turnPre) pl.turn=pl.turnPre; onLand(pl); if(pl.human) Sound.land(0,1); }
+    else pl.y=pl.ltDrop?pl.ltH*(1-u*u):(pl.ltH||TRAMP.H)*4*u*(1-u); }
   // jump (+ hover: rise to the top of the arc, then hang there while held and time is left)
-  if(pl.jt>=0){
-    const hold=pl.human?(hoverHeld&&performance.now()>=hoverArmAt):pl.botHover, wasHover=pl.hovering;
+  else if(pl.jt>=0){
+    const auto=pl.autoHover>0; if(auto) pl.autoHover-=dt;
+    const hold=auto||(!modNoFlutter&&(pl.human?(hoverHeld&&performance.now()>=hoverArmAt):pl.botHover)), wasHover=pl.hovering;
     pl.hovering=false;
-    if(hold&&pl.fl>0){
+    if(hold&&(pl.fl>0||auto)){
       if(pl.jt<JT/2) pl.jt=Math.min(JT/2,pl.jt+dt);
-      else {pl.fl=Math.max(0,pl.fl-dt/pl.hoverMax); pl.flWait=FLUTTER_DELAY; pl.hovering=true; if(pl.human) hoverUsed=true;
+      else {if(!auto) pl.fl=Math.max(0,pl.fl-dt/pl.hoverMax); pl.flWait=FLUTTER_DELAY; pl.hovering=true; if(pl.human) hoverUsed=true;
         pl.puffT-=dt; if(pl.puffT<=0){pl.puffT=0.07; puff(pl);}}
     } else pl.jt+=dt;
     if(pl.hovering&&!wasHover) onHover(pl);
-    if(pl.jt>=JT){pl.jt=-1;pl.y=0;pl.cool=0.12;pl.botHover=false;onLand(pl);} else pl.y=jumpY(pl.jt);
+    if(pl.jt>=JT){pl.jt=-1;pl.y=GY;pl.cool=0.12;pl.botHover=false;onLand(pl);} else pl.y=yAt(pl.jt)*(GY?1:(pl.jf||1));
   }
   else if(pl.cool>0) pl.cool-=dt;
   // flutter meter: drains while fluttering, refills in FLUTTER_RECHARGE s from empty (a partly filled meter flutters for less)
@@ -1574,13 +2999,26 @@ function stepPlayer(pl,dt){
     pl.boost=Math.min(1,pl.boost+dt/pl.charge);
     if(pl.boost>=1&&pl.human) Sound.boostReady();
   }
+  // low gravity: a jump is a slow float up and down, almost a pause in the forward run
+  if(curMod==="lowgrav"&&pl.jt>=0) mul*=LOWG.air;
+  if(holes.length&&!pl.remote) holePull(pl.p,pl.h,dt);
   // move + trail
-  const d=pl.speed*mul*dt; advance(pl.p,pl.h,d,pl.human?null:(pl.remote&&pl.netHas?pl.netT:null)); pl.acc+=d;
-  pl.stride+=d; const sn=Math.floor(pl.stride/STEP_LEN);
-  if(sn!==pl.stepN){pl.stepN=sn; if(pl.human&&pl.jt<0) Sound.step();}
+  const d=pl.speed*mul*dt;
+  if(curMod==="ice"&&!pl.remote){ if(!pl.v) pl.v=pl.h.clone();
+    if(pl.slipTurn){ const st=Math.sign(pl.slipTurn)*Math.min(Math.abs(pl.slipTurn),1.1*dt); pl.h.applyAxisAngle(pl.p,st); pl.slipTurn-=st; if(Math.abs(pl.slipTurn)<1e-4) pl.slipTurn=0; }
+    if(pl.jt>=0) pl.v.copy(pl.h); else iceDrift(pl.p,pl.v,pl.h,dt);   // in the air (jump, flutter) you go where you face: no slide
+    if(pl.skid&&pl.jt<0){ const st=Math.sign(pl.skid)*Math.min(Math.abs(pl.skid),1.4*dt); pl.v.applyAxisAngle(pl.p,st); pl.skid-=st; if(Math.abs(pl.skid)<1e-4) pl.skid=0; }
+    advance(pl.p,pl.v,d,pl.h); }
+  else advance(pl.p,pl.h,d,pl.human?null:(pl.remote&&pl.netHas?pl.netT:null));
+  pl.acc+=d;
+  if(!pl.remote){ trampCheck(pl); portalCheck(pl); }
+  pl.stride+=d; const sn=Math.floor(pl.stride/STEPL);
+  if(sn!==pl.stepN){pl.stepN=sn; if(pl.human&&!SUBM&&(GY?pl.hovering:pl.jt<0)){ if(curMod==="lowgrav") Sound.land(0,0.3); else Sound.step(); }}
   while(pl.acc>=SP){pl.acc-=SP; dropPoint(pl);}
 }
 function dropPoint(pl){
+  if(curMod==="potato") return;                       // Hot potato: no tubes at all — it's all about the bomb
+  if(nearPortal(pl.p)) return;
   const r=R+pl.y+TR;
   pl.trail.add(pl.p.x*r,pl.p.y*r,pl.p.z*r,pl.h.x,pl.h.y,pl.h.z,pl.i);
   if(Net.role) pl.log.push([pl.p.x*r,pl.p.y*r,pl.p.z*r,performance.now()]); // online: what gets shared with the others
@@ -1589,42 +3027,60 @@ const projV=new THREE.Vector3();
 function spatialAt(v){projV.copy(v).project(camera); const n=v.clone().normalize();
   return {pan:Math.max(-1,Math.min(1,projV.x))*0.8, vol:Math.max(0.12,Math.min(1,(n.dot(camC)+0.15)/0.75))};}
 function spatial(pl){return spatialAt(pl.p.clone().multiplyScalar(R+pl.y));}
-function onJump(pl){ if(pl.human) hoverSpent=false; hostFx("j",pl); if(pl.human) Sound.jump(0,1); else {const s=spatial(pl); if(s.vol>0.5) Sound.jump(s.pan,s.vol*0.4);} }
+function onJump(pl){
+  // ice: your feet slip as you push off, so the jump is weaker and you twist off to one side
+  // ice: your feet slip as you push off — a weaker jump, a twist to one side and a wobble (and a slide when you land)
+  // (the turn is eased in over a moment, not snapped, so neither you nor the camera jerks)
+  pl.jf=1; if(curMod==="ice"&&!pl.remote){ pl.jf=0.6; const sd=Math.random()<0.5?-1:1; pl.slipTurn=sd*(0.28+Math.random()*0.22); pl.slipT=pl.slipD=0.85; pl.slipSd=sd; }
+  if(pl.human) hoverSpent=false; hostFx("j",pl); if(pl.human){ if(SUBM) Sound.blub(); else if(GY) Sound.dive(); else Sound.jump(0,1); } else {const s=spatial(pl); if(s.vol>0.5) Sound.jump(s.pan,s.vol*0.4);} }
 function onHover(){} // the hover hum is started/stopped in hoverSounds()
 // one hum per hovering runner, started when they begin and faded out the moment they stop
 function hoverSounds(){
+  // Flight mode: your own wing-beat whoosh while you're up
+  { const me=meP(), fly=!!GY&&!!me&&me.alive&&state==="play"&&!paused&&!me.hovering&&me.y>0.6;
+    if(fly&&me.flySnd==null) me.flySnd=Sound.flyStart()||false;
+    else if(!fly&&me&&me.flySnd!=null){ if(me.flySnd) Sound.hoverStop(me.flySnd); me.flySnd=null; } }
+  // Submarines: holding a dive (the "flutter") bubbles
+  { const me=meP(); if(SUBM&&me&&me.alive&&me.hovering&&state==="play"&&!paused){ const now=performance.now(); if(!me.bubS||now>=me.bubS){ me.bubS=now+90+Math.random()*60; Sound.bubble(); } } }
+  { const me=meP(); if(GY&&me&&me.alive&&state==="play"&&!paused&&(me.hovering||(me.jt>=0&&me.y<0.35))){ const now=performance.now(); if(!me.patT||now>=me.patT){ me.patT=now+120; Sound.patter(); } } }
   for(const pl of players){
-    const on=pl.hovering&&pl.alive&&state==="play"&&!paused;
+    const on=pl.hovering&&pl.alive&&state==="play"&&!paused&&!GY&&!SUBM;   // in Flight mode the "flutter" is running on the ground: footsteps, not a hum
     if(on&&pl.hoverSnd==null){
       if(pl.human) pl.hoverSnd=Sound.hoverStart(0,1)||false;
       else {const s=spatial(pl); pl.hoverSnd=s.vol>0.3?(Sound.hoverStart(s.pan,s.vol*0.5)||false):false;}
     } else if(!on&&pl.hoverSnd!=null){ if(pl.hoverSnd) Sound.hoverStop(pl.hoverSnd); pl.hoverSnd=null; }
   }
 }
-function onLand(pl){ if(pl.human) hoverSpent=false; hostFx("l",pl); if(pl.human) Sound.land(0,1); }
-function onCrash(pl){ if(pl.human) Sound.crash(0,1,true); else {const s=spatial(pl); Sound.crash(s.pan,s.vol,false);} }
+function onLand(pl){
+  if(curMod==="ice"&&!pl.remote&&pl.v){ const sd=Math.random()<0.5?-1:1; pl.skid=sd*(0.3+Math.random()*0.25); pl.slipT=pl.slipD=0.75; pl.slipSd=-sd; }   // and you skid on landing
+  if(pl.human) hoverSpent=false; hostFx("l",pl); if(pl.human&&!GY&&!SUBM) Sound.land(0,1); }
+function onCrash(pl){ mineBlast(pl); ghoulFx(pl); holeFx(pl); if(pl.human) Sound.crash(0,1,true); else {const s=spatial(pl); Sound.crash(s.pan,s.vol,false);} }
 function simStep(dt){
   if(state==="count"){stateT-=dt; if(stateT<=0){state="play";onGo();if(Net.role==="host")broadcast({t:"go"});Sound.count(0);Sound.setMode("play");showMsg("Go!","");setTimeout(afterGo,550);} return;}
   if(state!=="play") return;
+  if(labRestartT>0){ labRestartT-=dt; if(labRestartT<=0){ labRestart(); return; } }
   const alive=players.filter(p=>p.alive);
   for(const pl of alive) if(!pl.remote) stepPlayer(pl,dt);
+  checkFood();
   const dead=[];
   for(const pl of alive){
-    if(pl.forceOut||(!pl.remote&&hitsTrail(pl.p.x,pl.p.y,pl.p.z,pl.y,pl.i,pl.trail.n-1-GRACE))) dead.push(pl);
+    if(pl.forceOut||(!pl.remote&&(hitsTrail(pl.p.x,pl.p.y,pl.p.z,pl.y,pl.i,pl.trail.n-1-GRACE)||ghoulCatch(pl)||holeHit(pl)))) dead.push(pl);
   }
   // head-on bumps: each device only decides for the runners it simulates itself
   for(let a=0;a<alive.length;a++)for(let b=a+1;b<alive.length;b++){
     const A=alive[a],B=alive[b]; if(A.remote&&B.remote) continue;
-    if(bump(A,B)){if(!A.remote&&!dead.includes(A))dead.push(A); if(!B.remote&&!dead.includes(B))dead.push(B);}
+    if(curMod!=="potato"&&bump(A,B)){if(!A.remote&&!dead.includes(A))dead.push(A); if(!B.remote&&!dead.includes(B))dead.push(B);}
   }
   if(dead.length){
     const rank=alive.length-dead.length+1;
-    for(const pl of dead){pl.alive=false;pl.rank=rank;pl.fig.visible=false;burst(pl.p.clone(),pl.y,pl.color);onCrash(pl);if(Net.role==="host")broadcast({t:"dead",i:pl.i,rank,T:performance.now()});
-      if(pl.human){Sound.setMode("dead");showMsg("You're out",placeText(rank)+" this round");}}
+    for(const pl of dead){pl.cause=pl.forceOut?(pl.cause==="bomb"?"bomb":"tube"):crashCause(pl); if(pl.cause==="bomb") bombBlast(pl); pl.alive=false;pl.rank=rank;pl.fig.visible=false;burst(pl.p.clone(),pl.y,pl.color);onCrash(pl); if(pl.human) holdDeathCam(pl);
+if(Net.role==="host")broadcast({t:"dead",i:pl.i,rank,T:performance.now(),c:pl.cause});
+      if(pl.human){Sound.setMode("dead");outMsg(pl,placeText(rank)+" this round");}}
     const left=alive.length-dead.length;
-    const mm=meP(); if(mm&&!mm.alive&&left>=2&&!Net.role) ffBtn.hidden=false;
+    const mm=meP(); if(mm&&!mm.alive&&left>=2&&!Net.role&&!labMod) ffBtn.hidden=false;
     renderChips();
-    if(left<=1){
+    if(labMod){ if(mm&&!mm.alive&&!labRestartT) labRestartT=0.8; }   // the lab never ends a round: you play on, and start over when you crash
+    else if(left<=1){
       for(const pl of players) if(pl.alive) pl.rank=1;
       endRound();
     }
@@ -1710,7 +3166,8 @@ function startMatch(){
   const others=CHARS.filter(c=>c!==mine).sort(()=>Math.random()-0.5).slice(0,opponents);
   beginMatch([{ch:mine,kind:"local"},...others.map(ch=>({ch,kind:"bot"}))]);
 }
-function beginMatch(list){
+function beginMatch(list,matchR){
+  clearMods(); matchRules=Net.role?(matchR||Net.rules||"classic"):rules;
   makePlayers(list); round=0; chipOrder=[...players]; roundScored=true; tieSet=null;
   const me=meP(); $("app").style.setProperty("--me",hexc(me?me.color:CHARS[3].color));
   try{navigator.wakeLock&&navigator.wakeLock.request("screen").catch(()=>{});}catch(_){}
@@ -1721,7 +3178,7 @@ function beginMatch(list){
 function startRound(){
   dropSettings();
   try{const a=document.activeElement; if(a&&a!==document.body&&a.blur) a.blur();}catch(_){}
-  round++; roundScored=false; specT=null;
+  round++; roundScored=false; specT=null; deathCam=null;
   setPlanetR(radiusFor(tieSet?tieSet.length:players.filter(p=>!p.left).length)); grid.clear(); timeScale=1; hud.hidden=false; roundTag.hidden=false; ffBtn.hidden=true; panel.hidden=true; celeb=null; stopRain();
   msgBig.classList.remove("cheer"); msgBig.style.color="";
   const q=new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6.28,Math.random()*6.28,Math.random()*6.28));
@@ -1738,9 +3195,9 @@ function startRound(){
   });
   const me0=meP()||players[0]; camC.copy(me0.p); camU.copy(me0.h); hoverHeld=false; hoverPtr=null;
   state="count"; stateT=3; Sound.setMode("count"); renderChips();
-  roundTag.textContent=tieSet?"Tiebreaker round":`Round ${round} · first to ${POINTS_TO_WIN}`;
+  applyMod(chooseMod());
   if(Net.role==="host"){Net.tpSent=new Map(); Net.sendAcc=1;
-    broadcast({t:"round",round,tb:tieSet,R,pl:players.map(p=>[...p.p.toArray(),...p.h.toArray()].map(r3))});}
+    broadcast({t:"round",round,tb:tieSet,R,mod:curMod,food:foods.map(f=>f.p.toArray().map(r3)),mines:mines.map(m=>m.p.toArray().map(r3)),tombs:tombs.map(t=>[...t.p.toArray().map(r3),r3(t.rot)]),tramps:tramps.map(t=>t.p.toArray().map(r3)),holes:holes.map(h=>h.p.toArray().map(r3)),portals:portals.map(q=>[...q.p.toArray().map(r3),q.pair]),ghouls:ghouls.map(g=>[...g.p.toArray(),...g.h.toArray()].map(r3).concat([g.lurk!=null?g.lurk:-1])),pl:players.map(p=>[...p.p.toArray(),...p.h.toArray()].map(r3))});}
 }
 let celeb=null;
 function endRound(){
@@ -1752,7 +3209,7 @@ function endRound(){
   if(Net.role==="host") broadcast({t:"end",T:performance.now(),r:players.map(p=>p.rank),s:players.map(p=>p.score),pp:players.map(p=>p.prevPos),po:players.map(p=>p.pos)});
   const w=winners.length===1?winners[0]:null; stateT=1.6;
   roundWinMsg(w);
-  Sound.setMode("count"); Sound.roundEnd(winners.length!==1?0:winners[0].human?1:-1);
+  Sound.setMode("count"); Sound.setTwist(null); Sound.roundEnd(winners.length!==1?0:winners[0].human?1:-1);
   renderChips();
 }
 function tickCeleb(dt){
@@ -1911,7 +3368,7 @@ function tickRain(dt){
   c.globalCompositeOperation="source-over"; c.globalAlpha=1;
   if(fade<=0) stopRain();
 }
-function toMenu(){setPlanetR(R_FULL);leaveOnline();hideSheets();state="menu";Sound.setMode("menu");panel.hidden=true;hud.hidden=true;roundTag.hidden=true;charSel.hidden=true;
+function toMenu(){labMod=null; labRestartT=0; roundTag.classList.remove("lab"); clearMods(); setPlanetR(R_FULL);leaveOnline();hideSheets();state="menu";Sound.setMode("menu");panel.hidden=true;hud.hidden=true;roundTag.hidden=true;charSel.hidden=true;
   boostBar.hidden=true;hideMsg();stopRain();celeb=null;menu.hidden=false;
   joy.hidden=true; joyId=null; ptrs.clear();}
 // Score chips: during a round the survivors stay in front; whoever crashes gets their points
@@ -1978,6 +3435,19 @@ function fitLine(el,max,min){
 // match setup (vs computer): opponents + difficulty, remembered between visits
 try{const o=+localStorage.getItem("kd-opp"); if(o>=1&&o<=3) opponents=o; const d=localStorage.getItem("kd-diff"); if(DIFF[d]) diff=d;}catch(_){}
 const DIFF_HINT={easy:"Slower pace, a little more time to think.",normal:"The standard game.",hard:"Faster pace. Sharp, quick rivals."};
+let rules=(()=>{try{return localStorage.getItem("kd-rules")==="chaos"?"chaos":"classic";}catch(_){return "classic";}})();
+const RULES_HINT={classic:"The original game.",chaos:"Every other round gets a twist, like low gravity or darkness."};
+function syncRules(){
+  const cur=Net.role?(Net.rules||"classic"):rules, guest=Net.role==="client";
+  document.querySelectorAll("#rulesSeg button,#lobbyRulesSeg button").forEach(b=>{const on=b.dataset.rules===(b.closest("#lobbyRulesSeg")?(Net.rules||"classic"):rules);
+    b.setAttribute("aria-checked",String(on)); b.tabIndex=on?0:-1;
+    if(b.closest("#lobbyRulesSeg")){ if(guest){b.setAttribute("aria-disabled","true"); b.tabIndex=-1;} else b.removeAttribute("aria-disabled"); }});
+  document.querySelectorAll("#lobbyRules .rulesHint").forEach(h=>h.textContent=guest?"The host picks the game mode.":"");
+  $("lobbyRules").classList.toggle("guest",guest);
+}
+document.querySelectorAll("#rulesSeg button").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.rules===rules) return; Sound.click(); rules=b.dataset.rules; try{localStorage.setItem("kd-rules",rules);}catch(_){} syncRules();}));
+document.querySelectorAll("#lobbyRulesSeg button").forEach(b=>b.addEventListener("click",()=>{ if(Net.role!=="host"||b.dataset.rules===Net.rules) return; Sound.click();
+  Net.rules=b.dataset.rules; rules=Net.rules; try{localStorage.setItem("kd-rules",rules);}catch(_){} hostSendLobby(); syncRules();}));
 function syncSetup(){
   // radio groups: only the chosen option is in the Tab order; arrows move between options
   document.querySelectorAll("#oppSeg button").forEach(x=>{const on=+x.dataset.n===opponents; x.setAttribute("aria-checked",String(on)); x.tabIndex=on?0:-1;});
@@ -2011,13 +3481,18 @@ document.querySelectorAll('[role="radiogroup"]').forEach(g=>g.addEventListener("
 }));
 document.querySelectorAll("#diffSeg button").forEach(b=>b.addEventListener("click",()=>{Sound.click(); diff=b.dataset.d; try{localStorage.setItem("kd-diff",diff);}catch(_){} syncSetup();}));
 function openCpuSetup(){
-  pushNav(); mode="cpu"; Sound.setMode("menu"); state="cpuset"; celeb=null;
+  labMod=null; pushNav(); mode="cpu"; Sound.setMode("menu"); state="cpuset"; celeb=null;
   hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain();
-  syncSetup(); $("cpuSetup").hidden=false;
+  syncSetup(); syncRules(); $("cpuSetup").hidden=false;
 }
 $("setupBack").onclick=()=>{Sound.click(); toMenu();};
 $("setupNext").onclick=()=>{Sound.click(); openCharSel();};
 $("startBtn").onclick=()=>{Sound.init();Sound.click();openCpuSetup();};
+$("labBtn").onclick=()=>{Sound.click(); openLab();};
+$("labHome").onclick=()=>{Sound.click(); $("labSheet").hidden=true; goHome();};
+$("labResume").onclick=()=>{Sound.click(); $("labSheet").hidden=true; paused=false;};
+$("labPauseBtn").onclick=()=>{Sound.click(); closePause(); openLab();};
+roundTag.addEventListener("click",()=>{ if(labMod&&(state==="play"||state==="count")){ Sound.click(); openLab(); } });
 $("onlineBtn").onclick=()=>{Sound.init();Sound.click();mode="online";openOnline();};
 $("charGo").onclick=()=>{Sound.click();
   if(mode!=="online"){startMatch(); return;}
@@ -2049,7 +3524,7 @@ function renderPause(){
   // asking to leave: the two answers side by side, "Leave match" as the main (filled) one on the right,
   // the same as the question between rounds; otherwise Resume is the main action, stacked on top
   $("pauseBtns").classList.toggle("row",c);
-  $("pauseCtlBtn").hidden=c;
+  $("pauseCtlBtn").hidden=c; $("labPauseBtn").hidden=c||!labMod;
   $("resumeBtn").classList.toggle("ghost",c); $("quitBtn").classList.toggle("ghost",!c);
 }
 function closePause(){$("pause").hidden=true; paused=false;}
@@ -2106,7 +3581,8 @@ window.addEventListener("keydown",e=>{
 });
 window.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(e.target&&e.target.classList&&e.target.classList.contains("lnInp")) return;
   if(!$("settings").hidden){closeSettings(); return;}
-  if(state==="panel"&&$("pause").hidden){ if($("askStay")) panelConfirm(false); else if($("panelQuit")) panelConfirm(true); else if(!$("homeBtn").hidden) $("homeBtn").click(); return; } if(!$("pause").hidden) closePause(); else if(state!=="menu") $("homeBtn").click(); }});
+  if(state==="panel"&&$("pause").hidden){ if($("askStay")) panelConfirm(false); else if($("panelQuit")) panelConfirm(true); else if(!$("homeBtn").hidden) $("homeBtn").click(); return; } if(!$("labSheet").hidden&&labMod&&inMatchState()){ $("labResume").click(); return; }
+  if(!$("pause").hidden) closePause(); else if(inMatchState()) openPause(false); else if(state!=="menu") $("homeBtn").click(); }});
 // hardware/gesture back (Android, desktop): back = home, or the pause menu during a match
 try{history.replaceState({tp:"menu"},"");}catch(_){}
 const IOS_HOME_APP=navigator.standalone===true;
@@ -2207,7 +3683,7 @@ function leaveOnline(quiet){
   clearTimeout(Net.timer);
   if(!quiet) sayBye();
   const peer=Net.peer; if(peer) setTimeout(()=>{try{peer.destroy();}catch(_){}},300); // let the goodbye get out first
-  Object.assign(Net,{uconns:new Map(),uConn:null,snaps:[],evq:[],off:null,role:null,peer:null,conns:new Map(),hostConn:null,code:"",myId:null,roster:[],inMatch:false});
+  Object.assign(Net,{uconns:new Map(),uConn:null,snaps:[],evq:[],off:null,role:null,peer:null,conns:new Map(),hostConn:null,code:"",myId:null,roster:[],inMatch:false,rules:"classic"});
 }
 function setOnlineStatus(t,isErr){const busy=!isErr&&/…$/.test(t||"");   // "Joining 1234…", "Connecting…" get a spinner
   ["onlineStatus","joinStatus"].forEach(id=>{const el=$(id); el.textContent=t||""; el.classList.toggle("err",!!isErr); el.classList.toggle("busy",busy);});}
@@ -2215,7 +3691,7 @@ function netFail(text){const wasJoin=Net.role==="client"; leaveOnline(); if(wasJ
 
 // ----- screens -----
 const onlineSheet=$("online"), lobbySheet=$("lobby");
-function hideSheets(){[menu,charSel,$("cpuSetup"),panel,onlineSheet,lobbySheet,$("joinSheet"),$("notice"),$("pause"),$("settings")].forEach(s=>s.hidden=true); settingsBack=[]; paused=false;}
+function hideSheets(){[menu,charSel,$("cpuSetup"),$("labSheet"),panel,onlineSheet,lobbySheet,$("joinSheet"),$("notice"),$("pause"),$("settings")].forEach(s=>s.hidden=true); settingsBack=[]; paused=false;}
 function openOnline(){
   pushNav();
   hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain();
@@ -2263,7 +3739,7 @@ otpIns.forEach((inp,k)=>{
 });
 function openLobby(){
   hideSheets(); hud.hidden=true; roundTag.hidden=true; boostBar.hidden=true; hideMsg(); stopRain(); celeb=null;
-  state="lobby"; Net.inMatch=false; Sound.setMode("menu"); lobbySheet.hidden=false; renderLobby();
+  clearMods(); state="lobby"; Net.inMatch=false; Sound.setMode("menu"); lobbySheet.hidden=false; renderLobby();
 }
 // Your own row in the lobby: tap your name to change it. While you type, the rest of the list can still
 // update around you (people joining) without the field being rebuilt.
@@ -2277,6 +3753,7 @@ function lobbyRow(r,i){
   return `<li${mine?' class="me"':""}><span class="lp ini">${lobbyIni(r)}</span>${nm}<span class="lt">${i===0?"Host":""}</span></li>`;
 }
 function renderLobby(){
+  syncRules();
   $("lobbyCode").textContent=Net.code;
   const list=$("lobbyList"), seats=Array.from({length:Math.max(0,4-Net.roster.length)},()=>`<li class="empty"><span class="lp"></span><span class="ln">Open seat</span><span class="lt"></span></li>`).join("");
   const mineLi=lobbyEditing?list.querySelector("li.me"):null, k=Net.roster.findIndex(r=>r.id===Net.myId);
@@ -2378,7 +3855,7 @@ function hostCreate(){
   let peer; try{peer=new Peer("tangleplanet-"+code.toLowerCase(),peerOpts());}catch(e){netFail("Couldn't start online play on this device."); return;}
   Object.assign(Net,{peer,role:"host",code});
   Net.timer=setTimeout(()=>{if(state==="online") netFail("Couldn't reach the game server. Check your connection and try again.");},12000);
-  peer.on("open",id=>{clearTimeout(Net.timer); Net.myId=id; Net.phase="lobby"; Net.roster=[{id,name:savedName()||defaultName(0),char:selChar,ready:false}]; openLobby();});
+  peer.on("open",id=>{clearTimeout(Net.timer); Net.myId=id; Net.phase="lobby"; Net.rules=rules; Net.roster=[{id,name:savedName()||defaultName(0),char:selChar,ready:false}]; openLobby();});
   peer.on("connection",conn=>{
     if(conn.label==="u"){ // fast lane: snapshots out, stick input in; a lost packet never holds up the next one
       conn.on("open",()=>Net.uconns.set(conn.peer,conn));
@@ -2458,13 +3935,13 @@ function hostDrop(id){
   toast(`${who} left the game`);
   broadcast({t:"left",i:pl.i});
 }
-function hostSendLobby(){Net.phase="lobby"; Net.roster.forEach(r=>r.ready=false); broadcast({t:"lobby",code:Net.code,roster:Net.roster}); if(state==="lobby") renderLobby();}
+function hostSendLobby(){Net.phase="lobby"; Net.roster.forEach(r=>r.ready=false); broadcast({t:"lobby",code:Net.code,roster:Net.roster,rules:Net.rules||"classic"}); if(state==="lobby") renderLobby();}
 function hostStartMatch(){
   if(Net.role!=="host"||Net.roster.length<2) return;
   const cols=rosterColors(Net.roster);
   Net.phase="match";
   const list=Net.roster.map((r,i)=>({id:r.id,name:r.name,char:r.char,color:cols[i]}));
-  broadcast({t:"match",players:list});
+  broadcast({t:"match",players:list,rules:Net.rules||"classic"});
   beginMatch(list.map(x=>({ch:charById(x.char),name:x.name,color:x.color,peer:x.id,kind:x.id===Net.myId?"local":"remote"})));
 }
 function hostTick(dt){
@@ -2540,7 +4017,7 @@ function hostGone(){
 function clientData(d){
   if(!d||typeof d!=="object") return;
   switch(d.t){
-    case "lobby": Net.code=d.code; Net.phase="lobby"; Net.roster=readRoster(d.roster);
+    case "lobby": Net.code=d.code; Net.phase="lobby"; Net.roster=readRoster(d.roster); Net.rules=d.rules==="chaos"?"chaos":"classic";
       if(state==="lobby") renderLobby(); else openLobby(); break;
     case "setup": if(lobbyEditing) flushLobbyEdit(); Net.phase="setup"; Net.roster=readRoster(d.roster);
       if(lobbyPendingName){const me=Net.roster.find(r=>r.id===Net.myId); if(me) me.name=lobbyPendingName;}
@@ -2551,8 +4028,16 @@ function clientData(d){
     case "full": netFail("That game is full."); break;
     case "busy": netFail("That game has already started."); break;
     case "match": Net.phase="match"; if(Array.isArray(d.players)) beginMatch(d.players.slice(0,4).map(x=>({ch:charById(x.char),name:cleanName(x.name),
-        color:Number.isFinite(x.color)?x.color:charById(x.char).color,peer:String(x.id),kind:x.id===Net.myId?"local":"remote"}))); break;
+        color:Number.isFinite(x.color)?x.color:charById(x.char).color,peer:String(x.id),kind:x.id===Net.myId?"local":"remote"})),d.rules==="chaos"?"chaos":"classic"); break;
     case "round": clientRound(d); break;
+    case "bomb": if(d.r===round&&Number.isFinite(d.h)){ if(bomb.h!==d.h&&bomb.h>=0&&d.h>=0) Sound.whoosh(); bomb.h=d.h|0; if(Number.isFinite(d.tl)) bomb.t=d.tl; } break;
+    case "hh": if(d.r===round&&Array.isArray(d.g)) d.g.forEach((a,k)=>{ const g=ghouls[k]; if(!g||!Array.isArray(a)||a.length<7||!a.slice(0,6).every(Number.isFinite)) return;
+        g.tp.set(a[0],a[1],a[2]).normalize(); g.th.set(a[3],a[4],a[5]); const md=GMODES[a[6]|0]||"wander"; if(g.mode==="lurk"&&md==="chase") g.pop=1; g.mode=md; }); break;
+    case "shriek": { const g=ghouls[d.k|0]; if(g) shriekAt(g); } break;
+    case "wail": { const g=ghouls[d.k|0]; if(g) wailAt(g); } break;
+    case "eat": if(curMod==="snake"){ const pl=players[d.i], f=foods[d.k];
+        if(pl&&Number.isFinite(d.e)) pl.eaten=d.e;
+        if(f&&Array.isArray(d.p)&&d.p.every(Number.isFinite)){ eatFx(pl,f); f.p.set(d.p[0],d.p[1],d.p[2]).normalize(); } } break;
     case "go": if(state==="count"){state="play"; onGo(); Sound.count(0); Sound.setMode("play"); showMsg("Go!",""); setTimeout(afterGo,550);} break;
     case "s": clientState(d); break;
     case "tp": if(d.r===round&&Array.isArray(d.d)) for(const a of d.d){ if(!Array.isArray(a)) continue; const pl=players[a[0]]; if(!pl||pl.human) continue;
@@ -2562,8 +4047,9 @@ function clientData(d){
       break;}
     case "dead": {const me=players[d.i]; if(me&&me.human&&!me.alive){me.rank=d.rank|0; if(state==="play"&&!msg.hidden) msgSmall.hidden=false, msgSmall.textContent=placeText(me.rank)+" this round"; renderChips(); break;}}
       if(Number.isFinite(d.T)&&!d._q){d._q=1; Net.evq.push(d); break;} {const pl=players[d.i]; if(!pl||!pl.alive) break;
+      if(d.c==="bomb"){ pl.cause="bomb"; bombBlast(pl); }
       pl.alive=false; pl.rank=d.rank|0; pl.fig.visible=false; burst(pl.p.clone(),pl.y,pl.color); onCrash(pl);
-      if(pl.human){Sound.setMode("dead"); showMsg("You're out",placeText(pl.rank)+" this round");}
+      if(pl.human){Sound.setMode("dead"); if(d.c) pl.cause=pl.cause||d.c; outMsg(pl,placeText(pl.rank)+" this round");}
       renderChips(); break;}
     case "end": if(Number.isFinite(d.T)&&!d._q){d._q=1; Net.evq.push(d); break;} clientEnd(d); break;
   }
@@ -2571,7 +4057,7 @@ function clientData(d){
 function clientRound(d){
   dropSettings();
   Net.rrDeadline=0; Net.evq=[]; Net.mySent=0; Net.sendAcc=1;
-  round=d.round|0; roundScored=false; specT=null; panel.hidden=true; stopRain(); celeb=null; hideMsg();
+  round=d.round|0; roundScored=false; specT=null; deathCam=null; panel.hidden=true; stopRain(); celeb=null; hideMsg();
   if(Number.isFinite(d.R)&&d.R>=4&&d.R<=R_FULL) setPlanetR(d.R); grid.clear();
   hud.hidden=false; roundTag.hidden=false;
   players.forEach((pl,i)=>{const a=d.pl&&d.pl[i]; if(!a) return;
@@ -2583,7 +4069,13 @@ function clientRound(d){
   const m=meP(); if(m){camC.copy(m.p); camU.copy(m.h); if(!m.sit) dropPoint(m);}
   hoverHeld=false; hoverPtr=null;
   state="count"; stateT=3; Sound.setMode("count"); renderChips();
-  roundTag.textContent=tieSet?"Tiebreaker round":`Round ${round} · first to ${POINTS_TO_WIN}`;
+  applyMod(typeof d.mod==="string"?d.mod:null);
+  if(curMod==="snake"&&Array.isArray(d.food)) setFoods(d.food);
+  if(curMod==="mines"&&Array.isArray(d.mines)) setMines(d.mines);
+  if(curMod==="haunted") hauntFromNet(d);
+  if(curMod==="tramp"&&Array.isArray(d.tramps)) setTramps(d.tramps);
+  if(curMod==="holes"&&Array.isArray(d.holes)) setHoles(d.holes);
+  if(curMod==="portals"&&Array.isArray(d.portals)) setPortals(d.portals);
 }
 // ----- shared online helpers -----
 // Every device runs its own runner itself (no waiting on the network for steering or jumps)
@@ -2653,20 +4145,20 @@ function clientEnd(d){
   state="ending"; timeScale=1; ffBtn.hidden=true;
   const winners=players.filter(p=>p.rank===1), w=winners.length===1?winners[0]:null; stateT=1.6;
   roundWinMsg(w);
-  Sound.setMode("count"); Sound.roundEnd(winners.length!==1?0:winners[0].human?1:-1);
+  Sound.setMode("count"); Sound.setTwist(null); Sound.roundEnd(winners.length!==1?0:winners[0].human?1:-1);
   renderChips();
 }
 // the guest's own runner: simulated right here, exactly like the host's
 function clientSim(dt){
   const me=meP(); if(state!=="play"||!me||!me.alive) return;
   stepPlayer(me,dt);
-  let hit=hitsTrail(me.p.x,me.p.y,me.p.z,me.y,me.i,me.trail.n-1-GRACE);
-  if(!hit) for(const o of players) if(o!==me&&o.alive&&o.fig.visible&&bump(me,o)){hit=true; break;}
+  let hit=hitsTrail(me.p.x,me.p.y,me.p.z,me.y,me.i,me.trail.n-1-GRACE)||ghoulCatch(me)||holeHit(me);
+  if(!hit&&curMod!=="potato") for(const o of players) if(o!==me&&o.alive&&o.fig.visible&&bump(me,o)){hit=true; break;}
   if(hit) clientDie(me);
 }
 function clientDie(me){
-  me.alive=false; me.fig.visible=false; burst(me.p.clone(),me.y,me.color); onCrash(me);
-  Sound.setMode("dead"); showMsg("You're out",""); renderChips();
+  me.cause=crashCause(me); me.alive=false; me.fig.visible=false; burst(me.p.clone(),me.y,me.color); onCrash(me); holdDeathCam(me);
+  Sound.setMode("dead"); outMsg(me,""); renderChips();
   clientSend(true);
   const c=Net.hostConn; if(c&&c.open){try{c.send({t:"die",r:round,T:performance.now()});}catch(_){}}
 }
@@ -2733,6 +4225,7 @@ function syncSpec(){
   const now=performance.now(); if(!specSince) specSince=now;
   // after a moment, fold the big "You're out" text away so the view is clear (fast-forward stays)
   if(state==="play"&&now-specSince>1800&&!msg.hidden) msg.classList.add("compact");
+  if(deathCam&&performance.now()<deathCam.until){ if(!tag.hidden) tag.hidden=true; specKey=""; return; }
   const t=specTarget(), n=specPool().length;
   const key=t?t.i+"|"+n+"|"+t.name:"";
   if(key!==specKey){specKey=key;
@@ -2747,7 +4240,7 @@ function syncSpec(){
 // how far below the ground the aim point sits (×R), lens (°)]. Tuned so the runner sits ~60% down the
 // screen with a good stretch of ground ahead before the horizon.
 const CAM_TALL=[0.48,3.0,0.45,0.25,54], CAM_WIDE=[0.48,2.4,0.7,0.85,44];
-let camMix=0, camY=0;                       // 0 = overview, 1 = chase
+let camMix=0, camY=0; const tmpFog=new THREE.Vector3();                       // 0 = overview, 1 = chase
 const chasePos=new THREE.Vector3(), chaseLook=new THREE.Vector3(), orbPos=new THREE.Vector3(), orbLook=new THREE.Vector3(), camUpV=new THREE.Vector3();
 function updateCamera(dt){
   let target=null;
@@ -2755,6 +4248,7 @@ function updateCamera(dt){
   else if(players.length && !["menu","select","online","lobby","cpuset"].includes(state)){
     const me=meP();
     if(me&&(me.alive||(state==="count"&&!me.sit))) target=me;
+    else if(deathCam&&performance.now()<deathCam.until&&state==="play") target=deathCam;
     else target=specTarget()||players.find(p=>p.alive)||null;
   }
   const chase=!!target&&(state==="play"||state==="count"||state==="ending"||state==="panel"||!!celeb);
@@ -2762,7 +4256,7 @@ function updateCamera(dt){
     oldC.copy(camC); camC.lerp(target.p,1-Math.exp(-(chase?12:6)*dt)).normalize();
     qq.setFromUnitVectors(oldC,camC); camU.applyQuaternion(qq);
     // screen-up swings round to the runner's heading, so "forward" is always up the screen
-    if(chase){
+    if(chase&&target.h){
       camHd.copy(target.h).addScaledVector(camC,-target.h.dot(camC));
       if(camHd.lengthSq()>1e-6){camHd.normalize(); camU.lerp(camHd,1-Math.exp(-CAM_FOLLOW*dt));}}
   } else if(["menu","select","online","lobby","cpuset"].includes(state)){
@@ -2771,24 +4265,35 @@ function updateCamera(dt){
   camMix+=((chase?1:0)-camMix)*(1-Math.exp(-7*dt)); if(Math.abs(camMix-(chase?1:0))<0.002) camMix=chase?1:0;
   camZoom+=((celeb?0.62:1)-camZoom)*(1-Math.exp(-3*dt));
   fovKick*=Math.exp(-4*dt);
+
   const tall=camera.aspect<1, CF=tall?CAM_TALL:CAM_WIDE, chaseFov=CF[4];
-  const fov=BASE_FOV+(chaseFov-BASE_FOV)*camMix+8*fovKick; if(Math.abs(camera.fov-fov)>0.01){camera.fov=fov;camera.updateProjectionMatrix();}
+  const fov=BASE_FOV+(chaseFov-BASE_FOV+(curMod==="turbo"?8:0))*camMix+8*fovKick; if(Math.abs(camera.fov-fov)>0.01){camera.fov=fov;camera.updateProjectionMatrix();}
   camU.addScaledVector(camC,-camU.dot(camC)).normalize();
   // overview (as before)
   camDir.copy(camC).multiplyScalar(Math.cos(TILT)).addScaledVector(camU,-Math.sin(TILT));
   orbPos.copy(camDir).multiplyScalar(R+(camDist-R)*(celeb?1:camZoom)); orbLook.copy(camC).multiplyScalar(R*0.82);
   // chase
-  const z=camZoom*R*CF[1];
+  // Shrinking planet: frame the view on the starting size, not the current one (otherwise the camera moves in as
+  // the planet shrinks and it looks the same size on screen); Trampolines: pull back while someone's up high
+  const Rc=curMod==="shrink"&&shrinkR0?shrinkR0:R;
+  { const lf=target&&target.lt>=0?Math.min(1,target.y/5):0; camLift+=(lf-camLift)*(1-Math.exp(-3*dt)); }
+  // Flight mode: sit further behind and lower, looking along at tube height, so you can judge what's ahead
+  camFly=0;   // (a lower flight camera was tried; the normal one reads better)
+  const pitch=CF[0]+(0.8-CF[0])*camFly, aimD=CF[3]*(1-0.5*camFly);   // pitch = angle from straight overhead
+  const z=camZoom*Rc*CF[1]*(1+1.6*camLift)*(1-0.12*camFly);
   // rise half as much as the runner does on a jump, so the jump reads without the view lurching
-  camY+=((target?target.y:0)*0.5-camY)*(1-Math.exp(-8*dt));
-  chasePos.copy(camC).multiplyScalar(R+camY+z*Math.cos(CF[0])).addScaledVector(camU,-z*Math.sin(CF[0]));
-  chaseLook.copy(camC).multiplyScalar(R*(1-CF[3])+camY).addScaledVector(camU,CF[2]*R);   // aim a bit below the ground ahead: less sky
+  camY+=((target?target.y:0)*(camLift>0.01?0.5+0.35*camLift:curMod==="lowgrav"?0.7:GY?0.6:0.5)-camY)*(1-Math.exp(-8*dt));   // low gravity: follow the big jumps more
+  chasePos.copy(camC).multiplyScalar(R+camY+z*Math.cos(pitch)).addScaledVector(camU,-z*Math.sin(pitch));
+  chaseLook.copy(camC).multiplyScalar(R-Rc*aimD+camY).addScaledVector(camU,CF[2]*Rc);
+  if(camLift>0.01){ look.copy(camC).multiplyScalar(R*0.2); chaseLook.lerp(look,camLift*0.85); }   // high up: look down at the planet   // aim a bit below the ground ahead: less sky
   const m=camMix*camMix*(3-2*camMix);
   camera.position.lerpVectors(orbPos,chasePos,m);
   look.lerpVectors(orbLook,chaseLook,m);
   camUpV.copy(camU).lerp(camC,m).normalize(); camera.up.copy(camUpV);
+  if(camShake>0){ const a=camShake*camShake*0.18*R/6; camera.position.x+=(Math.random()-.5)*a; camera.position.y+=(Math.random()-.5)*a; camera.position.z+=(Math.random()-.5)*a; }
   camera.lookAt(look);
   camera.updateMatrixWorld();
+  if(lantern.intensity>0){ const t=target||meP(); if(t) lantern.position.copy(t.p).multiplyScalar(R+2.0+(t.y||0)).addScaledVector(camU,-1.4); }   // a little behind, so the runner's back is lit too
   sun.position.copy(camera.position).addScaledVector(camC,30).addScaledVector(camRight.setFromMatrixColumn(camera.matrixWorld,0),-18);
 }
 
@@ -2809,15 +4314,31 @@ function syncFigures(){
       if(pl.fig.userData.ring) pl.fig.userData.ring.position.y=0.03-hop;
       continue;
     }
-    pl.fig.position.copy(pl.p).multiplyScalar(R+pl.y);
     const run=state==="play";
-    const sw=pl.jt>=0?0.9:(run?Math.sin(pl.stride*Math.PI/STEP_LEN)*0.75:0);
-    legs[0].rotation.x=pl.jt>=0?-sw:sw; legs[1].rotation.x=pl.jt>=0?-sw*0.6:-sw;
-    if(pl.fig.userData.ring){ const rg=pl.fig.userData.ring; rg.position.y=0.03-pl.y;
+    // low gravity: long bounding strides, a little hop on every step
+    // low gravity: the run becomes slow, floaty bounds, like on the moon (the tube stays flat, only the body bounces)
+    const lgHop=curMod==="lowgrav"&&run&&pl.jt<0&&pl.alive, hopU=lgHop?Math.sin(((pl.stride%STEPL)/STEPL)*Math.PI):0;
+    const bob=lgHop?0.55*hopU:0;
+    pl.fig.position.copy(pl.p).multiplyScalar(R+pl.y+bob);
+    // Flight mode: up in the air is the "jump" pose; holding at the bottom of a dive is running on the ground
+    const onGround=GY?(pl.hovering||(pl.jt>=0&&pl.y<0.35)):(pl.jt<0&&!(pl.lt>=0));
+    const sw=!onGround?0.9:(run?Math.sin(pl.stride*Math.PI/STEPL)*0.75:0);
+    legs[0].rotation.x=!onGround?-sw:sw; legs[1].rotation.x=!onGround?-sw*0.6:-sw;
+    if(lgHop){ legs[0].rotation.x=legs[1].rotation.x=-0.25-0.55*hopU; }   // both feet together, tucked up mid-bound
+    // ice: a slip makes you wobble side to side, arms (well, body) flailing, and your legs splay
+    // ice: one smooth lean to the side and back as the feet go, the front foot sliding out, then catching yourself
+    if(pl.slipT>0){ pl.slipT=Math.max(0,pl.slipT-syncDt); const u=1-pl.slipT/(pl.slipD||0.8), e=Math.sin(Math.PI*u);
+      pl.fig.rotateZ((pl.slipSd||1)*0.42*e); pl.fig.rotateX(-0.22*e);
+      legs[0].rotation.x=legs[0].rotation.x*(1-e)+0.85*e; legs[1].rotation.x=legs[1].rotation.x*(1-e)-0.45*e; }
+    if(pl.fig.userData.ring){ const rg=pl.fig.userData.ring; rg.position.y=0.03-pl.y-bob; if(rg.visible===modNoFlutter) rg.visible=!modNoFlutter;
       const fill=pl.fig.userData.ringFill, segs=pl.fig.userData.ringSegs, f=pl.fl==null?1:pl.fl;
       pl.flShow=pl.flShow==null?f:pl.flShow+(f-pl.flShow)*Math.min(1,syncDt*14);  // glide toward the real value
       if(Math.abs(pl.flShow-f)<0.002) pl.flShow=f;
       fill.geometry.setDrawRange(0,Math.round(pl.flShow*segs)*6);
+      // Flight mode: the ring under you flashes red when a tube is right ahead at your height (time to dive)
+      if(pl.human&&GY){ if(!rg.userData.c0) rg.userData.c0=fill.material.color.clone();
+        const warn=flightWarn(pl); fill.material.color.copy(warn?(Math.sin(performance.now()/60)>0?WARN_RED:WARN_RED2):rg.userData.c0); }
+      else if(rg.userData.c0&&!GY){ fill.material.color.copy(rg.userData.c0); }
       // a little pop when it's full again
       if(f>=1&&!pl.flFull){pl.flFull=true; pl.flPop=performance.now();} else if(f<1) pl.flFull=false;
       const pt=pl.flPop?(performance.now()-pl.flPop)/280:1, sc=pt<1?1+0.25*Math.sin(pt*Math.PI):1;
@@ -2825,12 +4346,13 @@ function syncFigures(){
       // glow like the boost bar when ready: on (and gently pulsing) when full, off while it refills
       const gl=pl.fig.userData.ringGlow; if(gl){const want=f>=1?0.75+0.25*Math.sin(performance.now()/1000*Math.PI*2):0;
         gl.material.opacity+=(want-gl.material.opacity)*Math.min(1,syncDt*10);}}
-    const hp=pl.fig.userData.hpad, hov=pl.hovering&&state==="play";
+    // wings: out while fluttering; in Flight mode, out the whole time you're up (not while running along the bottom)
+    const hp=pl.fig.userData.hpad, hov=SUBM?false:GY?(pl.alive&&!pl.hovering&&(state==="play"||state==="count")):(pl.hovering&&state==="play");
     if(hp&&hp.visible!==hov) hp.visible=hov;
     if(hov){const t=performance.now()/1000, w=pl.fig.userData.wings;
       // a fast buzz (~15 beats/s, in step with the hum) over a small arc; two faint copies at the ends of the
       // stroke smear it into a blur, the way very fast wings look
-      for(const piv of w){const sd=piv.userData.sd, ph=t*Math.PI*2*WING_HZ, beat=a=>0.28+0.3*Math.sin(a);
+      for(const piv of w){const sd=piv.userData.sd, ph=t*Math.PI*2*(GY?3.4:WING_HZ), beat=GY?(a=>0.15+0.55*Math.sin(a)):(a=>0.28+0.3*Math.sin(a));
         piv.rotation.z=sd*beat(ph);
         piv.userData.ghosts[0].rotation.z=sd*beat(ph+2.1); piv.userData.ghosts[1].rotation.z=sd*beat(ph-2.1);}
       pl.fig.position.addScaledVector(pl.p,0.06*Math.sin(t*8));
@@ -2893,13 +4415,13 @@ function frame(now){
   {const gs=$("globalSound"), hb=$("homeBtn"), showHome=hud.hidden&&state!=="menu"&&$("pause").hidden;
    if(gs.hidden!==!hud.hidden) gs.hidden=!hud.hidden; if(hb.hidden!==!showHome) hb.hidden=!showHome;
    syncPads();
-   const sb=$("settingsBtn"), noGear=!hud.hidden||!$("settings").hidden||!$("pause").hidden; if(sb.hidden!==noGear) sb.hidden=noGear;
+   const sb=$("settingsBtn"), noGear=!hud.hidden||!$("settings").hidden||!$("pause").hidden||state==="panel"; if(sb.hidden!==noGear) sb.hidden=noGear;
    const mb=$("menuBtn"), noPause=state==="panel"; if(mb.hidden!==noPause) mb.hidden=noPause;
    }
   clientTick(dt); proxyFrame(dt); hostTick(dt); hostRoundTick();
   if(state==="panel"&&Net.rrDeadline&&$("rrStatus")){Net._rrT=(Net._rrT||0)+dt; if(Net._rrT>0.25){Net._rrT=0; panelReady();}}
   for(const pl of players) pl.trail.flush();
-  tickCeleb(dt); hoverSounds(); syncSpec(); syncFigures(); tickFx(dt); updateCamera(dt); syncBoostUI(); tickRain(dt);
+  tickCeleb(dt); hoverSounds(); syncSpec(); syncFigures(); tickFx(dt); tickFoods(); tickMines(); tieSparkles(dt); if(!paused){ tickHaunt(dt*timeScale); tickTramp(dt); } syncShadows(); if(!paused){ tickShrink(dt*timeScale); tickShrinkFx(dt); tickOrbs(dt*timeScale); tickBomb(dt*timeScale); tickSubs(dt); } drawSpeedLines(); syncDiveCue(); syncTrackBtn(); tickRave(); tickLandRing(); updateCamera(dt); syncBoostUI(); tickRain(dt);
   renderer.render(scene,camera);
   requestAnimationFrame(frame);
 }
